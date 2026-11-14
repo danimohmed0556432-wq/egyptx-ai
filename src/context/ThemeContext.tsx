@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-type Theme = 'dark' | 'light';
+type Theme = 'dark' | 'light' | 'maspero';
 
 interface ThemeContextType {
   theme: Theme;
@@ -27,6 +27,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       if (savedTheme === 'light') {
         setThemeState('light');
         applyTheme('light');
+      } else if (savedTheme === 'maspero') {
+        setThemeState('maspero');
+        applyTheme('maspero');
       } else {
         setThemeState('dark');
         applyTheme('dark');
@@ -48,6 +51,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       if (body) {
         body.classList.add('light');
         body.classList.remove('dark');
+      }
+    } else if (t === 'maspero') {
+      root.classList.add('dark');
+      root.classList.remove('light');
+      root.setAttribute('data-theme', 'maspero');
+      root.style.colorScheme = 'dark';
+      if (body) {
+        body.classList.add('dark');
+        body.classList.remove('light');
       }
     } else {
       root.classList.add('dark');
@@ -72,7 +84,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark';
+    const next: Theme = theme === 'dark' ? 'light' : theme === 'light' ? 'maspero' : 'dark';
     setTheme(next);
   };
 

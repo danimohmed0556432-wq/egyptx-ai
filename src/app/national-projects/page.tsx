@@ -3,303 +3,273 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Building2, 
-  Landmark, 
-  Sparkles, 
-  Compass, 
-  Crown, 
-  MapPin, 
-  ArrowLeft, 
-  ExternalLink,
-  Layers,
+import {
+  Sparkles,
+  Compass,
+  MapPin,
+  ArrowLeft,
   ChevronRight,
   ShieldCheck,
   Calendar,
-  X
+  X,
+  Landmark,
+  BookOpen,
+  Layers,
+  Award,
+  Crown,
 } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
+import {
+  NATIONAL_PROJECTS_LIST,
+  NATIONAL_PROJECTS_PAGE_UI,
+  ProjectCategoryId,
+  NationalProjectItem,
+  SupportedLocale,
+} from '@/data/nationalHeritageProjects';
 
-interface NationalProject {
-  id: string;
-  title: {
-    en: string;
-    ar: string;
-  };
-  description: {
-    en: string;
-    ar: string;
-  };
-  category: 'Tourism' | 'Heritage' | 'Mummies Parade' | 'Museums';
-  imageUrl: string;
-  location: string;
-  year: string;
-  highlight: string;
-  stats: string;
-}
-
-const NATIONAL_PROJECTS: NationalProject[] = [
-  {
-    id: 'gem',
-    title: {
-      en: 'Grand Egyptian Museum (GEM)',
-      ar: 'المتحف المصري الكبير'
-    },
-    description: {
-      en: 'The largest archaeological museum complex in the world dedicated to a single civilization, housing over 100,000 artifacts including the complete Tutankhamun collection.',
-      ar: 'أكبر مجمع متاحف أثرية في العالم مكرس لحضارة واحدة، يضم أكثر من 100,000 قطعة أثرية بما فيها مجموعة الملك توت عنخ آمون الكاملة.'
-    },
-    category: 'Museums',
-    imageUrl: '/gem.jpg',
-    location: 'Giza Plateau, Cairo',
-    year: '2024–2025',
-    highlight: 'Over 100,000 Treasures',
-    stats: '500,000 m² Area'
-  },
-  {
-    id: 'mummies-parade',
-    title: {
-      en: "Pharaohs' Golden Parade & NMEC",
-      ar: 'موكب المومياوات الملكية والمتحف القومي للحضارة'
-    },
-    description: {
-      en: 'A historic theatrical procession that safely transferred 22 royal mummies from Tahrir to the state-of-the-art National Museum of Egyptian Civilization in Fustat.',
-      ar: 'موكب أسطوري مهيب نقل 22 مومياء ملكية فرعونية من ميدان التحرير إلى المتحف القومي للحضارة المصرية بالفسطاط بتقنيات حفظ عالمية.'
-    },
-    category: 'Mummies Parade',
-    imageUrl: '/mummies.jpg',
-    location: 'Fustat, Historic Cairo',
-    year: '2021',
-    highlight: '22 Royal Monarchs',
-    stats: 'Global Broadcast to 60+ Nations'
-  },
-  {
-    id: 'sphinxes-avenue',
-    title: {
-      en: 'Avenue of Sphinxes Restoration',
-      ar: 'إحياء وتطوير طريق الكباش بالأقصر'
-    },
-    description: {
-      en: 'Restoration of the 2.7-kilometer sacred ceremonial processional way connecting Karnak Temple and Luxor Temple, flanked by over 1,050 carved sphinx statues.',
-      ar: 'مشروع أثري وطني أعاد افتتاح الطريق الاحتفالي المقدس بطول 2.7 كم الرابط بين معبدي الكرنك والأقصر محاطاً بأكثر من 1,050 تمثال كباش.'
-    },
-    category: 'Heritage',
-    imageUrl: '/sphinx.jpg',
-    location: 'Luxor (Thebes)',
-    year: '2021',
-    highlight: '2,700m Ceremonial Route',
-    stats: '1,050 Sphinx Statues'
-  },
-  {
-    id: 'historic-cairo',
-    title: {
-      en: 'Historic Cairo & Ahl Misr Walkway',
-      ar: 'تطوير القاهرة التاريخية وممشى أهل مصر'
-    },
-    description: {
-      en: 'Urban revitalization of Islamic Cairo, the Citadel aqueducts, and the Nile riverfront promenades, blending cultural heritage preservation with vibrant modern tourism.',
-      ar: 'مشروع قومي لتطوير وترميم القاهرة الإسلامية وسور مجرى العيون مع إنشاء ممشى أهل مصر السياحي المتطور على ضفاف نهر النيل.'
-    },
-    category: 'Tourism',
-    imageUrl: '/cairo.jpg',
-    location: 'Nile Corniche & Old Cairo',
-    year: '2022–2024',
-    highlight: 'Eco-Friendly Waterfront',
-    stats: '14.5 km Nile Promenade'
-  },
-  {
-    id: 'greco-roman',
-    title: {
-      en: 'Greco-Roman Museum of Alexandria',
-      ar: 'إعادة إحياء المتحف اليوناني الروماني بالإسكندرية'
-    },
-    description: {
-      en: 'Comprehensive reconstruction and modernization of Alexandria’s premier classical heritage museum, exhibiting over 10,000 antiquities spanning Alexander to the Byzantine era.',
-      ar: 'ترميم وتحديث شامل لأقدم متاحف الآثار الكلاسيكية في الشرق الأوسط لعرض أكثر من 10 آلاف قطعة أثرية من عصور الإسكندر حتى البيزنطية.'
-    },
-    category: 'Museums',
-    imageUrl: '/alex.jpg',
-    location: 'Alexandria',
-    year: '2023',
-    highlight: 'Classical Mediterranean Legacy',
-    stats: '44 Exhibition Galleries'
-  },
-  {
-    id: 'great-transfiguration',
-    title: {
-      en: 'The Great Transfiguration (Saint Catherine)',
-      ar: 'مشروع التجلي الأعظم بسانت كاترين'
-    },
-    description: {
-      en: 'World-heritage sustainable tourism transformation surrounding Mount Sinai and the Monastery of Saint Catherine, dedicated to interfaith pilgrimage and eco-tourism.',
-      ar: 'مشروع تنموي عالمي فريد لتطوير منطقة سانت كاترين وجبل موسى، كوجهة عالمية للسياحة الروحية والبيئية مع صون التراث الإنساني لليونسكو.'
-    },
-    category: 'Heritage',
-    imageUrl: '/catherine.jpg',
-    location: 'South Sinai',
-    year: '2024–2025',
-    highlight: 'Spiritual World Heritage',
-    stats: '14 Integrated Mega-Projects'
-  },
-  {
-    id: 'new-alamein',
-    title: {
-      en: 'New Alamein Riviera & Eco-Tourism',
-      ar: 'ريفييرا العلمين الجديدة والسياحة الساحلية'
-    },
-    description: {
-      en: 'Transforming the Mediterranean coastline into a year-round smart hub for international leisure, cultural festivals, and sustainable beach tourism.',
-      ar: 'تحويل ساحل البحر المتوسط إلى مركز دولي ذكي مستدام للسياحة الترفيهية والمهرجانات الثقافية على مدار العام.'
-    },
-    category: 'Tourism',
-    imageUrl: '/alamein.jpg',
-    location: 'Mediterranean Coast',
-    year: '2023–2025',
-    highlight: 'Year-Round Coastal Hub',
-    stats: '14 km Crystal Lagoon & Shoreline'
-  },
-  {
-    id: 'saqqara-discoveries',
-    title: {
-      en: 'Saqqara Necropolis Modernization',
-      ar: 'مركز زوار واكتشافات جبانة سقارة الأثرية'
-    },
-    description: {
-      en: 'State-of-the-art visitor facilities and archaeological exploration platforms showcasing newly unearthed Old Kingdom shafts, animal mummies, and intact sarcophagi.',
-      ar: 'تطوير مسارات الزيارة ومراكز الاستقبال المتطورة في سقارة لمواكبة أضخم الكشوفات الأثرية للتوابيت الملونة ومقابر الدولة القديمة.'
-    },
-    category: 'Heritage',
-    imageUrl: '/saqqara.jpg',
-    location: 'Saqqara, Giza',
-    year: '2022–2024',
-    highlight: 'Step Pyramid Sanctuary',
-    stats: '250+ Sarcophagi Unearthed'
-  }
+const CATEGORY_ORDER: ProjectCategoryId[] = [
+  'all',
+  'smart_cities',
+  'museums_antiquities',
+  'infrastructure_transport',
+  'clean_energy_dev',
 ];
 
-const CATEGORIES = ['All', 'Museums', 'Heritage', 'Mummies Parade', 'Tourism'] as const;
-type CategoryFilter = typeof CATEGORIES[number];
-
 export default function NationalProjectsPage() {
-  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('All');
-  const [activeProjectModal, setActiveProjectModal] = useState<NationalProject | null>(null);
+  const { locale } = useLanguage();
+  const activeLocale: SupportedLocale =
+    locale in NATIONAL_PROJECTS_PAGE_UI ? (locale as SupportedLocale) : 'en';
+  const ui = NATIONAL_PROJECTS_PAGE_UI[activeLocale];
+  const isRtl = activeLocale === 'ar';
 
-  const filteredProjects = selectedCategory === 'All'
-    ? NATIONAL_PROJECTS
-    : NATIONAL_PROJECTS.filter(project => project.category === selectedCategory);
+  const [selectedCategory, setSelectedCategory] = useState<ProjectCategoryId>('all');
+  const [activeProjectModal, setActiveProjectModal] = useState<NationalProjectItem | null>(null);
+  const [imgFallbacks, setImgFallbacks] = useState<Record<string, boolean>>({});
+
+  const featuredProject = NATIONAL_PROJECTS_LIST.find((p) => p.featured);
+  const showFeaturedSpotlight =
+    Boolean(featuredProject) &&
+    (selectedCategory === 'all' || selectedCategory === featuredProject?.category);
+
+  const filteredProjects = NATIONAL_PROJECTS_LIST.filter((project) => {
+    if (showFeaturedSpotlight && project.id === featuredProject?.id) return false;
+    if (selectedCategory === 'all') return true;
+    return project.category === selectedCategory;
+  });
+
+  const getProjectImage = (project: NationalProjectItem) =>
+    imgFallbacks[project.id] ? project.fallbackImageUrl : project.imageUrl;
+
+  const markImageFallback = (projectId: string) => {
+    setImgFallbacks((prev) => (prev[projectId] ? prev : { ...prev, [projectId]: true }));
+  };
 
   return (
-    <div 
+    <div
+      dir={isRtl ? 'rtl' : 'ltr'}
       className="relative min-h-screen bg-cover bg-center bg-no-repeat bg-fixed text-gray-900 dark:text-white font-sans selection:bg-amber-500 selection:text-black"
       style={{ backgroundImage: "url('/Golden Hieroglyphs at Sunset.png')" }}
     >
-      {/* Adaptive Overlay for Readability */}
-      <div className="absolute inset-0 bg-[#FDFBF7]/92 dark:bg-black/85 backdrop-blur-[2px] z-0 pointer-events-none" />
+      {/* Adaptive Pharaonic Overlay */}
+      <div className="absolute inset-0 bg-[#FDFBF7]/92 dark:bg-[#080705]/88 backdrop-blur-[2px] z-0 pointer-events-none" />
 
       {/* Main Content Container */}
       <div className="relative z-10 flex flex-col min-h-screen">
-
         {/* ── TOP HEADER ────────────────────────────────────────────────── */}
-        <header className="sticky top-0 z-40 px-4 sm:px-8 py-4 bg-[#FDFBF7]/90 dark:bg-gray-950/80 backdrop-blur-xl border-b border-amber-500/20 flex items-center justify-between">
+        <header className="sticky top-0 z-40 px-4 sm:px-8 py-4 bg-[#FDFBF7]/90 dark:bg-[#080705]/85 backdrop-blur-xl border-b border-[#D6A044]/25 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Link
               href="/"
               className="p-2 rounded-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white border border-gray-300 dark:border-white/10 transition-colors"
-              title="Back to Home"
+              title={ui.backHome}
+              aria-label={ui.backHome}
             >
-              <ArrowLeft className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+              <ArrowLeft
+                className={`w-5 h-5 text-amber-600 dark:text-[#D6A044] ${isRtl ? 'rotate-180' : ''}`}
+              />
             </Link>
             <div>
-              <h1 className="text-base sm:text-lg font-black tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-amber-700 via-amber-600 to-amber-500 dark:from-yellow-200 dark:via-amber-400 dark:to-amber-600 flex items-center gap-2">
-                National Projects of Egypt
-                <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-mono uppercase bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/40">
-                  المشروعات القومية
-                </span>
+              <h1 className="text-base sm:text-lg font-black tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-amber-700 via-amber-600 to-amber-500 dark:from-[#F6E2B3] dark:via-[#D6A044] dark:to-amber-500">
+                {ui.headerTitle}
               </h1>
               <p className="text-xs text-gray-600 dark:text-gray-400 font-light hidden sm:block">
-                Celebrating modern megaprojects, heritage preservation, and tourism excellence
+                {ui.headerSubtitle}
               </p>
             </div>
           </div>
 
           <Link
             href="/planner"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 border border-amber-500/40 text-amber-800 dark:text-amber-300 text-xs font-semibold transition-all cursor-pointer shadow-md"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#D6A044]/20 to-amber-500/20 hover:from-[#D6A044]/30 hover:to-amber-500/30 border border-[#D6A044]/40 text-amber-800 dark:text-[#F6E2B3] text-xs font-semibold transition-all cursor-pointer shadow-md shrink-0"
           >
             <Compass className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Plan Your Tour</span>
-            <span className="sm:hidden">Plan</span>
+            <span className="hidden sm:inline">{ui.planTour}</span>
+            <span className="sm:hidden">{ui.planShort}</span>
           </Link>
         </header>
 
         {/* ── HERO BANNER SECTION ───────────────────────────────────────── */}
         <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-8 text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-semibold mb-4 shadow-[0_0_20px_rgba(245,158,11,0.2)]">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Egypt&apos;s 2030 Tourism & Heritage Vision</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#D6A044]/15 border border-[#D6A044]/35 text-amber-800 dark:text-[#F6E2B3] text-xs font-semibold mb-4 shadow-[0_0_20px_rgba(214,160,68,0.2)]">
+            <Sparkles className="w-3.5 h-3.5 text-[#D6A044]" />
+            <span>{ui.eyebrow}</span>
           </div>
 
           <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-gray-900 dark:text-white mb-4 leading-tight">
-            Egypt&apos;s Modern Renaissance <br />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-700 via-amber-600 to-yellow-600 dark:from-amber-300 dark:via-amber-400 dark:to-yellow-500">
-              نهضة مصر الحديثة
+            {ui.heroTitle}{' '}
+            <span className="block sm:inline bg-clip-text text-transparent bg-gradient-to-r from-amber-700 via-amber-600 to-yellow-600 dark:from-[#F6E2B3] dark:via-[#D6A044] dark:to-amber-500">
+              {ui.heroTitleAccent}
             </span>
           </h2>
 
           <p className="max-w-3xl mx-auto text-sm sm:text-base text-gray-700 dark:text-gray-300 font-light leading-relaxed mb-8">
-            From the monumental halls of the Grand Egyptian Museum and the historic Royal Mummies Parade 
-            to restored ancient avenues and sustainable Mediterranean coasts, discover how Egypt is reimagining 
-            its legacy for the next thousand years.
+            {ui.heroSubtitle}
           </p>
 
           {/* Key Metrics Ribbon */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto mb-10">
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-[#F8F3E9]/90 dark:bg-white/5 border border-amber-500/20 backdrop-blur-md">
-              <span className="text-xl sm:text-2xl font-black text-amber-700 dark:text-amber-300 block">100,000+</span>
-              <span className="text-[11px] text-gray-600 dark:text-gray-400 font-medium">Relics Curated at GEM</span>
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-[#F8F3E9]/90 dark:bg-white/5 border border-[#D6A044]/25 backdrop-blur-md">
+              <span className="text-xl sm:text-2xl font-black text-amber-700 dark:text-[#F6E2B3] block">
+                {ui.kpi1Value}
+              </span>
+              <span className="text-[11px] text-gray-600 dark:text-gray-400 font-medium">
+                {ui.kpi1Label}
+              </span>
             </div>
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-[#F8F3E9]/90 dark:bg-white/5 border border-amber-500/20 backdrop-blur-md">
-              <span className="text-xl sm:text-2xl font-black text-amber-700 dark:text-amber-300 block">22</span>
-              <span className="text-[11px] text-gray-600 dark:text-gray-400 font-medium">Royal Mummies Enshrined</span>
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-[#F8F3E9]/90 dark:bg-white/5 border border-[#D6A044]/25 backdrop-blur-md">
+              <span className="text-xl sm:text-2xl font-black text-amber-700 dark:text-[#F6E2B3] block">
+                {ui.kpi2Value}
+              </span>
+              <span className="text-[11px] text-gray-600 dark:text-gray-400 font-medium">
+                {ui.kpi2Label}
+              </span>
             </div>
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-[#F8F3E9]/90 dark:bg-white/5 border border-amber-500/20 backdrop-blur-md">
-              <span className="text-xl sm:text-2xl font-black text-amber-700 dark:text-amber-300 block">2.7 km</span>
-              <span className="text-[11px] text-gray-600 dark:text-gray-400 font-medium">Avenue of Sphinxes</span>
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-[#F8F3E9]/90 dark:bg-white/5 border border-[#D6A044]/25 backdrop-blur-md">
+              <span className="text-xl sm:text-2xl font-black text-amber-700 dark:text-[#F6E2B3] block">
+                {ui.kpi3Value}
+              </span>
+              <span className="text-[11px] text-gray-600 dark:text-gray-400 font-medium">
+                {ui.kpi3Label}
+              </span>
             </div>
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-[#F8F3E9]/90 dark:bg-white/5 border border-amber-500/20 backdrop-blur-md">
-              <span className="text-xl sm:text-2xl font-black text-amber-700 dark:text-amber-300 block">100%</span>
-              <span className="text-[11px] text-gray-600 dark:text-gray-400 font-medium">Sustainable Heritage</span>
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-[#F8F3E9]/90 dark:bg-white/5 border border-[#D6A044]/25 backdrop-blur-md">
+              <span className="text-xl sm:text-2xl font-black text-amber-700 dark:text-[#F6E2B3] block">
+                {ui.kpi4Value}
+              </span>
+              <span className="text-[11px] text-gray-600 dark:text-gray-400 font-medium">
+                {ui.kpi4Label}
+              </span>
             </div>
           </div>
 
           {/* ── FILTER TABS ─────────────────────────────────────────────── */}
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 py-2">
-            {CATEGORIES.map((cat) => {
-              const isActive = selectedCategory === cat;
+            {CATEGORY_ORDER.map((catId) => {
+              const isActive = selectedCategory === catId;
               return (
                 <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
+                  key={catId}
+                  onClick={() => setSelectedCategory(catId)}
                   className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer ${
                     isActive
-                      ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-gray-950 shadow-[0_0_20px_rgba(245,158,11,0.5)] scale-105'
-                      : 'bg-[#F8F3E9] dark:bg-white/5 hover:bg-[#EFE6D5] dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/10 hover:border-amber-500/30'
+                      ? 'bg-gradient-to-r from-[#D6A044] to-amber-400 text-[#080705] shadow-[0_0_20px_rgba(214,160,68,0.45)] scale-105'
+                      : 'bg-[#F8F3E9] dark:bg-white/5 hover:bg-[#EFE6D5] dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-white/10 hover:border-[#D6A044]/40'
                   }`}
                 >
-                  {cat === 'All' && ' '}
-                  {cat === 'Museums' && ' '}
-                  {cat === 'Heritage' && ' '}
-                  {cat === 'Mummies Parade' && ' '}
-                  {cat === 'Tourism' && ' '}
-                  {cat}
+                  {ui.categories[catId]}
                 </button>
               );
             })}
           </div>
         </section>
 
+        {/* ── #1 FLAGSHIP SPOTLIGHT: NEW ADMINISTRATIVE CAPITAL ───────────── */}
+        {showFeaturedSpotlight && featuredProject && (
+          <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-8 w-full">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="group relative rounded-3xl overflow-hidden bg-white/95 dark:bg-[#110E0A]/95 border-2 border-[#D6A044]/55 shadow-[0_0_40px_rgba(214,160,68,0.2)] grid grid-cols-1 lg:grid-cols-12"
+            >
+              {/* Flagship Image */}
+              <div className="relative h-64 sm:h-80 lg:h-auto lg:col-span-6 overflow-hidden bg-[#080705]">
+                <img
+                  src={getProjectImage(featuredProject)}
+                  alt={featuredProject.title[activeLocale]}
+                  onError={() => markImageFallback(featuredProject.id)}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#080705] via-[#080705]/20 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-[#080705]/30" />
+
+                <div className={`absolute top-4 ${isRtl ? 'right-4' : 'left-4'} z-10`}>
+                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-gradient-to-r from-[#D6A044] to-amber-300 text-[#080705] shadow-lg">
+                    <Crown className="w-3.5 h-3.5" />
+                    {ui.flagshipBadge}
+                  </span>
+                </div>
+
+                <div className={`absolute top-4 ${isRtl ? 'left-4' : 'right-4'} z-10`}>
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-black/75 backdrop-blur-md text-gray-200 border border-white/15">
+                    <Calendar className="w-3.5 h-3.5 text-[#D6A044]" />
+                    {featuredProject.year}
+                  </span>
+                </div>
+              </div>
+
+              {/* Flagship Details */}
+              <div className="p-6 sm:p-8 lg:col-span-6 flex flex-col justify-between space-y-5">
+                <div className="space-y-3">
+                  <div className="flex flex-wrap items-center gap-2 text-xs">
+                    <span className="px-2.5 py-1 rounded-full font-bold uppercase tracking-wider bg-[#D6A044]/15 text-amber-800 dark:text-[#F6E2B3] border border-[#D6A044]/40">
+                      {ui.categories[featuredProject.category]}
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-amber-700 dark:text-[#D6A044] font-semibold">
+                      <MapPin className="w-3.5 h-3.5" />
+                      {featuredProject.location[activeLocale]}
+                    </span>
+                  </div>
+
+                  <h3 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white leading-tight">
+                    {featuredProject.title[activeLocale]}
+                  </h3>
+
+                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {featuredProject.description[activeLocale]}
+                  </p>
+
+                  <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed bg-[#F8F3E9] dark:bg-white/5 p-3.5 rounded-xl border border-[#D6A044]/20">
+                    {featuredProject.architecturalHighlights[activeLocale]}
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-gray-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-4">
+                  <div className="space-y-0.5">
+                    <span className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4" />
+                      {featuredProject.highlight[activeLocale]}
+                    </span>
+                    <span className="text-xs font-mono text-amber-700 dark:text-[#D6A044] font-bold block">
+                      {featuredProject.stats[activeLocale]}
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={() => setActiveProjectModal(featuredProject)}
+                    className="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#D6A044] to-amber-400 text-[#080705] font-bold text-xs shadow-lg hover:shadow-[#D6A044]/40 transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <span>{ui.exploreMilestone}</span>
+                    <ChevronRight className={`w-4 h-4 ${isRtl ? 'rotate-180' : ''}`} />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </section>
+        )}
+
         {/* ── PROJECTS GRID ─────────────────────────────────────────────── */}
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 pb-20 flex-1">
-          <motion.div 
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 pb-20 flex-1 w-full">
+          <motion.div
             layout
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
           >
@@ -312,80 +282,83 @@ export default function NationalProjectsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.35 }}
-                  className="group relative bg-white/90 dark:bg-white/5 border border-amber-500/25 hover:border-amber-400/50 backdrop-blur-md rounded-2xl overflow-hidden shadow-xl hover:shadow-[0_0_35px_rgba(245,158,11,0.2)] transition-all duration-300 flex flex-col justify-between"
+                  className="group relative bg-white/90 dark:bg-[#110E0A]/90 border border-[#D6A044]/25 hover:border-[#D6A044]/60 backdrop-blur-md rounded-2xl overflow-hidden shadow-xl hover:shadow-[0_0_35px_rgba(214,160,68,0.2)] transition-all duration-300 flex flex-col justify-between"
                 >
                   {/* Image Container */}
-                  <div className="relative w-full h-52 sm:h-56 overflow-hidden bg-gray-900">
-                    <img 
-                      src={project.imageUrl} 
-                      alt={project.title.en} 
+                  <div className="relative w-full h-52 sm:h-56 overflow-hidden bg-[#080705]">
+                    <img
+                      src={getProjectImage(project)}
+                      alt={project.title[activeLocale]}
+                      onError={() => markImageFallback(project.id)}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
-                    
+
                     {/* Dark gradient overlay for text readability */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#080705] via-[#080705]/25 to-transparent" />
 
                     {/* Category Badge */}
-                    <div className="absolute top-3 left-3 z-10">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-amber-300 border border-amber-500/40">
-                        {project.category}
+                    <div className={`absolute top-3 ${isRtl ? 'right-3' : 'left-3'} z-10`}>
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/70 backdrop-blur-md text-[#F6E2B3] border border-[#D6A044]/40">
+                        {ui.categories[project.category]}
                       </span>
                     </div>
 
-                    {/* Year / Status Badge */}
-                    <div className="absolute top-3 right-3 z-10">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold bg-black/60 backdrop-blur-md text-gray-300 border border-white/15">
-                        <Calendar className="w-3 h-3 text-amber-400" />
+                    {/* Year Badge */}
+                    <div className={`absolute top-3 ${isRtl ? 'left-3' : 'right-3'} z-10`}>
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold bg-black/70 backdrop-blur-md text-gray-200 border border-white/15">
+                        <Calendar className="w-3 h-3 text-[#D6A044]" />
                         {project.year}
                       </span>
                     </div>
 
                     {/* Location Tag */}
-                    <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1 text-xs text-amber-200 font-medium drop-shadow-md">
-                      <MapPin className="w-3.5 h-3.5 text-amber-400" />
-                      <span>{project.location}</span>
+                    <div
+                      className={`absolute bottom-3 ${isRtl ? 'right-3' : 'left-3'} z-10 flex items-center gap-1 text-xs text-amber-200 font-medium drop-shadow-md`}
+                    >
+                      <MapPin className="w-3.5 h-3.5 text-[#D6A044] shrink-0" />
+                      <span>{project.location[activeLocale]}</span>
                     </div>
                   </div>
 
                   {/* Body Content */}
                   <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
                     <div>
-                      {/* Titles */}
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors mb-1">
-                        {project.title.en}
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-amber-700 dark:group-hover:text-[#F6E2B3] transition-colors mb-2 leading-snug">
+                        {project.title[activeLocale]}
                       </h3>
-                      <p className="text-xs font-semibold text-amber-700 dark:text-amber-400/90 font-serif mb-3" dir="rtl">
-                        {project.title.ar}
-                      </p>
 
-                      {/* Description */}
                       <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed font-light line-clamp-3">
-                        {project.description.en}
+                        {project.description[activeLocale]}
                       </p>
                     </div>
 
                     {/* Highlights & CTA */}
                     <div className="pt-4 border-t border-gray-200 dark:border-white/10 space-y-3">
-                      <div className="flex items-center justify-between text-[11px]">
-                        <span className="text-gray-600 dark:text-gray-400 flex items-center gap-1">
-                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                          {project.highlight}
+                      <div className="flex items-center justify-between gap-2 text-[11px]">
+                        <span className="text-gray-600 dark:text-gray-400 flex items-center gap-1 min-w-0">
+                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                          <span className="truncate">{project.highlight[activeLocale]}</span>
                         </span>
-                        <span className="font-mono text-amber-700 dark:text-amber-300 font-semibold">
-                          {project.stats}
+                        <span className="font-mono text-amber-700 dark:text-[#D6A044] font-semibold shrink-0">
+                          {project.stats[activeLocale]}
                         </span>
                       </div>
 
                       <button
                         onClick={() => setActiveProjectModal(project)}
-                        className="w-full py-2.5 px-4 rounded-xl bg-[#F8F3E9] dark:bg-white/5 hover:bg-amber-500/20 border border-gray-200 dark:border-white/10 hover:border-amber-500/40 text-xs font-bold text-gray-800 dark:text-gray-200 hover:text-amber-800 dark:hover:text-amber-300 transition-all flex items-center justify-center gap-1.5 cursor-pointer group-hover:bg-amber-500/10"
+                        className="w-full py-2.5 px-4 rounded-xl bg-[#F8F3E9] dark:bg-white/5 hover:bg-[#D6A044]/20 border border-gray-200 dark:border-white/10 hover:border-[#D6A044]/40 text-xs font-bold text-gray-800 dark:text-gray-200 hover:text-amber-800 dark:hover:text-[#F6E2B3] transition-all flex items-center justify-center gap-1.5 cursor-pointer group-hover:bg-[#D6A044]/10"
                       >
-                        <span>Explore Milestone</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-amber-400 group-hover:translate-x-1 transition-transform" />
+                        <span>{ui.exploreMilestone}</span>
+                        <ChevronRight
+                          className={`w-3.5 h-3.5 text-[#D6A044] transition-transform ${
+                            isRtl
+                              ? 'rotate-180 group-hover:-translate-x-1'
+                              : 'group-hover:translate-x-1'
+                          }`}
+                        />
                       </button>
                     </div>
-
                   </div>
                 </motion.div>
               ))}
@@ -393,71 +366,116 @@ export default function NationalProjectsPage() {
           </motion.div>
         </main>
 
-        {/* ── PROJECT DETAILS MODAL ─────────────────────────────────────── */}
+        {/* ── INTERACTIVE DOSSIER MODAL ─────────────────────────────────── */}
         <AnimatePresence>
           {activeProjectModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+              onClick={() => setActiveProjectModal(null)}
+            >
               <motion.div
+                dir={isRtl ? 'rtl' : 'ltr'}
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="relative w-full max-w-2xl bg-[#FDFBF7] dark:bg-gray-950 border border-amber-500/40 rounded-3xl overflow-hidden shadow-2xl text-gray-900 dark:text-white"
+                onClick={(e) => e.stopPropagation()}
+                className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[#FDFBF7] dark:bg-[#0C0A07] border border-[#D6A044]/45 rounded-3xl shadow-2xl text-gray-900 dark:text-white"
               >
                 {/* Modal Image */}
-                <div className="relative h-60 sm:h-72 w-full">
+                <div className="relative h-56 sm:h-68 w-full bg-[#080705]">
                   <img
-                    src={activeProjectModal.imageUrl}
-                    alt={activeProjectModal.title.en}
+                    src={getProjectImage(activeProjectModal)}
+                    alt={activeProjectModal.title[activeLocale]}
+                    onError={() => markImageFallback(activeProjectModal.id)}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0C0A07] via-[#0C0A07]/35 to-transparent" />
 
                   <button
                     onClick={() => setActiveProjectModal(null)}
-                    className="absolute top-4 right-4 p-2 rounded-full bg-black/60 hover:bg-black/80 text-white/80 hover:text-white border border-white/20 transition-all cursor-pointer"
+                    aria-label={ui.closeBtn}
+                    className={`absolute top-4 ${isRtl ? 'left-4' : 'right-4'} p-2 rounded-full bg-black/65 hover:bg-black/85 text-white/85 hover:text-white border border-white/20 transition-all cursor-pointer`}
                   >
                     <X className="w-4 h-4" />
                   </button>
 
-                  <div className="absolute bottom-4 left-6">
-                    <span className="px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/30 text-amber-200 border border-amber-500/50">
-                      {activeProjectModal.category}
+                  <div className={`absolute bottom-4 ${isRtl ? 'right-6' : 'left-6'}`}>
+                    <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#D6A044]/30 text-[#F6E2B3] border border-[#D6A044]/50 backdrop-blur-md">
+                      {ui.categories[activeProjectModal.category]}
                     </span>
                   </div>
                 </div>
 
                 {/* Modal Body */}
-                <div className="p-6 sm:p-8 space-y-6">
+                <div className="p-6 sm:p-8 space-y-5">
                   <div>
-                    <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-1">
-                      {activeProjectModal.title.en}
+                    <h3 className="text-2xl font-black text-gray-900 dark:text-white leading-snug">
+                      {activeProjectModal.title[activeLocale]}
                     </h3>
-                    <p className="text-sm font-bold text-amber-700 dark:text-amber-400 font-serif" dir="rtl">
-                      {activeProjectModal.title.ar}
-                    </p>
                   </div>
 
-                  <div className="space-y-3">
-                    <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-light">
-                      {activeProjectModal.description.en}
-                    </p>
-                    <p className="text-sm text-amber-900 dark:text-amber-100/90 leading-relaxed font-medium bg-[#F8F3E9] dark:bg-white/5 p-4 rounded-xl border border-amber-500/20 dark:border-white/5" dir="rtl">
-                      {activeProjectModal.description.ar}
-                    </p>
-                  </div>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-normal">
+                    {activeProjectModal.description[activeLocale]}
+                  </p>
 
+                  {/* Metrics Grid */}
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     <div className="p-3 rounded-xl bg-[#F8F3E9] dark:bg-white/5 border border-gray-200 dark:border-white/10">
-                      <span className="text-[10px] text-gray-500 dark:text-gray-400 block uppercase font-mono">Location</span>
-                      <span className="text-xs font-bold text-gray-900 dark:text-white">{activeProjectModal.location}</span>
+                      <span className="text-[10px] text-gray-500 dark:text-gray-400 block uppercase font-mono">
+                        {ui.locationLabel}
+                      </span>
+                      <span className="text-xs font-bold text-gray-900 dark:text-white">
+                        {activeProjectModal.location[activeLocale]}
+                      </span>
                     </div>
                     <div className="p-3 rounded-xl bg-[#F8F3E9] dark:bg-white/5 border border-gray-200 dark:border-white/10">
-                      <span className="text-[10px] text-gray-500 dark:text-gray-400 block uppercase font-mono">Timeline</span>
-                      <span className="text-xs font-bold text-gray-900 dark:text-white">{activeProjectModal.year}</span>
+                      <span className="text-[10px] text-gray-500 dark:text-gray-400 block uppercase font-mono">
+                        {ui.timelineLabel}
+                      </span>
+                      <span className="text-xs font-bold text-gray-900 dark:text-white font-mono">
+                        {activeProjectModal.year}
+                      </span>
                     </div>
                     <div className="p-3 rounded-xl bg-[#F8F3E9] dark:bg-white/5 border border-gray-200 dark:border-white/10 col-span-2 sm:col-span-1">
-                      <span className="text-[10px] text-gray-500 dark:text-gray-400 block uppercase font-mono">Impact Metric</span>
-                      <span className="text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">{activeProjectModal.stats}</span>
+                      <span className="text-[10px] text-gray-500 dark:text-gray-400 block uppercase font-mono">
+                        {ui.impactMetricLabel}
+                      </span>
+                      <span className="text-xs font-bold text-amber-700 dark:text-[#D6A044] font-mono">
+                        {activeProjectModal.stats[activeLocale]}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Dossier Sections */}
+                  <div className="space-y-3">
+                    <div className="p-4 rounded-2xl bg-[#F8F3E9]/80 dark:bg-white/5 border border-[#D6A044]/20">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-[#D6A044] mb-1.5 flex items-center gap-1.5">
+                        <BookOpen className="w-3.5 h-3.5" />
+                        <span>{ui.overviewContextLabel}</span>
+                      </h4>
+                      <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                        {activeProjectModal.historicalContext[activeLocale]}
+                      </p>
+                    </div>
+
+                    <div className="p-4 rounded-2xl bg-[#F8F3E9]/80 dark:bg-white/5 border border-[#D6A044]/20">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-[#D6A044] mb-1.5 flex items-center gap-1.5">
+                        <Layers className="w-3.5 h-3.5" />
+                        <span>{ui.engineeringHighlightsLabel}</span>
+                      </h4>
+                      <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                        {activeProjectModal.architecturalHighlights[activeLocale]}
+                      </p>
+                    </div>
+
+                    <div className="p-4 rounded-2xl bg-[#F8F3E9]/80 dark:bg-white/5 border border-[#D6A044]/20">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-[#D6A044] mb-1.5 flex items-center gap-1.5">
+                        <Award className="w-3.5 h-3.5" />
+                        <span>{ui.nationalImpactLabel}</span>
+                      </h4>
+                      <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                        {activeProjectModal.heritageImpact[activeLocale]}
+                      </p>
                     </div>
                   </div>
 
@@ -466,23 +484,22 @@ export default function NationalProjectsPage() {
                       onClick={() => setActiveProjectModal(null)}
                       className="px-5 py-2.5 rounded-full bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/15 text-gray-900 dark:text-white font-semibold text-xs cursor-pointer transition-all"
                     >
-                      Close
+                      {ui.closeBtn}
                     </button>
                     <Link
                       href="/planner"
-                      className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 text-gray-950 font-bold text-xs shadow-lg hover:shadow-amber-500/30 transition-all flex items-center gap-1.5"
+                      className="px-5 py-2.5 rounded-full bg-gradient-to-r from-[#D6A044] to-amber-400 text-[#080705] font-bold text-xs shadow-lg hover:shadow-[#D6A044]/30 transition-all flex items-center gap-1.5"
                     >
-                      <span>Add to Itinerary</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
+                      <Landmark className="w-3.5 h-3.5" />
+                      <span>{ui.addToItineraryBtn}</span>
+                      <ChevronRight className={`w-3.5 h-3.5 ${isRtl ? 'rotate-180' : ''}`} />
                     </Link>
                   </div>
                 </div>
-
               </motion.div>
             </div>
           )}
         </AnimatePresence>
-
       </div>
     </div>
   );

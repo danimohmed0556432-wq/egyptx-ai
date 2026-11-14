@@ -178,7 +178,7 @@ interface ToastState {
 }
 
 export default function SponsorsShowcase() {
-  const { locale } = useLanguage();
+  const { locale, t } = useLanguage();
   const isAr = locale === 'ar';
 
   const [ambassadors, setAmbassadors] = useState<SponsorAmbassador[]>(INITIAL_AMBASSADORS);
@@ -367,7 +367,7 @@ export default function SponsorsShowcase() {
   };
 
   return (
-    <section className="relative py-24 md:py-32 bg-[#FDFBF7] dark:bg-gradient-to-b dark:from-[#030712] dark:via-[#070E1A] dark:to-[#030712] border-t border-slate-200/80 dark:border-[#D4AF37]/20 overflow-hidden text-[#1A2332] dark:text-white transition-colors duration-200">
+    <section className="relative py-24 md:py-32 bg-[#F7F3EB] dark:bg-gradient-to-b dark:from-[#080705] dark:via-[#12100C] dark:to-[#080705] border-t border-slate-200/80 dark:border-[#D4AF37]/20 overflow-hidden text-[#1A2332] dark:text-white transition-colors duration-200">
       {/* Subtle Pharaonic Hieroglyph Watermark & Gold Halo Backdrops */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-[#D4AF37]/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute -bottom-10 right-0 w-[500px] h-[350px] bg-[#1B6B93]/10 rounded-full blur-[120px] pointer-events-none" />
@@ -379,17 +379,17 @@ export default function SponsorsShowcase() {
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#8A661C] dark:text-[#E2CB85] text-xs font-bold uppercase tracking-[0.25em] mb-4 shadow-[0_0_20px_rgba(212,175,55,0.2)]">
             <Crown className="w-4 h-4 text-[#D4AF37] animate-pulse" />
-            <span>{isAr ? 'سفراء وشخصيات الحضارة المصرية' : 'EgyptX Global Ambassadors'}</span>
+            <span>{t('ambassadors.badge')}</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-[#8A661C] to-[#C9A84C] dark:from-white dark:via-[#F5E6B8] dark:to-[#C9A84C] drop-shadow-sm mb-4 leading-tight">
-            {isAr ? 'نجوم العالم في أحضان حضارة مصر الخالدة' : 'Global Icons Exploring Timeless Egypt'}
+            {t('ambassadors.title')}
           </h2>
 
           <p className="text-base sm:text-lg text-gray-700 dark:text-white/70 leading-relaxed font-normal max-w-2xl mx-auto">
-            {isAr
+            {t('ambassadors.subtitle') !== 'ambassadors.subtitle' ? t('ambassadors.subtitle') : (isAr
               ? 'شخصيات وقادة ومؤثرون عالميون يوثقون رحلاتهم الاستثنائية بين أعظم معالم مصر التاريخية.'
-              : 'Renowned world figures, cultural leaders, and digital visionaries celebrating Egypt’s iconic heritage.'}
+              : 'Renowned world figures, cultural leaders, and digital visionaries celebrating Egypt’s iconic heritage.')}
           </p>
 
           <div className="w-16 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mx-auto mt-6" />
@@ -397,7 +397,7 @@ export default function SponsorsShowcase() {
           {/* Controls & Filter Bar */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             {/* Location Filters */}
-            <div className="inline-flex p-1 rounded-xl bg-[#F8F3E9] dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md">
+            <div className="inline-flex p-1 rounded-xl bg-[#EFE8D8] dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md">
               <button
                 onClick={() => { setPartnerTypeFilter('all'); setActiveIndex(0); }}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
@@ -406,7 +406,7 @@ export default function SponsorsShowcase() {
                     : 'text-gray-700 hover:text-gray-900 dark:text-white/70 dark:hover:text-white font-medium'
                 }`}
               >
-                {isAr ? `كافة الشخصيات (${ambassadors.length})` : `All Ambassadors (${ambassadors.length})`}
+                {`${t('ambassadors.filterAll')} (${ambassadors.length})`}
               </button>
               <button
                 onClick={() => { setPartnerTypeFilter('giza'); setActiveIndex(0); }}
@@ -416,7 +416,7 @@ export default function SponsorsShowcase() {
                     : 'text-gray-700 hover:text-gray-900 dark:text-white/70 dark:hover:text-white font-medium'
                 }`}
               >
-                {isAr ? 'الأهرامات والقاهرة' : 'Giza & Cairo'}
+                {t('ambassadors.filterGiza')}
               </button>
               <button
                 onClick={() => { setPartnerTypeFilter('luxor'); setActiveIndex(0); }}
@@ -426,7 +426,7 @@ export default function SponsorsShowcase() {
                     : 'text-gray-700 hover:text-gray-900 dark:text-white/70 dark:hover:text-white font-medium'
                 }`}
               >
-                {isAr ? 'الأقصر' : 'Luxor'}
+                {t('ambassadors.filterLuxor')}
               </button>
               <button
                 onClick={() => { setPartnerTypeFilter('aswan'); setActiveIndex(0); }}
@@ -436,12 +436,12 @@ export default function SponsorsShowcase() {
                     : 'text-gray-700 hover:text-gray-900 dark:text-white/70 dark:hover:text-white font-medium'
                 }`}
               >
-                {isAr ? 'أسوان والإسكندرية' : 'Aswan & Alexandria'}
+                {t('ambassadors.filterAswan')}
               </button>
             </div>
 
             {/* View Mode Toggle */}
-            <div className="inline-flex p-1 rounded-xl bg-[#F8F3E9] dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md">
+            <div className="inline-flex p-1 rounded-xl bg-[#EFE8D8] dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md">
               <button
                 onClick={() => setViewMode('carousel')}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
@@ -451,7 +451,7 @@ export default function SponsorsShowcase() {
                 }`}
               >
                 <Layers className="w-3.5 h-3.5" />
-                <span>{isAr ? 'معرض ثلاثي الأبعاد' : '3D Carousel'}</span>
+                <span>{t('ambassadors.viewCarousel')}</span>
               </button>
               <button
                 onClick={() => setViewMode('papyrus')}
@@ -462,7 +462,7 @@ export default function SponsorsShowcase() {
                 }`}
               >
                 <LayoutGrid className="w-3.5 h-3.5" />
-                <span>{isAr ? 'شبكة البرديات الحديثة' : 'Modern Papyrus Grid'}</span>
+                <span>{t('ambassadors.viewGrid')}</span>
               </button>
             </div>
           </div>
@@ -517,7 +517,7 @@ export default function SponsorsShowcase() {
                     }}
                   >
                     {/* Ambassador Card Container with Gold Border Glow */}
-                    <div className="relative w-full h-full bg-[#08101D] border-2 border-[#D4AF37]/50 rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.85)] group transition-all duration-300 hover:border-[#F3E5AB]">
+                    <div className="relative w-full h-full bg-[#12100C] border-2 border-[#D4AF37]/50 rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.85)] group transition-all duration-300 hover:border-[#F3E5AB]">
                       {/* Background Monument Photo with Local Asset */}
                       <img
                         src={ambassador.photoUrl}
@@ -533,20 +533,20 @@ export default function SponsorsShowcase() {
                       />
 
                       {/* Pharaonic Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#040812] via-[#050D1A]/85 via-50% to-black/25 pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#080705] via-[#080705]/85 via-50% to-black/25 pointer-events-none" />
 
                       {/* Subtle Golden Inner Border Cartouche Accent */}
                       <div className="absolute inset-2 border border-[#D4AF37]/25 rounded-2xl pointer-events-none" />
 
                       {/* Top Overlay Badge (Role + Logo Tag + Selective Delete) */}
                       <div className="absolute top-5 left-5 right-5 flex items-center justify-between z-10">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#030712]/85 backdrop-blur-md border border-[#D4AF37]/60 text-[#E2CB85] text-[11px] font-bold shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#080705]/85 backdrop-blur-md border border-[#D4AF37]/60 text-[#E2CB85] text-[11px] font-bold shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
                           <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
                           <span>{isAr ? ambassador.categoryAr : ambassador.category}</span>
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <div className="px-3 py-1 rounded-lg bg-[#030712]/90 backdrop-blur-md border border-[#D4AF37]/40 font-mono text-xs font-black tracking-widest text-[#F3E5AB] shadow-md">
+                          <div className="px-3 py-1 rounded-lg bg-[#080705]/90 backdrop-blur-md border border-[#D4AF37]/40 font-mono text-xs font-black tracking-widest text-[#F3E5AB] shadow-md">
                             {ambassador.logoText}
                           </div>
 
@@ -597,7 +597,7 @@ export default function SponsorsShowcase() {
                         <div className="pt-2 flex items-center justify-between">
                           <span className="text-[11px] uppercase tracking-wider text-[#E2CB85] font-bold flex items-center gap-1 group-hover:underline drop-shadow">
                             <Eye className="w-3.5 h-3.5" />
-                            <span>{isAr ? 'عرض قصة السفير' : 'View Ambassador Story'}</span>
+                            <span>{t('ambassadors.viewStory')}</span>
                           </span>
                           <div className="w-8 h-8 rounded-full bg-[#D4AF37]/30 border border-[#D4AF37]/60 flex items-center justify-center text-[#E2CB85] group-hover:bg-[#D4AF37] group-hover:text-black transition-colors shadow-md">
                             <ArrowUpRight className="w-4 h-4" />
@@ -660,10 +660,10 @@ export default function SponsorsShowcase() {
               <div
                 key={ambassador.id}
                 onClick={() => setSelectedAmbassador(ambassador)}
-                className="group relative bg-[#F8F3E9] dark:bg-[#09111E] border border-slate-200 dark:border-[#D4AF37]/30 hover:border-[#D4AF37] rounded-3xl overflow-hidden shadow-xl transition-all duration-300 hover:-translate-y-1.5 cursor-pointer flex flex-col"
+                className="group relative bg-[#EFE8D8] dark:bg-[#12100C] border border-slate-200 dark:border-[#D4AF37]/30 hover:border-[#D4AF37] rounded-3xl overflow-hidden shadow-xl transition-all duration-300 hover:-translate-y-1.5 cursor-pointer flex flex-col"
               >
                 {/* Photo Header */}
-                <div className="relative h-64 w-full overflow-hidden bg-[#040812]">
+                <div className="relative h-64 w-full overflow-hidden bg-[#080705]">
                   <img
                     src={ambassador.photoUrl}
                     alt={ambassador.name}
@@ -725,7 +725,7 @@ export default function SponsorsShowcase() {
                   </p>
 
                   <div className="pt-2 flex items-center justify-between text-xs text-[#8A661C] dark:text-[#E2CB85] font-semibold">
-                    <span>{isAr ? 'عرض التفاصيل' : 'Explore Story'}</span>
+                    <span>{t('ambassadors.exploreStory')}</span>
                     <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </div>
                 </div>
@@ -735,15 +735,15 @@ export default function SponsorsShowcase() {
         )}
 
         {/* Global Partnership CTA Banner */}
-        <div className="mt-16 rounded-3xl bg-[#F8F3E9] dark:bg-gradient-to-r dark:from-[#0C1628] dark:via-[#101E35] dark:to-[#0A1220] border border-slate-200/80 dark:border-[#D4AF37]/40 p-8 sm:p-10 shadow-sm dark:shadow-[0_0_50px_rgba(212,175,55,0.15)] flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+        <div className="mt-16 rounded-3xl bg-[#EFE8D8] dark:bg-gradient-to-r dark:from-[#12100C] dark:via-[#1A1611] dark:to-[#080705] border border-slate-200/80 dark:border-[#D4AF37]/40 p-8 sm:p-10 shadow-sm dark:shadow-[0_0_50px_rgba(212,175,55,0.15)] flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
           <div className="absolute -right-16 -top-16 w-52 h-52 bg-[#D4AF37]/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="space-y-2 max-w-2xl text-center md:text-left">
             <div className="inline-flex items-center gap-2 text-xs font-bold text-[#8A661C] dark:text-[#E2CB85] tracking-wider uppercase">
-              <span>{isAr ? 'دعوة VIP حصرية' : 'EXCLUSIVE VIP INVITATION'}</span>
+              <span>{t('ambassadors.vipTag')}</span>
             </div>
             <h3 className="text-2xl sm:text-3xl font-extrabold text-[#1A2332] dark:text-white">
-              {isAr ? 'قصتك تستحق أن تُخلّد بين العظماء.' : 'Your Story Belongs Among the Greats.'}
+              {t('ambassadors.vipHeadline')}
             </h3>
             <p className="text-sm text-slate-800 dark:text-white/70 font-medium">
               {isAr
@@ -757,7 +757,7 @@ export default function SponsorsShowcase() {
               onClick={() => setIsJoinModalOpen(true)}
               className="px-6 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-[#D4AF37] to-[#E2CB85] text-[#030712] hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] transition-all flex items-center justify-center gap-2 shadow-lg hover:scale-105 active:scale-95"
             >
-              <span>{isAr ? 'احصل على مكانتك الملكية' : 'Claim Your VIP Status'}</span>
+              <span>{t('ambassadors.claimVip')}</span>
             </button>
           </div>
         </div>
@@ -780,7 +780,7 @@ export default function SponsorsShowcase() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-2xl bg-[#FDFBF7] dark:bg-[#09111E] border border-[#D4AF37]/50 rounded-3xl overflow-hidden shadow-[0_25px_70px_rgba(0,0,0,0.5)] z-10"
+              className="relative w-full max-w-2xl bg-[#F7F3EB] dark:bg-[#12100C] border border-[#D4AF37]/50 rounded-3xl overflow-hidden shadow-[0_25px_70px_rgba(0,0,0,0.5)] z-10"
             >
               {/* Close Button */}
               <button
@@ -791,7 +791,7 @@ export default function SponsorsShowcase() {
               </button>
 
               {/* Monument Hero Image with Fallback */}
-              <div className="relative h-72 sm:h-80 md:h-96 w-full bg-[#040812] overflow-hidden">
+              <div className="relative h-72 sm:h-80 md:h-96 w-full bg-[#080705] overflow-hidden">
                 <img
                   src={selectedAmbassador.photoUrl}
                   alt={selectedAmbassador.name}
@@ -803,7 +803,7 @@ export default function SponsorsShowcase() {
                     }
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#09111E] via-[#09111E]/30 via-35% to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#12100C] via-[#12100C]/30 via-35% to-transparent" />
 
                 <div className="absolute bottom-4 left-6 right-6">
                   <span className="px-3 py-1 rounded-full bg-[#D4AF37]/25 border border-[#D4AF37]/50 text-[#E2CB85] text-xs font-bold uppercase tracking-wider backdrop-blur-md shadow-sm">
@@ -817,21 +817,21 @@ export default function SponsorsShowcase() {
 
               {/* Details Body */}
               <div className="p-6 sm:p-8 space-y-6">
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs bg-[#F8F3E9] dark:bg-white/5 p-4 rounded-2xl border border-slate-200 dark:border-white/10">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs bg-[#EFE8D8] dark:bg-white/5 p-4 rounded-2xl border border-slate-200 dark:border-white/10">
                   <div>
-                    <span className="text-gray-500 dark:text-white/40 block uppercase">{isAr ? 'المعلم' : 'Monument'}</span>
+                    <span className="text-gray-500 dark:text-white/40 block uppercase">{t('ambassadors.monument')}</span>
                     <span className="font-bold text-gray-900 dark:text-white text-sm">
                       {isAr ? selectedAmbassador.monumentNameAr : selectedAmbassador.monumentName}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-500 dark:text-white/40 block uppercase">{isAr ? 'الموقع' : 'Location'}</span>
+                    <span className="text-gray-500 dark:text-white/40 block uppercase">{t('ambassadors.location')}</span>
                     <span className="font-bold text-[#8A661C] dark:text-[#E2CB85] text-sm">
                       {isAr ? selectedAmbassador.locationAr : selectedAmbassador.location}
                     </span>
                   </div>
                   <div className="col-span-2 sm:col-span-1">
-                    <span className="text-gray-500 dark:text-white/40 block uppercase">{isAr ? 'الصفة' : 'Role'}</span>
+                    <span className="text-gray-500 dark:text-white/40 block uppercase">{t('ambassadors.role')}</span>
                     <span className="font-bold text-emerald-700 dark:text-[#4EE2A2] text-sm">
                       {isAr ? selectedAmbassador.categoryAr : selectedAmbassador.category}
                     </span>
@@ -840,9 +840,9 @@ export default function SponsorsShowcase() {
 
                 <div className="space-y-2">
                   <h4 className="text-xs uppercase font-bold text-[#D4AF37] tracking-wider">
-                    {isAr ? 'بيان الزيارة والأثر الحضاري' : 'Ambassador Story & Reflection'}
+                    {t('ambassadors.storyHeading')}
                   </h4>
-                  <p className="text-sm text-slate-700 dark:text-white/80 leading-relaxed font-serif italic bg-slate-100 dark:bg-[#050B14] p-4 rounded-xl border border-slate-200 dark:border-white/5">
+                  <p className="text-sm text-slate-700 dark:text-white/80 leading-relaxed font-serif italic bg-slate-100 dark:bg-[#080705] p-4 rounded-xl border border-slate-200 dark:border-white/5">
                     "{isAr ? selectedAmbassador.quoteAr : selectedAmbassador.quote}"
                   </p>
                 </div>
@@ -856,7 +856,7 @@ export default function SponsorsShowcase() {
                       className="px-4 py-2 rounded-xl bg-slate-200/80 dark:bg-black/40 backdrop-blur-md border border-slate-300 dark:border-white/10 text-gray-700 dark:text-white/60 hover:text-red-500 dark:hover:text-red-400 hover:border-red-400/40 font-medium text-xs flex items-center gap-1.5 transition-all shadow-sm group/del"
                     >
                       <X className="w-3.5 h-3.5 text-[#D4AF37]/75 group-hover/del:text-red-400 transition-colors" />
-                      <span>{isAr ? 'حذف بطاقتي المخصصة' : 'Remove Custom Card'}</span>
+                      <span>{t('ambassadors.removeCard')}</span>
                     </button>
                   ) : <div />}
 
@@ -864,7 +864,7 @@ export default function SponsorsShowcase() {
                     onClick={() => setSelectedAmbassador(null)}
                     className="px-6 py-2.5 rounded-xl bg-[#D4AF37] text-black font-bold text-xs uppercase tracking-wider hover:bg-[#E2CB85] transition-colors"
                   >
-                    {isAr ? 'إغلاق' : 'Close'}
+                    {t('ambassadors.close')}
                   </button>
                 </div>
               </div>
@@ -889,7 +889,7 @@ export default function SponsorsShowcase() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-lg bg-[#FDFBF7] dark:bg-[#0C1525] border border-[#D4AF37]/50 rounded-3xl p-6 sm:p-8 shadow-[0_25px_70px_rgba(212,175,55,0.25)] z-10 my-8"
+              className="relative w-full max-w-lg bg-[#F7F3EB] dark:bg-[#12100C] border border-[#D4AF37]/50 rounded-3xl p-6 sm:p-8 shadow-[0_25px_70px_rgba(212,175,55,0.25)] z-10 my-8"
             >
               <button
                 onClick={() => setIsJoinModalOpen(false)}
@@ -948,7 +948,7 @@ export default function SponsorsShowcase() {
                   <select
                     value={formMonument}
                     onChange={(e) => setFormMonument(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-[#08101E] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-[#D4AF37] transition-colors"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-[#12100C] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-[#D4AF37] transition-colors"
                   >
                     <option value="Great Pyramids of Giza">{isAr ? 'أهرامات الجيزة الخالدة' : 'Great Pyramids of Giza'}</option>
                     <option value="Grand Egyptian Museum (GEM)">{isAr ? 'المتحف المصري الكبير (GEM)' : 'Grand Egyptian Museum (GEM)'}</option>
@@ -1041,7 +1041,7 @@ export default function SponsorsShowcase() {
             initial={{ opacity: 0, y: 40, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-6 z-50 max-w-sm sm:max-w-md p-4 rounded-2xl bg-[#FDFBF7]/95 dark:bg-[#09111E]/95 backdrop-blur-xl border border-[#D4AF37]/60 shadow-[0_20px_50px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.85)] flex items-start gap-3 text-gray-900 dark:text-white"
+            className="fixed bottom-6 right-6 z-50 max-w-sm sm:max-w-md p-4 rounded-2xl bg-[#F7F3EB]/95 dark:bg-[#12100C]/95 backdrop-blur-xl border border-[#D4AF37]/60 shadow-[0_20px_50px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.85)] flex items-start gap-3 text-gray-900 dark:text-white"
           >
             <div className="shrink-0 p-2 rounded-xl bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#E2CB85]">
               {toast.type === 'success' ? (

@@ -20,91 +20,97 @@
     "experiences": "Erlebnisse",
     "official": "Offiziell",
     "headers": {
-      "destinations": "Destinations",
-      "aiExperiences": "AI Experiences",
-      "lifeAndCulture": "Life & Culture",
-      "officialAndBookings": "Official & Bookings"
+      "destinations": "Reiseziele",
+      "aiExperiences": "KI-Erlebnisse",
+      "lifeAndCulture": "Leben & Kultur",
+      "officialAndBookings": "Offiziell & Buchungen"
     },
-    "meresankhVr": "Meresankh VR",
-    "launchMeresankh": "Launch Meresankh VR",
+    "meresankhVr": "Meresanch VR",
+    "launchMeresankh": "Meresanch VR starten",
     "badges": {
       "ai": "AI",
       "live": "Live",
       "new": "New",
-      "curated": "Curated",
-      "renaissance": "Renaissance",
+      "curated": "Kuratiert",
+      "renaissance": "Erneuerung",
       "gps": "GPS"
     },
     "items": {
       "exploreEgypt": {
-        "title": "Explore Egypt",
-        "subtitle": "Ancient wonders & iconic monuments"
+        "title": "Ägypten Entdecken",
+        "subtitle": "Antike Wunder & Monumente"
       },
       "hiddenEgypt": {
-        "title": "Hidden Egypt",
-        "subtitle": "Undiscovered desert secrets & oases"
+        "title": "Verborgenes Ägypten",
+        "subtitle": "Unentdeckte Wüstenoasen"
       },
       "culture": {
-        "title": "Egyptian Culture",
-        "subtitle": "Arts, music, literature & heritage"
+        "title": "Ägyptische Kultur",
+        "subtitle": "Kunst, Musik, Literatur & Erbe"
       },
       "aiPlanner": {
-        "title": "AI Planner",
-        "subtitle": "Smart custom itineraries & flow"
+        "title": "KI-Reiseplaner",
+        "subtitle": "Intelligente Reiserouten nach Maß"
       },
       "aiGuide": {
-        "title": "AI Guide",
-        "subtitle": "Conversational audio heritage guide"
+        "title": "KI-Reiseführer",
+        "subtitle": "Interaktiver Audio-Kulturguide"
       },
       "vrEgypt": {
-        "title": "VR Egypt",
-        "subtitle": "360 degree virtual monument portals"
+        "title": "VR Ägypten",
+        "subtitle": "360°-Virtual-Monument-Portale"
       },
       "hieroglyphScanner": {
-        "title": "Hieroglyph Scanner",
-        "subtitle": "Epigraphic visual symbol translator"
+        "title": "Hieroglyphen-Scanner",
+        "subtitle": "Epigrafischer Symbolübersetzer"
       },
       "slang": {
-        "title": "EgyptSpeak",
-        "subtitle": "Authentic colloquial dialect engine"
+        "title": "Ägyptisch Sprechen",
+        "subtitle": "Authentischer Dialekt-Übersetzer"
       },
       "memoryCore": {
-        "title": "Memory Core",
-        "subtitle": "Expedition travel journal & logs"
+        "title": "Reiseerinnerungen",
+        "subtitle": "Reisetagebuch & Protokolle"
       },
       "journal": {
         "title": "Journal",
-        "subtitle": "Editorial stories & essays"
+        "subtitle": "Redaktionelle Berichte & Essays"
       },
       "cinema": {
-        "title": "Cinema",
-        "subtitle": "Cinematic visual features"
+        "title": "Kino",
+        "subtitle": "Kinoreife Bilddokumentationen"
       },
       "shorts": {
-        "title": "Shorts",
-        "subtitle": "Vertical creator vignettes"
+        "title": "Kurzvideos",
+        "subtitle": "Vertikale Creator-Clips"
       },
       "shop": {
         "title": "Shop",
-        "subtitle": "Handcrafted authentic artifacts"
+        "subtitle": "Handgefertigte Unikate"
       },
       "egyptOfficial": {
-        "title": "Egypt Official",
-        "subtitle": "Presidency & sovereign heritage"
+        "title": "Offizielles Ägypten",
+        "subtitle": "Staatliche Institutionen & Erbe"
       },
       "nationalProjects": {
-        "title": "National Projects",
-        "subtitle": "Grand Egyptian Museum & renewals"
+        "title": "Nationale Projekte",
+        "subtitle": "Großes Ägyptisches Museum & mehr"
       },
       "bookings": {
-        "title": "Concierge Bookings",
-        "subtitle": "Flights, palaces & private reservations"
+        "title": "Concierge-Buchungen",
+        "subtitle": "Flüge, Paläste & Privatbuchungen"
       },
       "smartNavigator": {
         "title": "Smarter Navigator",
         "subtitle": "Echtzeit-GPS-Routenführung"
+      },
+      "egyptLife": {
+        "title": "Leben in Ägypten",
+        "subtitle": "Währungsrechner & Alltagsguide"
       }
-    }
+    },
+    "brand": "EGYPTX AI",
+    "tutHall": "Tut-Halle"
   },
   "home": {
     "title": "EgyptX KI",
@@ -142,7 +148,7 @@
         "desc": "Reisefotografien automatisch organisieren und aufwerten.",
         "action": "Erinnerungen ansehen"
       },
-      "foundation": "The Foundation"
+      "foundation": "Das Fundament"
     },
     "smartTourism": {
       "title": "Smart-Tourismus-Übersicht",
@@ -208,8 +214,8 @@
           "desc": "KI-gestützter Zugang zu Ägyptens historischen und archäologischen Daten"
         }
       },
-      "heading": "The EgyptX AI Ecosystem",
-      "subheading": "An intelligent network connecting all pillars of Egyptian tourism"
+      "heading": "Das EgyptX KI-Ökosystem",
+      "subheading": "Ein intelligentes Netzwerk für alle Säulen des ägyptischen Tourismus"
     },
     "mobility": {
       "title": "Intelligente Mobilität",
@@ -236,53 +242,53 @@
         "desc": "Integrierte Buchung für authentifizierte smarte Kreuzfahrten auf dem Nil."
       }
     },
-    "heroTagline": "The sovereign AI ecosystem uniting 7,000 years of heritage with bespoke modern travel.",
+    "heroTagline": "Das souveräne KI-Ökosystem, das 7.000 Jahre Kulturerbe mit maßgeschneidertem Reisen verbindet.",
     "sponsors": {
-      "header": "Official Partners & Sovereign Patrons",
-      "footnote": "Operating under the national digital transformation framework of the Arab Republic of Egypt.",
+      "header": "Offizielle Partner & Schirmherren",
+      "footnote": "Betrieben im Rahmen der nationalen digitalen Transformation der Arabischen Republik Ägypten.",
       "partners": {
         "tourismMinistry": {
-          "name": "MINISTRY OF TOURISM & ANTIQUITIES",
-          "category": "GOVERNMENT PATRON",
-          "tagline": "Sovereign Heritage Authority"
+          "name": "MINISTERIUM FÜR TOURISMUS & ALTERTÜMER",
+          "category": "STAATLICHE SCHIRMHERRSCHAFT",
+          "tagline": "Souveräne Kulturerbe-Behörde"
         },
         "antiquitiesCouncil": {
-          "name": "SUPREME COUNCIL OF ANTIQUITIES",
-          "category": "ARCHAEOLOGY",
-          "tagline": "Excavation & Preservation"
+          "name": "OBERSTER RAT FÜR ALTERTÜMER",
+          "category": "ARCHÄOLOGIE",
+          "tagline": "Ausgrabung & Erhaltung"
         },
         "unesco": {
-          "name": "UNESCO WORLD HERITAGE",
-          "category": "GLOBAL COOPERATION",
-          "tagline": "Memphis & Thebes Monuments"
+          "name": "UNESCO-WELTERBE",
+          "category": "GLOBALE KOOPERATION",
+          "tagline": "Monumente von Memphis & Theben"
         },
         "gem": {
-          "name": "GRAND EGYPTIAN MUSEUM",
-          "category": "CULTURAL INSTITUTION",
-          "tagline": "Giza Plateau Foundation"
+          "name": "GROSSES ÄGYPTISCHES MUSEUM",
+          "category": "KULTURINSTITUTION",
+          "tagline": "Gizeh-Plateau-Stiftung"
         },
         "egyptair": {
           "name": "EGYPTAIR",
-          "category": "NATIONAL CARRIER",
-          "tagline": "Star Alliance Member"
+          "category": "NATIONALE FLUGGESELLSCHAFT",
+          "tagline": "Star-Alliance-Mitglied"
         },
         "nmec": {
           "name": "NMEC FUSTAT",
-          "category": "CIVILIZATION MUSEUM",
-          "tagline": "Royal Mummies Gallery"
+          "category": "ZIVILISATIONSMUSEUM",
+          "tagline": "Halle der Königsmumien"
         }
       }
     },
     "events": {
-      "calendarTag": "Cultural Calendar",
-      "title": "Upcoming Events",
-      "subtitle": "Curated ceremonies, concerts, and seasonal gatherings across the Nile.",
-      "access": "Event Access"
+      "calendarTag": "Kulturkalender",
+      "title": "Kommende Veranstaltungen",
+      "subtitle": "Kuratierte Zeremonien, Konzerte und saisonale Treffen entlang des Nils.",
+      "access": "Veranstaltungszugang"
     }
   },
   "planner": {
     "title": "Planen Sie Ihre Ägypten-Reise",
-    "prompt": "Erzählen Sie uns von Ihrer Traumreise...",
+    "prompt": "Ägypten freut sich auf Ihren Besuch.. gestalten Sie Ihre Wunschreise",
     "whereFrom": "Woher kommen Sie?",
     "targetGov": "Zielgouvernement",
     "anywhere": "Überall in Ägypten",
@@ -299,7 +305,7 @@
     "accessibility": "Anforderungen an die Barrierefreiheit",
     "avoid": "Zu meidende Orte",
     "lessCrowded": "Weniger überfüllte Orte bevorzugen",
-    "generateBtn": "Generate My Egypt Journey",
+    "generateBtn": "Reiseplan erstellen",
     "loading1": "Analysiere Ihre Präferenzen...",
     "loading2": "Erstelle Ihre Reise...",
     "itineraryTitle": "Ihr persönlicher Reiseplan",
@@ -326,10 +332,10 @@
     "intBeaches": "Beaches",
     "intAdventure": "Adventure",
     "intFood": "Food",
-    "intCulture": "Culture",
-    "intNature": "Nature",
-    "styleSolo": "Solo",
-    "styleCouple": "Couple",
+    "intCulture": "Kultur",
+    "intNature": "Natur",
+    "styleSolo": "Alleinreisend",
+    "styleCouple": "Zu zweit",
     "styleFamily": "Family",
     "styleGroup": "Group",
     "planYour": "Planen Sie Ihre",
@@ -355,7 +361,38 @@
     "activitiesPlanned": "{count} geplante Aktivitäten",
     "findingPhoto": "Foto wird gesucht...",
     "tipLabel": "Tipp:",
-    "didYouKnowLabel": "Wussten Sie schon?"
+    "didYouKnowLabel": "Wussten Sie schon?",
+    "badge": "KI-Reiseplaner",
+    "step1Title": "Schritt 1: Ihre Reisegruppe",
+    "royalNameLabel": "Ihr königlicher Name / Titel",
+    "hyperPersonalized": "Hyper-personalisiert",
+    "royalNamePlaceholder": "z. B. Königlicher Reisender, Alexander oder Ihr Name",
+    "travelersLabel": "Anzahl der Reisenden",
+    "nextBtn": "Weiter",
+    "backBtn": "Zurück",
+    "step2Title": "Schritt 2: Wann reisen Sie?",
+    "countryOrigin": "Herkunftsland",
+    "step3Title": "Schritt 3: Top-Reiseziele",
+    "step3Subtitle": "Wählen Sie Ihre liebsten ägyptischen Reiseziele oder lassen Sie unseren KI-Guide suchen.",
+    "selectedCount": "Ausgewählt",
+    "aiChooseTitle": "KI-Auswahl (Smart Finder)",
+    "aiChooseDesc": "Sie kennen den Stadtnamen nicht? Geben Sie eine Beschreibung oder ein Wahrzeichen ein (z. B. Abu Simbel).",
+    "aiChoosePlaceholder": "Beschreibung, Monument oder Atmosphäre eingeben...",
+    "aiFinderBtn": "KI-Finder",
+    "aiMatchIdentified": "KI-Treffer gefunden",
+    "autoSelected": "Automatisch ausgewählt",
+    "famousFor": "Bekannt für:",
+    "resetBtn": "Zurücksetzen",
+    "quickPrompts": "Schnellvorschläge:",
+    "aiPick": "KI-Wahl",
+    "step4Title": "Schritt 4: Interessen & Tempo",
+    "interestsLabel": "Interessen",
+    "paceLabel": "Reisetempo",
+    "budgetLabel": "Gesamtbudget (USD)",
+    "royalTraveler": "Königlicher Reisender:",
+    "changeNamePlaceholder": "Name ändern...",
+    "errorTitle": "Hoppla! Etwas ist schiefgelaufen.",
+    "heroTitle": "Willkommen in Ägypten"
   },
   "explore": {
     "title": "Entdecke Ägypten",
@@ -372,6 +409,31 @@
       "nature": "Natur",
       "beach": "Strand",
       "hidden": "Versteckt"
+    },
+    "interactiveMap": "Interaktive Karte",
+    "loadingVerified": "Verifizierte Reiseziele werden geladen...",
+    "noDestinations": "Keine Reiseziele in dieser Kategorie gefunden.",
+    "catAll": "Alle",
+    "catAncient": "Antike Stätten",
+    "catMuseum": "Museen",
+    "catNature": "Natur",
+    "catReligious": "Religiöse Stätten",
+    "catCulture": "Kultur",
+    "catBeach": "Rotes Meer & Strände",
+    "catHidden": "Verborgenes Ägypten",
+    "cities": {
+      "Cairo": "Kairo",
+      "Giza": "Gizeh",
+      "Luxor": "Luxor",
+      "Aswan": "Assuan",
+      "Siwa": "Siwa",
+      "Fayoum": "Fayyum",
+      "Matrouh": "Matruh",
+      "Alexandria": "Alexandria",
+      "Red Sea": "Rotes Meer",
+      "Hurghada": "Hurghada",
+      "Sharm El Sheikh": "Scharm el-Scheich",
+      "Egypt": "Ägypten"
     }
   },
   "passport": {
@@ -538,7 +600,7 @@
       "desc": "Assuan bietet..."
     },
     "siwa": {
-      "name": "Siwa",
+      "name": "Oase Siwa",
       "tagline": "Die Wüstenoase",
       "highlights": "Salzseen",
       "desc": "Die Oase Siwa ist..."
@@ -555,7 +617,9 @@
       "highlights": "Korallenriffe",
       "desc": "Hurghada wurde..."
     },
-    "planJourney": "Plan My Journey Here →"
+    "planJourney": "Meine Reise hier planen",
+    "featured": "Ausgewählte Reiseziele",
+    "subtitle": "Von antiken Wundern bis zu verborgenen Oasen"
   },
   "footer": {
     "title": "EgyptX KI",
@@ -581,33 +645,33 @@
     "technology": "Technologie",
     "terms": "AGB & Datenschutz",
     "copy": "© 2026 EgyptX KI. Das nationale Smart-Tourismus-Ökosystem.",
-    "nationalProjects": "National Projects",
-    "egyptianCulture": "Egyptian Culture",
+    "nationalProjects": "Nationale Projekte",
+    "egyptianCulture": "Ägyptische Kultur",
     "journal": "Journal",
-    "contactUs": "Contact Us",
+    "contactUs": "Kontakt",
     "contactModal": {
-      "badge": "Connect with EgyptX AI",
-      "title": "Get in Touch",
-      "subtitle": "Have questions about smart itineraries, enterprise tourism partnerships, or AI heritage experiences? We are here to assist.",
-      "emailLabel": "Email",
+      "badge": "Mit EgyptX AI verbinden",
+      "title": "Kontakt aufnehmen",
+      "subtitle": "Haben Sie Fragen zu intelligenten Reiserouten, Tourismuspartnerschaften oder KI-Kulturerlebnissen? Wir helfen Ihnen gerne weiter.",
+      "emailLabel": "E-Mail",
       "hotlineLabel": "Hotline",
-      "hqLabel": "Cairo HQ",
-      "hqValue": "Zamalek, Cairo",
-      "nameLabel": "Your Full Name",
-      "emailInputLabel": "Email Address",
-      "subjectLabel": "Subject / Topic",
+      "hqLabel": "Hauptsitz Kairo",
+      "hqValue": "Zamalek, Kairo",
+      "nameLabel": "Ihr vollständiger Name",
+      "emailInputLabel": "E-Mail-Adresse",
+      "subjectLabel": "Betreff / Thema",
       "subjects": {
-        "general": "General Inquiry",
-        "planning": "AI Itinerary & Planning",
-        "smartSite": "Smart Site & Museum Access",
-        "enterprise": "Enterprise / Tourism Partner",
-        "press": "Press & Media"
+        "general": "Allgemeine Anfrage",
+        "planning": "KI-Reiseplanung",
+        "smartSite": "Intelligenter Museums- & Stättenzugang",
+        "enterprise": "Unternehmens- / Tourismuspartner",
+        "press": "Presse & Medien"
       },
-      "messageLabel": "Message",
-      "messagePlaceholder": "Tell us about your upcoming travel plans or question...",
-      "sendBtn": "Send Message",
-      "successTitle": "Thank you! Your message has been sent successfully.",
-      "successDesc": "An EgyptX representative will contact you shortly."
+      "messageLabel": "Nachricht",
+      "messagePlaceholder": "Erzählen Sie uns von Ihren Reiseplänen oder Ihrer Frage...",
+      "sendBtn": "Nachricht senden",
+      "successTitle": "Vielen Dank! Ihre Nachricht wurde erfolgreich gesendet.",
+      "successDesc": "Ein EgyptX-Vertreter wird sich in Kürze mit Ihnen in Verbindung setzen."
     }
   },
   "hidden": {
@@ -615,7 +679,25 @@
     "reducedCrowding": "Reduced Crowding",
     "loading": "Loading hidden gems...",
     "noData": "Platform visit data unavailable",
-    "aiRec": "AI Recommendation"
+    "aiRec": "AI Recommendation",
+    "title": "Verborgenes Ägypten",
+    "subtitle": "Entdecken Sie die unerzählten Geschichten der geheimnisvollsten Orte Ägyptens.",
+    "exploreBtn": "Verborgene Orte entdecken",
+    "missionDesc": "Entdecken Sie weniger überlaufene, einzigartige Orte, empfohlen von unserer KI.",
+    "missionDescFull": "Die Lenkung von Besuchern zu diesen Zielen entlastet große Monumente und stärkt die lokale Wirtschaft.",
+    "empty": "Keine verborgenen Schätze gefunden.",
+    "lockedTitle": "Exklusiver Elite-Tresor",
+    "lockedDesc": "Geheimes Grab und Kulturschatz. Erfordert EgyptX-Elite-Zugang.",
+    "lockedModalTitle": "Ägyptens geheime Tresore freischalten",
+    "lockedModalDesc": "Sie haben Ihren kostenlosen geheimen Tresor genutzt! Upgraden Sie auf EgyptX Elite für unbegrenzten Zugang.",
+    "unlockBtn": "Mit Elite freischalten",
+    "vipPass": "VIP-Tresorpass",
+    "freeVault": "1 kostenloser Tresor",
+    "eliteVault": "Elite-Tresor",
+    "aiRecTitle": "KI-Empfehlung",
+    "aiRecAwaiting": "Warten auf KI-Modellprognosen für diesen Ort.",
+    "exploreDest": "Reiseziel erkunden",
+    "noAi": "Keine KI-Empfehlung verfügbar."
   },
   "cta": {
     "title": "Erleben Sie Ägypten, intelligent.",
@@ -636,7 +718,10 @@
       "textiles": "Textilien",
       "jewelry": "Schmuck",
       "wood": "Holzkunst",
-      "traditional": "Traditionell"
+      "traditional": "Traditionell",
+      "woodwork": "Holzarbeiten",
+      "glass": "Glaskunst",
+      "leather": "Lederwaren"
     },
     "prod": {
       "1": "Handbemalte Fayoum-Tonschale",
@@ -646,8 +731,23 @@
       "5": "Perlmuttverzierte Box",
       "6": "Traditionelle Alabastervase",
       "7": "Handgeflochtener nubischer Korb",
-      "8": "Goldener Kartuschen-Anhänger"
-    }
+      "8": "Goldener Kartuschen-Anhänger",
+      "fayoum": "Fayyum-Keramikteller",
+      "scarab": "Silberner Skarabäus-Anhänger",
+      "khayamiya": "Khayamiya-Wandbehang",
+      "alabaster": "Alabastervase",
+      "papyrus": "Handbemalter Papyrus",
+      "copper": "Graviertes Kupfertablett",
+      "desc": {
+        "fayoum": "Handgefertigter Teller aus Fayyum",
+        "scarab": "Traditioneller Silberanhänger",
+        "khayamiya": "Authentische Zeltmacher-Applikation",
+        "alabaster": "Handgeschnitzte Vase aus Luxor",
+        "papyrus": "Antike Kunstkopie auf echtem Papyrus",
+        "copper": "Kunstvolles Kupfertablett im Mamluken-Stil"
+      }
+    },
+    "shopBtn": "Jetzt einkaufen"
   },
   "navigator": {
     "badge": "Echtzeit-Smart-Navigator",
@@ -843,5 +943,53 @@
     "subtitle": "Unbegrenzte KI-Zeitreisen, 3D-Rekonstruktionen und VIP-Concierge.",
     "upgradeBtn": "Auf Elite upgraden",
     "laterBtn": "Vielleicht später"
+  },
+  "kids": {
+    "title": "Kindermodus",
+    "subtitle": "Ein magisches, lehrreiches Erlebnis für junge Entdecker",
+    "playBtn": "Spielen & Lernen",
+    "start": "Abenteuer starten",
+    "games": "Lernspiele"
+  },
+  "login": {
+    "title": "Willkommen zurück",
+    "subtitle": "Melden Sie sich bei Ihrem Konto an",
+    "email": "E-Mail-Adresse",
+    "pass": "Passwort",
+    "btn": "Anmelden",
+    "register": "Konto erstellen",
+    "signIn": "Einloggen",
+    "access": "Auf Ihr Konto zugreifen",
+    "demoTourist": "Demo-Touristenkonto",
+    "demoBusiness": "Demo-Geschäftskonto",
+    "govLogin": "Behörden-Login"
+  },
+  "ambassadors": {
+    "badge": "EgyptX Globale Botschafter",
+    "title": "Weltikonen entdecken das zeitlose Ägypten",
+    "filterAll": "Alle Botschafter",
+    "filterGiza": "Gizeh & Kairo",
+    "filterLuxor": "Luxor",
+    "filterAswan": "Assuan & Alexandria",
+    "viewCarousel": "3D-Karussell",
+    "viewGrid": "Modernes Papyrus-Raster",
+    "viewStory": "Geschichte ansehen",
+    "exploreStory": "Story entdecken",
+    "vipTag": "EXKLUSIVE VIP-EINLADUNG",
+    "vipHeadline": "Ihre Geschichte gehört zu den Großen.",
+    "claimVip": "VIP-Status sichern",
+    "monument": "Monument",
+    "location": "Standort",
+    "role": "Rolle",
+    "storyHeading": "Botschafter-Bericht & Reflexion",
+    "removeCard": "Eigene Karte entfernen",
+    "close": "Schließen",
+    "createTitle": "VIP-Botschafterkarte erstellen",
+    "formName": "Name des Botschafters",
+    "formRole": "Rolle / Kategorie",
+    "formMonument": "Zugehöriges ägyptisches Monument",
+    "formPhoto": "Foto hochladen",
+    "formStory": "Ihre Erfahrung / Geschichte",
+    "publishBtn": "VIP-Karte veröffentlichen"
   }
 }

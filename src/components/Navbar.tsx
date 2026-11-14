@@ -75,7 +75,7 @@ function LanguageSelector({ locale, setLocale, solidNav }: { locale: string; set
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 mt-2 w-36 bg-[#F8F3E9] dark:bg-[#131A2A] border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(26,35,50,0.12),0_0_25px_rgba(197,160,89,0.05)] overflow-hidden z-50 py-1"
+            className="absolute right-0 mt-2 w-36 bg-[#EFE8D8] dark:bg-[#12100C] border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(26,35,50,0.12),0_0_25px_rgba(197,160,89,0.05)] overflow-hidden z-50 py-1"
           >
             {NAV_LANGUAGES.map((lang) => (
               <button
@@ -202,7 +202,7 @@ function NavHoverDropdown({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.96 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[320px] bg-[#F8F3E9] dark:bg-[#131A2A] text-[#1A2332] dark:text-white backdrop-blur-2xl border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(26,35,50,0.12),0_0_30px_rgba(197,160,89,0.08)] overflow-hidden z-50 p-2 space-y-1"
+            className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[320px] bg-[#EFE8D8] dark:bg-[#12100C] text-[#1A2332] dark:text-white backdrop-blur-2xl border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(26,35,50,0.12),0_0_30px_rgba(197,160,89,0.08)] overflow-hidden z-50 p-2 space-y-1"
           >
             <div className="px-3 pt-2 pb-1.5 border-b border-slate-200/70 dark:border-white/10 flex items-center justify-between">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C5A059] dark:text-[#D4AF37]">
@@ -316,7 +316,7 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         solidNav
-          ? 'backdrop-blur-xl bg-[#FDFBF7]/90 dark:bg-[#0B0F19]/90 border-b border-black/[0.06] dark:border-[#D4AF37]/20 py-3 shadow-[0_16px_40px_rgba(26,35,50,0.06)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.4)]'
+          ? 'backdrop-blur-xl bg-[#F7F3EB]/90 dark:bg-[#080705]/90 border-b border-black/[0.06] dark:border-[#D4AF37]/20 py-3 shadow-[0_16px_40px_rgba(26,35,50,0.06)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.4)]'
           : 'bg-transparent py-4'
       }`}
     >
@@ -415,7 +415,7 @@ export default function Navbar() {
               }`}
             >
               <Glasses className="w-3.5 h-3.5 text-[#C5A059]" />
-              <span>Tut Hall</span>
+              <span>{safeNav(t('nav.tutHall'), 'Tut Hall')}</span>
             </Link>
           </nav>
 
@@ -453,7 +453,7 @@ export default function Navbar() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 8, scale: 0.95 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute right-0 mt-2 w-48 bg-[#F8F3E9] dark:bg-[#131A2A] text-[#1A2332] dark:text-white border border-slate-200/80 dark:border-white/10 rounded-2xl overflow-hidden shadow-2xl z-50 p-1"
+                      className="absolute right-0 mt-2 w-48 bg-[#EFE8D8] dark:bg-[#12100C] text-[#1A2332] dark:text-white border border-slate-200/80 dark:border-white/10 rounded-2xl overflow-hidden shadow-2xl z-50 p-1"
                     >
                       <div className="px-3 py-2.5 border-b border-slate-200/70 dark:border-white/10">
                         <p className="text-xs font-bold text-[#1A2332] dark:text-white truncate">{user.name}</p>
@@ -529,7 +529,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
-            className="lg:hidden bg-[#F8F3E9]/98 dark:bg-[#0A1628]/98 backdrop-blur-2xl border-b border-black/[0.06] dark:border-[#C5A059]/25 shadow-xl overflow-hidden"
+            className="lg:hidden bg-[#EFE8D8]/98 dark:bg-[#12100C]/98 backdrop-blur-2xl border-b border-black/[0.06] dark:border-[#C5A059]/25 shadow-xl overflow-hidden"
           >
             <div className="max-w-7xl mx-auto px-4 pt-3 pb-8 space-y-3">
               {/* Home */}
@@ -650,7 +650,7 @@ export default function Navbar() {
                   className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[#C5A059]/15 border border-[#C5A059]/30 text-[#C5A059] text-xs font-bold uppercase tracking-wider hover:bg-[#C5A059]/25 transition-colors"
                 >
                   <Glasses className="w-4 h-4 text-[#C5A059]" />
-                  <span>Tut Hall</span>
+                  <span>{safeNav(t('nav.tutHall'), 'Tut Hall')}</span>
                 </Link>
               </div>
             </div>

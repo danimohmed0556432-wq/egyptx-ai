@@ -83,7 +83,7 @@ const getCategoryIcon = (category: string) => {
 };
 
 export default function NewsContent() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [activeCategory, setActiveCategory] = useState('All');
   const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
 
@@ -94,7 +94,7 @@ export default function NewsContent() {
   const categories = getCategories(t);
 
   return (
-    <main className="relative min-h-screen bg-[#FDFBF7] dark:bg-[#030712] text-slate-900 dark:text-white font-sans transition-colors duration-200">
+    <main dir={locale === 'ar' ? 'rtl' : 'ltr'} className="relative min-h-screen bg-[#FDFBF7] dark:bg-[#030712] text-slate-900 dark:text-white font-sans transition-colors duration-200">
       <Navbar />
       
       <div className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">

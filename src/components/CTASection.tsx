@@ -7,7 +7,7 @@ import { useLanguage } from '@/context/LanguageContext';
 export default function CTASection() {
   const { t } = useLanguage();
   return (
-    <section className="relative w-full py-32 bg-[#FDFBF7] dark:bg-[#070B13] overflow-hidden flex items-center justify-center border-t border-slate-200/60 dark:border-white/5 transition-colors duration-200">
+    <section className="relative w-full py-32 bg-[#F7F3EB] dark:bg-[#080705] overflow-hidden flex items-center justify-center border-t border-slate-200/60 dark:border-white/5 transition-colors duration-200">
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.06)_0%,transparent_70%)] pointer-events-none" />
 

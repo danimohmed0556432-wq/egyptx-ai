@@ -663,7 +663,7 @@ function CinematicLoading({
   }, [phase]);
 
   return (
-    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-[#FDFBF7]/92 dark:bg-[#030712]/92 backdrop-blur-xl">
+    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-[#F7F3EB]/92 dark:bg-[#080705]/92 backdrop-blur-xl">
       {/* Background ambient luxury glows */}
       <div className="absolute w-[500px] h-[500px] bg-[#C9A84C]/10 rounded-full blur-[140px] pointer-events-none -top-20 -left-20" />
       <div className="absolute w-[450px] h-[450px] bg-[#1B6B93]/15 rounded-full blur-[140px] pointer-events-none -bottom-20 -right-20" />
@@ -674,7 +674,7 @@ function CinematicLoading({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: -15 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 w-full max-w-lg bg-[#F8F3E9] dark:bg-[#0B1120]/80 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl dark:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(201,168,76,0.1)] text-center flex flex-col items-center overflow-hidden"
+        className="relative z-10 w-full max-w-lg bg-[#F8F3E9] dark:bg-[#12100C]/95 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl dark:shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(201,168,76,0.1)] text-center flex flex-col items-center overflow-hidden"
       >
         {/* Subtle top gold decorative line */}
         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#C9A84C] to-transparent opacity-80" />
@@ -758,7 +758,7 @@ function CinematicLoading({
         </div>
 
         {/* Subtitle description */}
-        <p className="text-gray-600 dark:text-white/60 text-xs md:text-sm max-w-sm mb-6 font-medium">
+        <p className="text-[#1A1510]/70 dark:text-[#F5EFE6]/65 text-xs md:text-sm max-w-sm mb-6 font-medium">
           {phase === 'success'
             ? 'Your personalized Egyptian expedition is ready.'
             : 'Applying real-time weather, crowds, and travel pacing models...'}
@@ -766,7 +766,7 @@ function CinematicLoading({
 
         {/* Progress bar container */}
         <div className="w-full max-w-xs">
-          <div className="w-full h-2 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden p-0.5 border border-slate-300 dark:border-white/10 shadow-inner">
+          <div className="w-full h-2 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden p-0.5 border border-[#76501F]/25 dark:border-[#D6A044]/25 shadow-inner">
             <motion.div
               className={`h-full rounded-full transition-all duration-300 ${
                 phase === 'success'
@@ -778,7 +778,7 @@ function CinematicLoading({
           </div>
           <div className="mt-2.5 flex justify-between items-center text-[11px] font-mono text-[#8A661C] dark:text-[#E2CB85]/90 px-0.5">
             <span className="font-bold tracking-wider">{displayProgress}%</span>
-            <span className="uppercase text-[9px] tracking-widest text-gray-500 dark:text-white/50">
+            <span className="uppercase text-[9px] tracking-widest text-[#1A1510]/65 dark:text-[#F5EFE6]/55">
               {phase === 'success' ? 'READY' : progress >= 90 ? 'FINALIZING...' : 'AI PROCESSING'}
             </span>
           </div>
@@ -805,26 +805,26 @@ function TripAssistant() {
   return (
     <div className="fixed bottom-6 right-6 z-50">
       {isOpen ? (
-        <div className="bg-[#FDFBF7]/98 dark:bg-[#0A1628]/95 backdrop-blur-xl border border-[#C9A84C]/30 w-80 rounded-2xl shadow-2xl overflow-hidden flex flex-col h-96">
+        <div className="bg-[#F7F3EB]/98 dark:bg-[#12100C]/95 backdrop-blur-xl border border-[#C9A84C]/30 w-80 rounded-2xl shadow-2xl overflow-hidden flex flex-col h-96">
           <div className="bg-[#C9A84C]/10 border-b border-[#C9A84C]/20 p-3 flex justify-between items-center">
             <span className="font-bold text-[#C9A84C] flex items-center gap-1.5 text-sm">
               <Sparkles className="w-4 h-4" /> Trip Assistant
             </span>
-            <button onClick={() => setIsOpen(false)} className="text-gray-500 hover:text-gray-900 dark:text-white/50 dark:hover:text-white">×</button>
+            <button onClick={() => setIsOpen(false)} className="text-gray-500 hover:text-[#1A1510] dark:text-[#F5EFE6]/50 dark:hover:text-white">×</button>
           </div>
           <div className="flex-1 p-3 overflow-y-auto space-y-3">
             {msgs.map((m, i) => (
-              <div key={i} className={`p-2 rounded-lg text-sm ${m.role === 'ai' ? 'bg-[#F8F3E9] dark:bg-white/5 text-gray-800 dark:text-white/90 mr-8 border border-slate-200 dark:border-transparent' : 'bg-[#C9A84C]/20 text-[#8A661C] dark:text-[#C9A84C] ml-8'}`}>
+              <div key={i} className={`p-2 rounded-lg text-sm ${m.role === 'ai' ? 'bg-[#EFE8D8] dark:bg-[#1A1611] text-[#1A1510] dark:text-[#F5EFE6]/90 mr-8 border border-slate-200 dark:border-transparent' : 'bg-[#C9A84C]/20 text-[#8A661C] dark:text-[#C9A84C] ml-8'}`}>
                 {m.text}
               </div>
             ))}
           </div>
           <form onSubmit={sendMsg} className="p-3 border-t border-slate-200 dark:border-white/10 flex gap-2">
-            <input value={input} onChange={e => setInput(e.target.value)} placeholder="Modify trip..." className="flex-1 bg-white dark:bg-white/5 border border-slate-300 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#C9A84C]" />
+            <input value={input} onChange={e => setInput(e.target.value)} placeholder="Modify trip..." className="flex-1 bg-white dark:bg-white/5 border border-[#76501F]/25 dark:border-[#D6A044]/25 rounded-lg px-3 py-1.5 text-sm text-[#1A1510] dark:text-[#F5EFE6] focus:outline-none focus:border-[#C9A84C]" />
           </form>
         </div>
       ) : (
-        <button onClick={() => setIsOpen(true)} aria-label="Open Trip Assistant" className="w-14 h-14 bg-gradient-to-r from-[#C9A84C] to-[#E2CB85] rounded-full flex items-center justify-center text-[#030712] shadow-[0_0_20px_rgba(201,168,76,0.4)] hover:scale-110 transition-transform">
+        <button onClick={() => setIsOpen(true)} aria-label="Open Trip Assistant" className="w-14 h-14 bg-gradient-to-r from-[#C9A84C] to-[#E2CB85] rounded-full flex items-center justify-center text-[#080705] shadow-[0_0_20px_rgba(201,168,76,0.4)] hover:scale-110 transition-transform">
           <MessageSquare className="w-6 h-6" />
         </button>
       )}
@@ -1298,7 +1298,7 @@ export default function PlannerContent() {
   const isFormValid = country && interests.length > 0 && travelStyle;
 
   return (
-    <main className="relative min-h-screen w-full bg-transparent text-gray-900 dark:text-white">
+    <main className="relative min-h-screen w-full bg-[#F7F3EB] dark:bg-[#080705] text-[#1A1510] dark:text-[#F5EFE6] transition-colors duration-200">
       {/* 1. INDEPENDENT BACKGROUND LAYER (Behind everything, doesn't affect width) */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div 
@@ -1306,7 +1306,7 @@ export default function PlannerContent() {
           style={{ backgroundImage: 'url(/contact-bg.png)' }}
         ></div>
         {/* Dark overlay to make cards pop */}
-        <div className="absolute inset-0 bg-[#FDFBF7]/92 dark:bg-[#0a0f1c]/85 transition-colors duration-200"></div> 
+        <div className="absolute inset-0 bg-[#F7F3EB]/92 dark:bg-[#080705]/88 transition-colors duration-200"></div> 
       </div>
 
       {/* 2. ORIGINAL CONTENT CONTAINER (No width constraints applied here) */}
@@ -1323,10 +1323,10 @@ export default function PlannerContent() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#C9A84C]/30 bg-[#F8F3E9] dark:bg-white/5 backdrop-blur-md mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#C9A84C]/30 bg-[#EFE8D8] dark:bg-[#1A1611] backdrop-blur-md mb-6"
           >
             <Bot className="w-4 h-4 text-[#C9A84C]" />
-            <span className="text-[#8A661C] dark:text-[#C9A84C] text-xs font-semibold tracking-wide uppercase">AI-Powered Journey Planner</span>
+            <span className="text-[#8A661C] dark:text-[#C9A84C] text-xs font-semibold tracking-wide uppercase">{t('planner.badge')}</span>
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -1334,14 +1334,13 @@ export default function PlannerContent() {
             transition={{ delay: 0.1 }}
             className="text-4xl md:text-6xl font-bold mb-4"
           >
-            <span className="bg-gradient-to-r from-[#C9A84C] via-[#E2CB85] to-[#C9A84C] bg-clip-text text-transparent">{t('planner.planYour')}</span>{' '}
-            <span className="text-gray-900 dark:text-white">{t('planner.journey')}</span>
+            <span className="bg-gradient-to-r from-[#76501F] via-[#B48A34] to-[#76501F] dark:from-[#F6E2B3] dark:via-[#D6A044] dark:to-[#F6E2B3] bg-clip-text text-transparent">{t('planner.heroTitle')}</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-gray-600 dark:text-white/50 text-lg max-w-2xl mx-auto"
+            className="text-[#1A1510]/75 dark:text-[#F5EFE6]/75 text-lg max-w-2xl mx-auto font-medium"
           >
             {t('planner.prompt')}
           </motion.p>
@@ -1359,7 +1358,7 @@ export default function PlannerContent() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
-              className="w-full bg-[#F8F3E9]/95 dark:bg-[#0A1628]/60 backdrop-blur-md rounded-3xl p-6 md:p-10 border border-slate-200 dark:border-[#C9A84C]/10 shadow-lg dark:shadow-none"
+              className="w-full bg-white/95 dark:bg-[#12100C]/95 backdrop-blur-md rounded-3xl p-6 md:p-10 border border-[#76501F]/25 dark:border-[#D6A044]/25 shadow-xl dark:shadow-[0_0_40px_rgba(214,160,68,0.08)]"
             >
               {/* Wizard Progress */}
               <div className="flex justify-between items-center mb-8 relative">
@@ -1367,7 +1366,7 @@ export default function PlannerContent() {
                   <div className="h-full bg-[#C9A84C] transition-all duration-300" style={{ width: `${((step - 1) / 3) * 100}%` }} />
                 </div>
                 {[1,2,3,4].map(s => (
-                  <div key={s} className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-colors ${step >= s ? 'bg-[#C9A84C] text-[#030712]' : 'bg-white dark:bg-[#060E1A] text-gray-500 dark:text-white/40 border border-slate-300 dark:border-white/20'}`}>
+                  <div key={s} className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-colors ${step >= s ? 'bg-[#C9A84C] text-[#080705]' : 'bg-[#EFE8D8] dark:bg-[#080705] text-[#76501F]/70 dark:text-[#F5EFE6]/45 border border-[#76501F]/25 dark:border-[#D6A044]/25'}`}>
                     {s}
                   </div>
                 ))}
@@ -1375,17 +1374,17 @@ export default function PlannerContent() {
 
               {step === 1 && (
                 <div className="space-y-6">
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Step 1: Your Travel Group</h3>
+                  <h3 className="text-2xl font-bold text-[#1A1510] dark:text-[#F5EFE6] mb-4">{t('planner.step1Title')}</h3>
 
                   {/* Royal Traveler Name Capture (Cocktail Party Effect) */}
                   <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#C9A84C]/15 via-white/5 to-transparent border border-[#C9A84C]/30 shadow-[0_0_20px_rgba(201,168,76,0.15)]">
-                    <label className="block text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center justify-between flex-wrap gap-2">
+                    <label className="block text-sm font-bold text-[#1A1510] dark:text-[#F5EFE6] mb-2 flex items-center justify-between flex-wrap gap-2">
                       <span className="flex items-center gap-2">
                         <Crown className="w-4 h-4 text-[#C9A84C] animate-pulse" />
-                        <span>{isAr ? 'اسمك الكريم (لإضفاء الطابع الملكي المخصص على رحلتك)' : 'Your Royal Name / Title'}</span>
+                        <span>{t('planner.royalNameLabel')}</span>
                       </span>
                       <span className="text-xs text-[#8A661C] dark:text-[#E2CB85] font-semibold">
-                        {isAr ? 'تخصيص فائق الدقة' : 'Hyper-Personalized'}
+                        {t('planner.hyperPersonalized')}
                       </span>
                     </label>
                     <div className="relative max-w-md">
@@ -1396,11 +1395,9 @@ export default function PlannerContent() {
                         placeholder={
                           user?.name
                             ? user.name
-                            : isAr
-                            ? 'مثال: سمو الأمير أحمد، سارة، أو اسمك المفضل'
-                            : 'e.g. Royal Traveler, Alexander, or your name'
+                            : t('planner.royalNamePlaceholder')
                         }
-                        className="w-full bg-white dark:bg-[#060E1A] border border-[#C9A84C]/40 focus:border-[#C9A84C] rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/30 text-sm shadow-inner transition-all"
+                        className="w-full bg-[#EFE8D8]/60 dark:bg-[#080705] border border-[#C9A84C]/40 focus:border-[#C9A84C] rounded-xl px-4 py-3 text-[#1A1510] dark:text-[#F5EFE6] placeholder-gray-400 dark:placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/30 text-sm shadow-inner transition-all"
                       />
                     </div>
                   </div>
@@ -1416,22 +1413,22 @@ export default function PlannerContent() {
                           className={`flex flex-col items-center p-5 rounded-xl border transition-all duration-200 ${
                             active
                               ? 'bg-[#C9A84C]/25 border-[#C9A84C] shadow-[0_0_25px_rgba(201,168,76,0.4)] scale-[1.02]'
-                              : 'bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 hover:border-[#C9A84C]/50 dark:hover:border-white/30 hover:bg-amber-50/30 dark:hover:bg-white/10'
+                              : 'bg-[#EFE8D8]/70 dark:bg-[#1A1611] border-[#76501F]/25 dark:border-[#D6A044]/25 hover:border-[#C9A84C]/50 dark:hover:border-white/30 hover:bg-amber-50/30 dark:hover:bg-white/10'
                           }`}
                         >
                         <span className="p-2 rounded-xl bg-[#C9A84C]/10 dark:bg-white/5 mb-2 text-[#C9A84C]">
                           <StyleIcon className="w-6 h-6" />
                         </span>
-                        <span className={`font-semibold text-sm ${active ? 'text-[#8A661C] dark:text-[#C9A84C]' : 'text-gray-700 dark:text-white/80'}`}>{s.label}</span>
+                        <span className={`font-semibold text-sm ${active ? 'text-[#8A661C] dark:text-[#C9A84C]' : 'text-[#1A1510]/85 dark:text-[#F5EFE6]/85'}`}>{s.label}</span>
                       </button>
                     );
                   })}
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-white/70 mb-3">Number of Travelers</label>
-                    <input type="number" min="1" max="50" value={travelers} onChange={(e) => setTravelers(Number(e.target.value))} className="w-full max-w-xs bg-white dark:bg-[#060E1A] border border-slate-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-[#C9A84C]/50" />
+                    <label className="block text-sm font-semibold text-[#1A1510]/80 dark:text-[#F5EFE6]/80 mb-3">{t('planner.travelersLabel')}</label>
+                    <input type="number" min="1" max="50" value={travelers} onChange={(e) => setTravelers(Number(e.target.value))} className="w-full max-w-xs bg-[#EFE8D8]/60 dark:bg-[#080705] border border-[#76501F]/25 dark:border-[#D6A044]/25 rounded-lg px-4 py-3 text-[#1A1510] dark:text-[#F5EFE6] focus:outline-none focus:border-[#C9A84C]/50" />
                   </div>
-                  <div className="flex justify-end pt-4"><button type="button" onClick={(e) => { e.preventDefault(); setStep(2); }} disabled={!travelStyle} className="px-6 py-2 bg-[#C9A84C] text-[#030712] font-bold rounded-xl disabled:opacity-50 hover:bg-[#E2CB85] transition-colors">Next →</button></div>
+                  <div className="flex justify-end pt-4"><button type="button" onClick={(e) => { e.preventDefault(); setStep(2); }} disabled={!travelStyle} className="px-6 py-2 bg-[#C9A84C] text-[#080705] font-bold rounded-xl disabled:opacity-50 hover:bg-[#E2CB85] transition-colors">{t('planner.nextBtn')} →</button></div>
                 </div>
               )}
 
@@ -1449,10 +1446,10 @@ export default function PlannerContent() {
                       opacity: 1;
                     }
                   `}</style>
-<h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Step 2: When are you going?</h3>
+<h3 className="text-2xl font-bold text-[#1A1510] dark:text-[#F5EFE6] mb-4">{t('planner.step2Title')}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 dark:text-white/70 mb-2">{t('planner.startDateLabel')}</label>
+                      <label className="block text-sm font-semibold text-[#1A1510]/80 dark:text-[#F5EFE6]/80 mb-2">{t('planner.startDateLabel')}</label>
                       <input type="date" min={todayDateStr} value={startDate} onChange={e => {
                         const nextStart = e.target.value;
                         setStartDate(nextStart);
@@ -1461,10 +1458,10 @@ export default function PlannerContent() {
                           const diff = Math.round((new Date(endDate).getTime() - new Date(nextStart).getTime()) / (1000 * 60 * 60 * 24));
                           if (diff >= 1 && diff <= 21) setDuration(diff);
                         }
-                      }} className="custom-date-picker w-full bg-white dark:bg-[#060E1A] border border-slate-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-[#C9A84C]/50 transition-colors" />
+                      }} className="custom-date-picker w-full bg-[#EFE8D8]/60 dark:bg-[#080705] border border-[#76501F]/25 dark:border-[#D6A044]/25 rounded-lg px-4 py-3 text-[#1A1510] dark:text-[#F5EFE6] focus:outline-none focus:border-[#C9A84C]/50 transition-colors" />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 dark:text-white/70 mb-2">{t('planner.endDateLabel')}</label>
+                      <label className="block text-sm font-semibold text-[#1A1510]/80 dark:text-[#F5EFE6]/80 mb-2">{t('planner.endDateLabel')}</label>
                       <input type="date" min={startDate || todayDateStr} value={endDate} onChange={e => {
                         const nextEnd = e.target.value;
                         setEndDate(nextEnd);
@@ -1473,21 +1470,21 @@ export default function PlannerContent() {
                           const diff = Math.round((new Date(nextEnd).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24));
                           if (diff >= 1) setDuration(Math.min(diff, 21));
                         }
-                      }} className="custom-date-picker w-full bg-white dark:bg-[#060E1A] border border-slate-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-[#C9A84C]/50 transition-colors" />
+                      }} className="custom-date-picker w-full bg-[#EFE8D8]/60 dark:bg-[#080705] border border-[#76501F]/25 dark:border-[#D6A044]/25 rounded-lg px-4 py-3 text-[#1A1510] dark:text-[#F5EFE6] focus:outline-none focus:border-[#C9A84C]/50 transition-colors" />
                     </div>
                   </div>
                   {dateError && (
                     <p className="text-sm text-red-500 dark:text-red-400 font-medium mt-2">{dateError}</p>
                   )}
                   <div className="mt-4">
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-white/70 mb-2">Country of Origin</label>
-                    <select value={country} onChange={e => setCountry(e.target.value)} className="w-full bg-white dark:bg-[#060E1A] border border-slate-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white">
-                      <option value="">Select Country</option>
+                    <label className="block text-sm font-semibold text-[#1A1510]/80 dark:text-[#F5EFE6]/80 mb-2">{t('planner.countryOrigin')}</label>
+                    <select value={country} onChange={e => setCountry(e.target.value)} className="w-full bg-[#EFE8D8]/60 dark:bg-[#080705] border border-[#76501F]/25 dark:border-[#D6A044]/25 rounded-lg px-4 py-3 text-[#1A1510] dark:text-[#F5EFE6]">
+                      <option value="">{t('planner.selectCountry')}</option>
                       {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
                     </select>
                   </div>
                   <div className="flex justify-between pt-4">
-                    <button onClick={() => setStep(1)} className="px-6 py-2 border border-slate-300 dark:border-white/20 text-gray-800 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-colors">← Back</button>
+                    <button onClick={() => setStep(1)} className="px-6 py-2 border border-[#76501F]/30 dark:border-[#D6A044]/30 text-[#1A1510] dark:text-[#F5EFE6] hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-colors">← {t('planner.backBtn')}</button>
                     <button onClick={() => {
                       if (!startDate || !endDate || !country) {
                         setDateError(t('planner.dateErrMissing'));
@@ -1509,7 +1506,7 @@ export default function PlannerContent() {
                       setDuration(diffDays);
                       setDateError(null);
                       setStep(3);
-                    }} disabled={!startDate || !endDate || !country} className="px-6 py-2 bg-[#C9A84C] text-[#030712] font-bold rounded-xl disabled:opacity-50">Next →</button>
+                    }} disabled={!startDate || !endDate || !country} className="px-6 py-2 bg-[#C9A84C] text-[#080705] font-bold rounded-xl disabled:opacity-50">{t('planner.nextBtn')} →</button>
                   </div>
                 </div>
               )}
@@ -1518,18 +1515,18 @@ export default function PlannerContent() {
                 <div className="space-y-6">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
                     <div>
-                      <h3 className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white">Step 3: Top Destinations</h3>
-                      <p className="text-sm text-gray-600 dark:text-white/60">Choose your favorite Egyptian destinations or let our AI guide find them for you.</p>
+                      <h3 className="text-2xl md:text-3xl font-extrabold text-[#1A1510] dark:text-[#F5EFE6]">{t('planner.step3Title')}</h3>
+                      <p className="text-sm text-[#1A1510]/70 dark:text-[#F5EFE6]/65">{t('planner.step3Subtitle')}</p>
                     </div>
                     {destinations.length > 0 && (
                       <span className="self-start sm:self-auto px-3 py-1 rounded-full bg-[#C9A84C]/20 border border-[#C9A84C]/40 text-[#C9A84C] text-xs font-bold">
-                        {destinations.length} Selected
+                        {destinations.length} {t('planner.selectedCount')}
                       </span>
                     )}
                   </div>
 
                   {/* ── AI CHOOSE (SMART FINDER) ── */}
-                  <div className="p-4 md:p-5 rounded-2xl bg-white/95 dark:bg-gradient-to-b dark:from-[#0A1628]/95 dark:to-[#060E1A]/95 border-2 border-[#C9A84C]/40 shadow-[0_0_30px_rgba(201,168,76,0.12)] space-y-4">
+                  <div className="p-4 md:p-5 rounded-2xl bg-[#F7F3EB] dark:bg-[#12100C] border-2 border-[#C9A84C]/40 shadow-[0_0_30px_rgba(201,168,76,0.12)] space-y-4">
                     <div className="flex items-center justify-between flex-wrap gap-2">
                       <div className="flex items-center gap-2">
                         <span className="p-1.5 rounded-lg bg-[#C9A84C]/20 border border-[#C9A84C]/40 text-[#C9A84C] shadow-[0_0_10px_rgba(201,168,76,0.3)]">
@@ -1537,29 +1534,29 @@ export default function PlannerContent() {
                         </span>
                         <div>
                           <h4 className="text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-[#8A661C] to-[#C9A84C] dark:from-white dark:via-[#E2CB85] dark:to-[#C9A84C]">
-                            AI Choose (Smart Finder)
+                            {t('planner.aiChooseTitle')}
                           </h4>
-                          <p className="text-xs text-gray-600 dark:text-white/60">
-                            Don\'t know the city name? Type any description or landmark in English or Arabic (e.g. \"أبو سمبل\" or \"the temple carved in the mountain\").
+                          <p className="text-xs text-[#1A1510]/70 dark:text-[#F5EFE6]/65">
+                            {t('planner.aiChooseDesc')}
                           </p>
                         </div>
                       </div>
                     </div>
 
                     {/* Glowing Interactive Search Bar */}
-                    <div className="relative flex items-center bg-[#FDFBF7] dark:bg-[#060E1A] border-2 border-[#C9A84C]/50 focus-within:border-[#C9A84C] focus-within:shadow-[0_0_25px_rgba(201,168,76,0.35)] rounded-2xl transition-all duration-300 p-1.5">
+                    <div className="relative flex items-center bg-[#F7F3EB] dark:bg-[#080705] border-2 border-[#C9A84C]/50 focus-within:border-[#C9A84C] focus-within:shadow-[0_0_25px_rgba(201,168,76,0.35)] rounded-2xl transition-all duration-300 p-1.5">
                       <Sparkles className="w-5 h-5 text-[#C9A84C] ml-3 shrink-0" />
                       <input
                         type="text"
                         value={aiDestQuery}
                         onChange={(e) => handleAiDestSearch(e.target.value)}
-                        placeholder="Type any description, monument or vibe (e.g., أبو سمبل, blue hole, temple carved in the mountain)..."
-                        className="w-full bg-transparent px-3 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/40 focus:outline-none text-sm md:text-base font-medium"
+                        placeholder={t('planner.aiChoosePlaceholder')}
+                        className="w-full bg-transparent px-3 py-2 text-[#1A1510] dark:text-[#F5EFE6] placeholder-gray-400 dark:placeholder-white/40 focus:outline-none text-sm md:text-base font-medium"
                       />
                       {aiDestQuery && (
                         <button
                           onClick={() => handleAiDestSearch('')}
-                          className="text-gray-400 hover:text-gray-900 dark:text-white/40 dark:hover:text-white px-2 py-1 text-xs"
+                          className="text-gray-400 hover:text-[#1A1510] dark:text-[#F5EFE6]/40 dark:hover:text-white px-2 py-1 text-xs"
                           title="Clear search"
                         >
                           ×
@@ -1567,10 +1564,10 @@ export default function PlannerContent() {
                       )}
                       <button
                         onClick={() => handleAiDestSearch(aiDestQuery)}
-                        className="px-4 py-2 bg-gradient-to-r from-[#C9A84C] to-[#E2CB85] text-[#030712] font-bold text-xs md:text-sm rounded-xl shrink-0 shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5"
+                        className="px-4 py-2 bg-gradient-to-r from-[#C9A84C] to-[#E2CB85] text-[#080705] font-bold text-xs md:text-sm rounded-xl shrink-0 shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5"
                       >
                         <Sparkles className="w-3.5 h-3.5" />
-                        AI Finder
+                        {t('planner.aiFinderBtn')}
                       </button>
                     </div>
 
@@ -1581,28 +1578,28 @@ export default function PlannerContent() {
                           initial={{ opacity: 0, y: -8, scale: 0.98 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                          className="bg-gradient-to-r from-[#C9A84C]/15 via-[#F8F3E9] to-[#1B6B93]/15 dark:from-[#C9A84C]/15 dark:via-[#0A1628]/95 dark:to-[#1B6B93]/20 border-2 border-[#C9A84C] rounded-2xl p-4 shadow-[0_0_30px_rgba(201,168,76,0.2)] backdrop-blur-md"
+                          className="bg-gradient-to-r from-[#C9A84C]/15 via-[#F8F3E9] to-[#1B6B93]/15 dark:from-[#C9A84C]/15 dark:via-[#12100C]/95 dark:to-[#1B6B93]/20 border-2 border-[#C9A84C] rounded-2xl p-4 shadow-[0_0_30px_rgba(201,168,76,0.2)] backdrop-blur-md"
                         >
                           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                             <div className="flex items-start gap-3">
-                              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C9A84C] to-[#E2CB85] text-[#030712] flex items-center justify-center shrink-0 shadow-md">
+                              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C9A84C] to-[#E2CB85] text-[#080705] flex items-center justify-center shrink-0 shadow-md">
                                 <Sparkles className="w-5 h-5" />
                               </div>
                               <div>
                                 <div className="flex items-center gap-2 flex-wrap">
-                                  <span className="text-xs font-bold uppercase tracking-wider text-[#C9A84C]">AI Match Identified</span>
-                                  <span className="text-gray-900 dark:text-white font-extrabold text-lg">→ {aiDestMatch.dest}</span>
+                                  <span className="text-xs font-bold uppercase tracking-wider text-[#C9A84C]">{t('planner.aiMatchIdentified')}</span>
+                                  <span className="text-[#1A1510] dark:text-[#F5EFE6] font-extrabold text-lg">→ {aiDestMatch.dest}</span>
                                   <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 font-semibold flex items-center gap-1">
-                                    Auto-Selected for Trip
+                                    {t('planner.autoSelected')}
                                   </span>
                                 </div>
-                                <p className="text-sm text-gray-800 dark:text-white/90 mt-1 leading-relaxed">
+                                <p className="text-sm text-[#1A1510] dark:text-[#F5EFE6]/90 mt-1 leading-relaxed">
                                   {aiDestMatch.reason}
                                 </p>
                                 <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-                                  <span className="text-xs text-gray-500 dark:text-white/50">Famous for:</span>
+                                  <span className="text-xs text-[#1A1510]/65 dark:text-[#F5EFE6]/55">{t('planner.famousFor')}</span>
                                   {aiDestMatch.landmarks.slice(0, 4).map(lm => (
-                                    <span key={lm} className="text-xs px-2 py-0.5 rounded-md bg-white dark:bg-white/10 text-gray-800 dark:text-white/90 border border-slate-200 dark:border-white/5">
+                                    <span key={lm} className="text-xs px-2 py-0.5 rounded-md bg-white dark:bg-white/10 text-[#1A1510] dark:text-[#F5EFE6]/90 border border-slate-200 dark:border-white/5">
                                       {lm}
                                     </span>
                                   ))}
@@ -1615,9 +1612,9 @@ export default function PlannerContent() {
                                 setAiDestMatch(null);
                                 setAiDestQuery('');
                               }}
-                              className="text-xs text-gray-600 hover:text-gray-900 dark:text-white/60 dark:hover:text-white px-3 py-1.5 rounded-lg border border-slate-300 dark:border-white/10 hover:border-slate-400 dark:hover:border-white/30 transition-colors shrink-0"
+                              className="text-xs text-gray-600 hover:text-[#1A1510] dark:text-[#F5EFE6]/60 dark:hover:text-white px-3 py-1.5 rounded-lg border border-[#76501F]/25 dark:border-[#D6A044]/25 hover:border-slate-400 dark:hover:border-white/30 transition-colors shrink-0"
                             >
-                              Reset
+                              {t('planner.resetBtn')}
                             </button>
                           </div>
                         </motion.div>
@@ -1626,12 +1623,12 @@ export default function PlannerContent() {
 
                     {/* Quick Inspiration Pills */}
                     <div className="flex items-center gap-2 overflow-x-auto pb-1 custom-scroll">
-                      <span className="text-xs text-gray-500 dark:text-white/50 shrink-0 font-medium">Quick Prompts:</span>
+                      <span className="text-xs text-[#1A1510]/65 dark:text-[#F5EFE6]/55 shrink-0 font-medium">{t('planner.quickPrompts')}</span>
                       {QUICK_AI_PROMPTS.map((p) => (
                         <button
                           key={p.label}
                           onClick={() => handleAiDestSearch(p.query)}
-                          className="px-3 py-1 rounded-full text-xs font-medium bg-[#F8F3E9] dark:bg-white/5 hover:bg-[#C9A84C]/20 border border-slate-200 dark:border-white/10 hover:border-[#C9A84C]/50 text-gray-700 dark:text-white/80 hover:text-[#8A661C] dark:hover:text-[#C9A84C] transition-all shrink-0 whitespace-nowrap"
+                          className="px-3 py-1 rounded-full text-xs font-medium bg-[#EFE8D8] dark:bg-[#1A1611] hover:bg-[#C9A84C]/20 border border-slate-200 dark:border-white/10 hover:border-[#C9A84C]/50 text-[#1A1510]/85 dark:text-[#F5EFE6]/85 hover:text-[#8A661C] dark:hover:text-[#C9A84C] transition-all shrink-0 whitespace-nowrap"
                         >
                           {p.label}
                         </button>
@@ -1661,9 +1658,9 @@ export default function PlannerContent() {
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120] via-[#0B1120]/50 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
                             {isAiMatched && (
-                              <div className="absolute top-3 left-3 bg-gradient-to-r from-[#C9A84C] to-[#E2CB85] text-[#030712] font-black text-[11px] px-2.5 py-1 rounded-full shadow-lg flex items-center gap-1 z-10 animate-pulse">
+                              <div className="absolute top-3 left-3 bg-gradient-to-r from-[#C9A84C] to-[#E2CB85] text-[#080705] font-black text-[11px] px-2.5 py-1 rounded-full shadow-lg flex items-center gap-1 z-10 animate-pulse">
                                 <Sparkles className="w-3 h-3" />
-                                AI Pick
+                                {t('planner.aiPick')}
                               </div>
                             )}
                             {active && (
@@ -1689,23 +1686,23 @@ export default function PlannerContent() {
                       .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(201, 168, 76, 0.6); }
                     `}</style>
                     <div className="flex justify-between pt-4">
-                    <button onClick={() => setStep(2)} className="px-6 py-2 border border-slate-300 dark:border-white/20 text-gray-800 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-colors">← Back</button>
-                    <button onClick={() => setStep(4)} disabled={destinations.length===0} className="px-6 py-2 bg-[#C9A84C] text-[#030712] font-bold rounded-xl disabled:opacity-50">Next →</button>
+                    <button onClick={() => setStep(2)} className="px-6 py-2 border border-[#76501F]/30 dark:border-[#D6A044]/30 text-[#1A1510] dark:text-[#F5EFE6] hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-colors">← {t('planner.backBtn')}</button>
+                    <button onClick={() => setStep(4)} disabled={destinations.length===0} className="px-6 py-2 bg-[#C9A84C] text-[#080705] font-bold rounded-xl disabled:opacity-50">{t('planner.nextBtn')} →</button>
                   </div>
                 </div>
               )}
 
               {step === 4 && (
                 <div className="space-y-6">
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Step 4: Interests & Pace</h3>
+                  <h3 className="text-2xl font-bold text-[#1A1510] dark:text-[#F5EFE6] mb-4">{t('planner.step4Title')}</h3>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-white/70 mb-4">Interests</label>
+                    <label className="block text-sm font-semibold text-[#1A1510]/80 dark:text-[#F5EFE6]/80 mb-4">{t('planner.interestsLabel')}</label>
                     <div className="flex flex-wrap gap-3">
                       {getInterests(t).map(i => {
                         const active = interests.includes(i.id);
                         const InterestIcon = i.icon;
                         return (
-                          <button key={i.id} onClick={() => toggleInterest(i.id)} className={`flex items-center gap-2 px-5 py-3 rounded-xl border text-sm font-medium transition-all ${active ? 'bg-[#C9A84C]/20 border-[#C9A84C] text-[#8A661C] dark:text-[#C9A84C] font-semibold' : 'bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 text-gray-700 dark:text-white/60 hover:border-[#C9A84C]/40'}`}>
+                          <button key={i.id} onClick={() => toggleInterest(i.id)} className={`flex items-center gap-2 px-5 py-3 rounded-xl border text-sm font-medium transition-all ${active ? 'bg-[#C9A84C]/20 border-[#C9A84C] text-[#8A661C] dark:text-[#C9A84C] font-semibold' : 'bg-[#EFE8D8]/70 dark:bg-[#1A1611] border-[#76501F]/25 dark:border-[#D6A044]/25 text-gray-700 dark:text-white/60 hover:border-[#C9A84C]/40'}`}>
                             <InterestIcon className="w-4 h-4 shrink-0" />
                             <span>{i.label}</span>
                           </button>
@@ -1714,13 +1711,13 @@ export default function PlannerContent() {
                     </div>
                   </div>
                   <div className="mt-6">
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-white/70 mb-2">Pace</label>
-                    <select value={pace} onChange={e => setPace(e.target.value)} className="w-full bg-white dark:bg-[#060E1A] border border-slate-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white">
+                    <label className="block text-sm font-semibold text-[#1A1510]/80 dark:text-[#F5EFE6]/80 mb-2">{t('planner.paceLabel')}</label>
+                    <select value={pace} onChange={e => setPace(e.target.value)} className="w-full bg-[#EFE8D8]/60 dark:bg-[#080705] border border-[#76501F]/25 dark:border-[#D6A044]/25 rounded-lg px-4 py-3 text-[#1A1510] dark:text-[#F5EFE6]">
                       {getPaces(t).map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
                     </select>
                   </div>
                   <div className="mt-4">
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-white/70 mb-2">Total Budget (USD)</label>
+                    <label className="block text-sm font-semibold text-[#1A1510]/80 dark:text-[#F5EFE6]/80 mb-2">{t('planner.budgetLabel')}</label>
                     <input
                       type="text"
                       inputMode="numeric"
@@ -1741,9 +1738,9 @@ export default function PlannerContent() {
                         if (digits) setBudget(digits);
                       }}
                       placeholder={t('planner.budgetPlaceholder').replaceAll('{amount}', String(minTotalBudget))}
-                      className="w-full bg-white dark:bg-[#060E1A] border border-slate-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white"
+                      className="w-full bg-[#EFE8D8]/60 dark:bg-[#080705] border border-[#76501F]/25 dark:border-[#D6A044]/25 rounded-lg px-4 py-3 text-[#1A1510] dark:text-[#F5EFE6]"
                     />
-                    <p className="text-xs text-gray-500 dark:text-white/50 mt-1.5">
+                    <p className="text-xs text-[#1A1510]/65 dark:text-[#F5EFE6]/55 mt-1.5">
                       {t('planner.minBudgetHint').replace('{days}', String(duration)).replace('{travelers}', String(travelers)).replace('{amount}', minTotalBudget.toLocaleString('en-US'))}
                     </p>
                     {budgetError && (
@@ -1751,11 +1748,11 @@ export default function PlannerContent() {
                     )}
                   </div>
 
-                  <div className="mt-4 p-3 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-between gap-3 flex-wrap">
+                  <div className="mt-4 p-3 rounded-xl bg-[#EFE8D8]/70 dark:bg-[#1A1611] border border-[#76501F]/25 dark:border-[#D6A044]/25 flex items-center justify-between gap-3 flex-wrap">
                     <div className="flex items-center gap-2">
                       <Crown className="w-4 h-4 text-[#C9A84C]" />
-                      <span className="text-xs text-gray-600 dark:text-white/70">
-                        {isAr ? 'المسافر الملكي:' : 'Royal Traveler:'}
+                      <span className="text-xs text-[#1A1510]/75 dark:text-[#F5EFE6]/75">
+                        {t('planner.royalTraveler')}
                       </span>
                       <span className="text-xs font-bold text-[#8A661C] dark:text-[#F3E5AB]">
                         {displayName}
@@ -1766,16 +1763,16 @@ export default function PlannerContent() {
                         type="text"
                         value={userName}
                         onChange={(e) => setUserName(e.target.value)}
-                        placeholder={isAr ? 'تعديل الاسم...' : 'Change name...'}
-                        className="w-36 bg-[#F8F3E9] dark:bg-[#060E1A] border border-slate-300 dark:border-white/10 focus:border-[#C9A84C]/60 rounded-lg px-2.5 py-1 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/40 focus:outline-none"
+                        placeholder={t('planner.changeNamePlaceholder')}
+                        className="w-36 bg-[#EFE8D8] dark:bg-[#080705] border border-[#76501F]/25 dark:border-[#D6A044]/25 focus:border-[#C9A84C]/60 rounded-lg px-2.5 py-1 text-xs text-[#1A1510] dark:text-[#F5EFE6] placeholder-gray-400 dark:placeholder-white/40 focus:outline-none"
                       />
                     </div>
                   </div>
                   <div className="flex justify-between pt-4">
-                    <button onClick={() => setStep(3)} className="px-6 py-2 border border-slate-300 dark:border-white/20 text-gray-800 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-colors">← Back</button>
-                    <button onClick={handleGenerate} disabled={!isFormValid} className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#C9A84C] to-[#E2CB85] text-[#030712] font-bold rounded-xl shadow-[0_0_20px_rgba(201,168,76,0.4)] disabled:opacity-50">
+                    <button onClick={() => setStep(3)} className="px-6 py-2 border border-[#76501F]/30 dark:border-[#D6A044]/30 text-[#1A1510] dark:text-[#F5EFE6] hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-colors">← {t('planner.backBtn')}</button>
+                    <button onClick={handleGenerate} disabled={!isFormValid} className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#C9A84C] to-[#E2CB85] text-[#080705] font-bold rounded-xl shadow-[0_0_20px_rgba(201,168,76,0.4)] disabled:opacity-50">
                       <Sparkles className="w-4 h-4" />
-                      <span>Generate Itinerary</span>
+                      <span>{t('planner.generateBtn')}</span>
                     </button>
                   </div>
                 </div>
@@ -1795,7 +1792,7 @@ export default function PlannerContent() {
               <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-red-500/20 border border-red-500/40 flex items-center justify-center text-red-400">
                 <AlertTriangle className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-red-800 dark:text-red-200 mb-2">Oops! Something went wrong.</h3>
+              <h3 className="text-xl font-bold text-red-800 dark:text-red-200 mb-2">{t('planner.errorTitle')}</h3>
               <p className="text-red-700 dark:text-red-200/70 mb-6">{error}</p>
               <button
                 onClick={() => setError(null)}
@@ -1838,8 +1835,8 @@ export default function PlannerContent() {
 
                 <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-3.5">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D4AF37] via-[#F3E5AB] to-[#C9A84C] text-[#030712] flex items-center justify-center shrink-0 shadow-md">
-                      <Crown className="w-5 h-5 text-[#030712] animate-pulse" />
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D4AF37] via-[#F3E5AB] to-[#C9A84C] text-[#080705] flex items-center justify-center shrink-0 shadow-md">
+                      <Crown className="w-5 h-5 text-[#080705] animate-pulse" />
                     </div>
 
                     <div className="space-y-0.5">
@@ -1849,7 +1846,7 @@ export default function PlannerContent() {
                       </div>
 
                       {/* Concise, elegant English greeting: "Your royal expedition is ready, [User's Name]. Tailored exclusively to your refined taste." */}
-                      <p className="text-sm sm:text-base font-medium text-gray-900 dark:text-white leading-relaxed">
+                      <p className="text-sm sm:text-base font-medium text-[#1A1510] dark:text-[#F5EFE6] leading-relaxed">
                         {isAr ? (
                           <>
                             مسارك الملكي جاهز يا <span className="text-[#8A661C] dark:text-[#F3E5AB] font-bold">{displayName}</span>. مصمم خصيصاً ليتناسب مع ذوقك الرفيع.
@@ -1881,7 +1878,7 @@ export default function PlannerContent() {
                         : `${displayName}'s Royal Egyptian Expedition (${duration} Days)`}
                     </h2>
                     <div className="flex flex-wrap gap-3">
-                      <span className="px-4 py-2 rounded-full bg-[#F8F3E9] dark:bg-white/5 backdrop-blur-md border border-slate-200 dark:border-white/10 text-gray-800 dark:text-white/90 font-medium shadow-sm flex items-center gap-2">
+                      <span className="px-4 py-2 rounded-full bg-[#EFE8D8] dark:bg-[#1A1611] backdrop-blur-md border border-slate-200 dark:border-white/10 text-[#1A1510] dark:text-[#F5EFE6]/90 font-medium shadow-sm flex items-center gap-2">
                         <Users className="w-4 h-4 text-[#C9A84C]" />
                         <span>{travelers} Traveler{travelers > 1 ? 's' : ''}</span>
                       </span>
@@ -1905,7 +1902,7 @@ export default function PlannerContent() {
                   <button
                     onClick={handleSaveTrip}
                     disabled={saving || saveSuccess}
-                    className="px-5 py-2.5 rounded-lg bg-[#F8F3E9] dark:bg-white/10 text-gray-900 dark:text-white text-sm font-semibold hover:bg-slate-200 dark:hover:bg-white/20 transition-colors disabled:opacity-50 border border-slate-300 dark:border-white/10"
+                    className="px-5 py-2.5 rounded-lg bg-[#F8F3E9] dark:bg-white/10 text-[#1A1510] dark:text-[#F5EFE6] text-sm font-semibold hover:bg-slate-200 dark:hover:bg-white/20 transition-colors disabled:opacity-50 border border-[#76501F]/25 dark:border-[#D6A044]/25"
                   >
                     {saving ? 'Saving...' : saveSuccess ? 'Saved!' : 'Save Trip'}
                   </button>
@@ -1918,10 +1915,10 @@ export default function PlannerContent() {
                       cityName: destinations[0] || (itinerary && itinerary[0]?.city) || 'Egypt',
                       travelerName: displayName,
                     })}
-                    className="relative group overflow-hidden px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#C9A84C] text-[#030712] text-sm font-extrabold hover:shadow-[0_0_25px_rgba(212,175,55,0.6)] transition-all flex items-center gap-2 active:scale-95"
+                    className="relative group overflow-hidden px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#C9A84C] text-[#080705] text-sm font-extrabold hover:shadow-[0_0_25px_rgba(212,175,55,0.6)] transition-all flex items-center gap-2 active:scale-95"
                   >
                     <span className="absolute inset-0 bg-white/30 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out pointer-events-none" />
-                    <Crown className="w-4 h-4 text-[#030712] animate-bounce" />
+                    <Crown className="w-4 h-4 text-[#080705] animate-bounce" />
                     <span>{isAr ? 'تسجيل / حجز الرحلة' : 'Register / Book this Journey'}</span>
                   </button>
                 </div>
@@ -1931,7 +1928,7 @@ export default function PlannerContent() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Map */}
                 <div className="lg:col-span-1">
-                  <div className="sticky top-24 bg-[#F8F3E9] dark:bg-[#0A1628]/60 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-[#C9A84C]/10 p-4 shadow-sm">
+                  <div className="sticky top-24 bg-[#F8F3E9] dark:bg-[#12100C]/90 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-[#C9A84C]/10 p-4 shadow-sm">
                     <h3 className="text-sm font-semibold text-gray-600 dark:text-white/50 uppercase tracking-wider mb-4 text-center">{t('planner.routeMap')}</h3>
                     <div className="w-full" style={{ maxHeight: '500px' }}>
                       <EgyptMap cities={destinations.length > 0 ? destinations : itinerary.map(d => d.city)} />
@@ -1947,7 +1944,7 @@ export default function PlannerContent() {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: dayIdx * 0.1 }}
-                      className="bg-[#F8F3E9]/90 dark:bg-[#0A1628]/60 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-[#C9A84C]/10 overflow-hidden shadow-sm"
+                      className="bg-white/90 dark:bg-[#12100C]/90 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-[#C9A84C]/10 overflow-hidden shadow-sm"
                     >
                       {/* Day header */}
                       <div className="px-6 py-4 border-b border-slate-200 dark:border-white/5 flex items-center justify-between gap-4">
@@ -1973,16 +1970,16 @@ export default function PlannerContent() {
                               travelStyle,
                               travelerName: displayName,
                             })}
-                            className="relative group overflow-hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-extrabold text-[#030712] bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#C9A84C] hover:shadow-[0_0_20px_rgba(212,175,55,0.6)] transition-all duration-300 active:scale-95 border border-[#D4AF37]"
+                            className="relative group overflow-hidden inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-extrabold text-[#080705] bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#C9A84C] hover:shadow-[0_0_20px_rgba(212,175,55,0.6)] transition-all duration-300 active:scale-95 border border-[#D4AF37]"
                           >
                             <span className="absolute inset-0 bg-white/30 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out pointer-events-none" />
-                            <Crown className="w-3.5 h-3.5 text-[#030712]" />
+                            <Crown className="w-3.5 h-3.5 text-[#080705]" />
                             <span>{t('planner.registerBookJourney')}</span>
                           </button>
                           <button
                             onClick={() => handleRegenerateDay(day.day)}
                             disabled={regeneratingDay !== null}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-white dark:bg-white/5 text-gray-700 dark:text-white/70 text-xs font-medium hover:text-gray-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors border border-slate-200 dark:border-white/10"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-white dark:bg-white/5 text-[#1A1510]/80 dark:text-[#F5EFE6]/80 text-xs font-medium hover:text-gray-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors border border-slate-200 dark:border-white/10"
                           >
                             <RotateCw className="w-3.5 h-3.5" />
                             <span>{t('planner.regenerateDay')}</span>
@@ -2011,7 +2008,7 @@ export default function PlannerContent() {
                       {/* Regenerating overlay / Activities */}
                       <div className="px-6 py-4 space-y-0 relative min-h-[100px]">
                         {regeneratingDay === day.day && (
-                          <div className="absolute inset-0 bg-[#0A1628]/80 backdrop-blur-sm z-10 flex items-center justify-center">
+                          <div className="absolute inset-0 bg-[#080705]/80 backdrop-blur-sm z-10 flex items-center justify-center">
                             <CinematicLoading progress={loadingProgress} phase={loadingPhase} />
                           </div>
                         )}
@@ -2052,7 +2049,7 @@ export default function PlannerContent() {
                             budget,
                             travelStyle,
                           })}
-                          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-[#030712] bg-gradient-to-r from-[#D4AF37] to-[#E2CB85] hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all active:scale-95"
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-[#080705] bg-gradient-to-r from-[#D4AF37] to-[#E2CB85] hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all active:scale-95"
                         >
                           <Sparkles className="w-3.5 h-3.5" />
                           <span>{isAr ? 'تسجيل / حجز هذا اليوم' : 'Book This Day Plan'}</span>
@@ -2067,7 +2064,7 @@ export default function PlannerContent() {
                     <div className="flex flex-wrap items-center justify-center gap-4">
                       <Link
                         href="/"
-                        className="inline-block px-8 py-3 rounded-xl bg-[#F8F3E9] dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 text-gray-900 dark:text-white font-semibold border border-slate-300 dark:border-white/10 transition-colors"
+                        className="inline-block px-8 py-3 rounded-xl bg-[#F8F3E9] dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 text-[#1A1510] dark:text-[#F5EFE6] font-semibold border border-[#76501F]/25 dark:border-[#D6A044]/25 transition-colors"
                       >
                         {t('planner.exploreAll')}
                       </Link>
@@ -2080,9 +2077,9 @@ export default function PlannerContent() {
                           cityName: destinations[0] || (itinerary && itinerary[0]?.city) || 'Egypt',
                           travelerName: displayName,
                         })}
-                        className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#E2CB85] text-[#030712] font-bold hover:shadow-[0_0_30px_rgba(201,168,76,0.5)] transition-all"
+                        className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#E2CB85] text-[#080705] font-bold hover:shadow-[0_0_30px_rgba(201,168,76,0.5)] transition-all"
                       >
-                        <Crown className="w-4 h-4 text-[#030712]" />
+                        <Crown className="w-4 h-4 text-[#080705]" />
                         <span>{isAr ? 'تسجيل / حجز الرحلة الكاملة' : 'Register / Book this Journey'}</span>
                       </button>
                     </div>

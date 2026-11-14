@@ -1,29 +1,23 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ExternalLink } from 'lucide-react';
-
-export interface CultureIconItem {
-  nameAr: string;
-  nameEn: string;
-  era: string;
-  descAr: string;
-  descEn: string;
-  category: string;
-  link: string;
-}
+import { ArrowUpRight, ArrowUpLeft } from 'lucide-react';
+import type { CultureIconEntry, CultureLang, CultureUiStrings } from '@/data/egyptianCultureData';
 
 interface CultureCardProps {
-  item: CultureIconItem;
-  personImage?: string;
+  item: CultureIconEntry;
+  lang: CultureLang;
+  ui: CultureUiStrings;
+  onSelect: (item: CultureIconEntry) => void;
 }
 
-export default function CultureCard({ item, personImage }: CultureCardProps) {
+export default function CultureCard({ item, lang, ui, onSelect }: CultureCardProps) {
   const [hasError, setHasError] = useState(false);
-  const showImage = Boolean(personImage && !hasError);
+  const localized = item.locales[lang] || item.locales.en;
+  const showImage = Boolean(item.image && !hasError);
+  const isRtl = lang === 'ar';
 
-  // Derive initials from English name
-  const initials = item.nameEn
+  const initials = localized.name
     .split(' ')
     .filter(Boolean)
     .map((word) => word[0])
@@ -31,82 +25,88 @@ export default function CultureCard({ item, personImage }: CultureCardProps) {
     .slice(0, 2)
     .toUpperCase();
 
+  const ArrowIcon = isRtl ? ArrowUpLeft : ArrowUpRight;
+
   return (
-    <div className="relative overflow-hidden rounded-2xl group border border-slate-200/80 dark:border-white/10 hover:border-[#C5A059] dark:hover:border-[#C5A059]/60 hover:shadow-xl hover:shadow-[#C5A059]/10 transition-all duration-300 flex flex-col bg-[#F8F3E9] dark:bg-[#0A1628] shadow-sm">
-      
-      {/* 1. IMAGE CONTAINER: Fixed proportional aspect ratio (aspect-[4/3] or h-64) with overflow-hidden */}
-      <div className="relative w-full aspect-[4/3] sm:h-64 overflow-hidden bg-slate-900 shrink-0">
+    <article
+      dir={isRtl ? 'rtl' : 'ltr'}
+      onClick={() => onSelect(item)}
+      className="relative overflow-hidden rounded-2xl group border border-[#76501F]/60 hover:border-[#D6A044] transition-all duration-300 flex flex-col bg-[#F8F3E9] dark:bg-[#0D0A06] shadow-[0_10px_30px_rgba(8,7,5,0.12)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.55)] hover:shadow-[0_20px_48px_rgba(214,160,68,0.18)] cursor-pointer"
+    >
+      {/* Subtle museum corner filigree accents */}
+      <span className="pointer-events-none absolute top-2 left-2 w-3 h-3 border-t border-l border-[#D6A044]/50 z-20 transition-colors group-hover:border-[#D6A044]" />
+      <span className="pointer-events-none absolute top-2 right-2 w-3 h-3 border-t border-r border-[#D6A044]/50 z-20 transition-colors group-hover:border-[#D6A044]" />
+      <span className="pointer-events-none absolute bottom-2 left-2 w-3 h-3 border-b border-l border-[#D6A044]/40 z-20 transition-colors group-hover:border-[#D6A044]" />
+      <span className="pointer-events-none absolute bottom-2 right-2 w-3 h-3 border-b border-r border-[#D6A044]/40 z-20 transition-colors group-hover:border-[#D6A044]" />
+
+      {/* Museum Portrait Frame */}
+      <div className="relative w-full aspect-[4/3] sm:h-64 overflow-hidden bg-[#120E09] shrink-0">
         {showImage ? (
           <img
-            src={personImage}
-            alt={item.nameEn}
+            src={item.image}
+            alt={localized.name}
             onError={() => setHasError(true)}
-            className="w-full h-full object-cover object-center opacity-90 group-hover:opacity-100 transition-transform duration-700 ease-out group-hover:scale-105"
+            className="w-full h-full object-cover object-center grayscale-[22%] sepia-[14%] group-hover:grayscale-0 group-hover:sepia-0 transition-all duration-700 ease-out group-hover:scale-[1.04]"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-[#0A1628] via-[#1B6B93]/25 to-[#C5A059]/25 flex items-center justify-center">
-            <div className="w-14 h-14 rounded-2xl bg-black/60 border border-[#C5A059]/40 flex items-center justify-center shadow-lg">
-              <span className="text-xl font-extrabold text-[#C5A059] select-none font-serif tracking-wider">
+          <div className="w-full h-full bg-gradient-to-br from-[#080705] via-[#21170D] to-[#76501F]/40 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-2xl bg-[#080705]/80 border border-[#D6A044]/50 flex items-center justify-center shadow-lg">
+              <span className="text-xl font-extrabold text-[#D6A044] select-none font-serif tracking-wider">
                 {initials}
               </span>
             </div>
           </div>
         )}
 
-        {/* Subtle Bottom Image Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
+        {/* Warm gold tint veil on hover + bottom dark vignette for crisp legibility */}
+        <div className="absolute inset-0 bg-[#D6A044]/0 group-hover:bg-[#D6A044]/10 transition-colors duration-500 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#080705] via-[#080705]/35 to-black/25 pointer-events-none" />
 
-        {/* Top Badges (Category & Era) */}
-        <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 z-10">
-          <span className="text-[10px] sm:text-[11px] font-semibold text-[#E2CB85] bg-black/75 backdrop-blur-md border border-[#C5A059]/40 px-2.5 py-0.5 rounded-full tracking-wide shadow-sm truncate max-w-[70%]">
-            {item.category}
+        {/* Top Badges: Epithet Pill & Era Medallion */}
+        <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between gap-2 z-10">
+          <span className="text-[11px] font-semibold text-[#F5DFA0] bg-[#080705]/80 backdrop-blur-md border border-[#D6A044]/45 px-3 py-1 rounded-full tracking-wide shadow-sm truncate max-w-[66%]">
+            {localized.epithet}
           </span>
-          <span className="text-[10px] text-gray-200 font-mono bg-black/75 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/15 shrink-0 shadow-sm">
+          <span
+            dir="ltr"
+            className="text-[10px] font-mono font-semibold text-[#F5EFE6] bg-[#080705]/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-[#D6A044]/35 shrink-0 shadow-sm"
+          >
             {item.era}
           </span>
         </div>
 
-        {/* Bottom Image Overlay Names */}
-        <div className="absolute bottom-2.5 left-3 right-3 z-10">
-          <h3 className="text-lg sm:text-xl font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] leading-tight">
-            {item.nameAr}
+        {/* Bottom Overlay: Icon Name in large serif/display typography */}
+        <div className="absolute bottom-3.5 left-4 right-4 z-10 text-start">
+          <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#FBF7EE] drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-tight tracking-tight">
+            {localized.name}
           </h3>
-          <h4 className="text-xs sm:text-sm font-serif font-medium text-[#E2CB85] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] tracking-wide">
-            {item.nameEn}
-          </h4>
         </div>
       </div>
 
-      {/* 2. CONTENT CONTAINER: Alabaster off-white in light mode, obsidian navy in dark */}
-      <div className="p-4 sm:p-5 flex flex-col justify-between flex-grow bg-[#F8F3E9] dark:bg-[#0A1628]">
-        
-        {/* Descriptions Block */}
-        <div className="space-y-1 mb-4">
-          <p className="text-xs sm:text-sm text-[#1A2332] dark:text-gray-200 leading-snug font-medium line-clamp-2">
-            {item.descAr}
-          </p>
-          <p className="text-[11px] sm:text-xs text-slate-600 dark:text-gray-400 leading-snug font-light italic line-clamp-2">
-            {item.descEn}
-          </p>
-        </div>
+      {/* Content Container */}
+      <div className="p-5 flex flex-col justify-between flex-grow bg-[#F8F3E9] dark:bg-[#0D0A06] text-start">
+        <p className="text-sm text-[#1A2332]/90 dark:text-[#E8DFCE]/90 leading-relaxed font-medium line-clamp-2 mb-5">
+          {localized.summary}
+        </p>
 
-        {/* Footer Action */}
-        <div className="pt-3 border-t border-slate-200/80 dark:border-white/10 flex items-center justify-between mt-auto">
-          <span className="text-[10px] text-slate-500 dark:text-gray-400 font-mono tracking-wider uppercase">
-            EgyptX Heritage
+        {/* Tactile Gold-Accented Footer Action */}
+        <div className="pt-3.5 border-t border-[#76501F]/25 dark:border-[#76501F]/40 flex items-center justify-between mt-auto">
+          <span className="text-[11px] text-[#76501F] dark:text-[#D6A044]/80 font-semibold tracking-wider uppercase">
+            {ui.heritageTag}
           </span>
-          <a
-            href={item.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/80 dark:bg-white/5 hover:bg-[#C5A059] hover:text-slate-950 dark:hover:bg-[#C5A059] dark:hover:text-slate-950 text-[11px] font-semibold text-[#1A2332] dark:text-white/90 border border-slate-200 dark:border-white/15 hover:border-[#C5A059] transition-all duration-200 cursor-pointer shadow-sm"
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(item);
+            }}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#21170D]/5 dark:bg-[#21170D] hover:bg-[#D6A044] text-[#76501F] dark:text-[#F5DFA0] hover:text-[#080705] dark:hover:text-[#080705] text-xs font-bold border border-[#76501F]/40 hover:border-[#D6A044] transition-all duration-200 cursor-pointer shadow-sm"
           >
-            <span>Learn More · اقرأ المزيد</span>
-            <ExternalLink className="w-3 h-3" />
-          </a>
+            <span>{ui.learnMore}</span>
+            <ArrowIcon className="w-3.5 h-3.5" />
+          </button>
         </div>
-
       </div>
-    </div>
+    </article>
   );
 }

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Amiri, Aref_Ruqaa, Cairo } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -10,6 +10,24 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const amiri = Amiri({
+  variable: "--font-amiri",
+  subsets: ["arabic", "latin"],
+  weight: ["400", "700"],
+});
+
+const arefRuqaa = Aref_Ruqaa({
+  variable: "--font-ruqaa",
+  subsets: ["arabic", "latin"],
+  weight: ["400", "700"],
+});
+
+const cairo = Cairo({
+  variable: "--font-cairo",
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const viewport: Viewport = {
@@ -43,7 +61,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${amiri.variable} ${arefRuqaa.variable} ${cairo.variable} h-full antialiased`}
     >
       <head>
         <script
@@ -56,6 +74,11 @@ export default function RootLayout({
                   document.documentElement.classList.remove('dark');
                   document.documentElement.setAttribute('data-theme', 'light');
                   document.documentElement.style.colorScheme = 'light';
+                } else if (saved === 'maspero') {
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.classList.remove('light');
+                  document.documentElement.setAttribute('data-theme', 'maspero');
+                  document.documentElement.style.colorScheme = 'dark';
                 } else {
                   document.documentElement.classList.add('dark');
                   document.documentElement.classList.remove('light');
@@ -75,7 +98,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-[#FDFBF7] text-[#1A2332] dark:bg-[#0B0F19] dark:text-[#F8FAFC]">
+      <body className="min-h-full flex flex-col bg-[#F7F3EB] text-[#1A1510] dark:bg-[#080705] dark:text-[#F5EFE6] transition-colors duration-200">
         <Providers>
           {children}
         </Providers>

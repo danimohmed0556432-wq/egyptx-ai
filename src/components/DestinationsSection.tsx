@@ -15,6 +15,7 @@ const getDestinations = (t: any) => [
     highlights: t('destinations.giza.highlights'),
     image: '/images/giza.jpg',
     imageUrl: '/images/giza.jpg',
+    fallbackImage: '/destinations/giza.jpg',
     video: '/videos/giza.mp4',
     description: t('destinations.giza.desc'),
   },
@@ -25,6 +26,7 @@ const getDestinations = (t: any) => [
     highlights: t('destinations.luxor.highlights'),
     image: '/luxor-majestic-temple.png',
     imageUrl: '/luxor-majestic-temple.png',
+    fallbackImage: '/destinations/luxor.jpg',
     video: '/videos/luxor.mp4',
     description: t('destinations.luxor.desc'),
   },
@@ -35,6 +37,7 @@ const getDestinations = (t: any) => [
     highlights: t('destinations.aswan.highlights'),
     image: '/aswan-nile-felucca.png',
     imageUrl: '/aswan-nile-felucca.png',
+    fallbackImage: '/destinations/aswan.jpg',
     video: '/videos/aswan.mp4',
     description: t('destinations.aswan.desc'),
   },
@@ -45,6 +48,7 @@ const getDestinations = (t: any) => [
     highlights: t('destinations.siwa.highlights'),
     image: '/siwa-magic-springs.png',
     imageUrl: '/siwa-magic-springs.png',
+    fallbackImage: '/destinations/siwa-oasis.jpg',
     video: '/videos/siwa.mp4',
     description: t('destinations.siwa.desc'),
   },
@@ -55,6 +59,7 @@ const getDestinations = (t: any) => [
     highlights: t('destinations.fayoum.highlights'),
     image: '/fayoum-wadi-waterfalls.png',
     imageUrl: '/fayoum-wadi-waterfalls.png',
+    fallbackImage: '/destinations/fayoum.jpg',
     video: '/videos/fayoum.mp4',
     description: t('destinations.fayoum.desc'),
   },
@@ -65,6 +70,7 @@ const getDestinations = (t: any) => [
     highlights: t('destinations.hurghada.highlights'),
     image: '/hurghada-red-sea-reef.png',
     imageUrl: '/hurghada-red-sea-reef.png',
+    fallbackImage: '/destinations/hurghada.jpg',
     video: '/videos/hurghada.mp4',
     description: t('destinations.hurghada.desc'),
   },
@@ -80,6 +86,7 @@ const LANDMARK_UNSPLASH_IMAGES = [
 export default function DestinationsSection() {
   const { t } = useLanguage();
   const [selectedDestination, setSelectedDestination] = useState<any | null>(null);
+  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -115,7 +122,7 @@ export default function DestinationsSection() {
   };
 
   return (
-    <section className="py-28 md:py-36 bg-[#FDFBF7] dark:bg-[#0B0F19] text-slate-900 dark:text-white relative overflow-hidden">
+    <section className="py-28 md:py-36 bg-[#F7F3EB] dark:bg-[#080705] text-[#1A1510] dark:text-[#F5EFE6] relative overflow-hidden">
       {/* Subtle Torchlight glow */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#C5A059]/5 blur-[130px] pointer-events-none" />
 
@@ -152,28 +159,29 @@ export default function DestinationsSection() {
               key={dest.id}
               variants={itemVariants}
               onClick={() => setSelectedDestination(dest)}
-              className="group relative flex flex-col h-[410px] rounded-2xl overflow-hidden bg-[#F8F3E9] dark:bg-[#131A2A] border border-slate-200/80 dark:border-white/5 shadow-sm dark:shadow-none hover:shadow-md dark:hover:border-[#D4AF37]/30 transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+              className="group relative flex flex-col h-[410px] rounded-2xl overflow-hidden bg-white dark:bg-[#12100C] border border-[#76501F]/25 dark:border-[#D6A044]/25 shadow-sm dark:shadow-none hover:shadow-md dark:hover:border-[#D6A044]/50 transition-all duration-300 hover:-translate-y-1 cursor-pointer">
               {/* Full Card Hover Background Image (hidden by default, 0.3 opacity on hover) */}
               <div
                 className="absolute inset-0 bg-cover bg-center opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none z-0"
                 style={{ backgroundImage: `url('${bgImage}')` }}
               />
               {/* Visual Top Half */}
-              <div className="h-[60%] w-full overflow-hidden relative z-10">
+              <div className="h-[60%] w-full overflow-hidden relative z-10 bg-[#EFE8D8] dark:bg-[#1A1611]">
                 <div className="absolute inset-0 transition-all duration-500 opacity-90 group-hover:opacity-100 group-hover:scale-105 transform origin-center group-hover:brightness-110">
                   <Image 
-                    src={dest.image}
+                    src={failedImages[dest.id] ? dest.fallbackImage : dest.image}
                     alt={dest.name}
                     fill
                     className="object-cover"
+                    onError={() => setFailedImages((prev) => ({ ...prev, [dest.id]: true }))}
                   />
                 </div>
                 {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/90 via-[#0a0a0a]/30 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#080705]/90 via-[#080705]/30 to-transparent"></div>
               </div>
 
               {/* Bottom Content */}
-              <div className="h-[40%] p-6 flex flex-col justify-between bg-[#F8F3E9] dark:bg-[#131A2A] relative z-10 border-t border-slate-200/60 dark:border-white/5">
+              <div className="h-[40%] p-6 flex flex-col justify-between bg-white dark:bg-[#12100C] relative z-10 border-t border-[#76501F]/20 dark:border-[#D6A044]/15">
                 <div>
                   <h3 className="text-xl sm:text-2xl font-serif-editorial font-bold text-[#1A2332] dark:text-gray-100 mb-1 group-hover:text-yellow-600 dark:group-hover:text-yellow-500 transition-colors">
                     {dest.name}
@@ -208,7 +216,7 @@ export default function DestinationsSection() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="relative w-[95%] sm:w-full max-w-[600px] bg-[#FDFBF7] dark:bg-[#0a0a0a] rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-white/10"
+              className="relative w-[95%] sm:w-full max-w-[600px] bg-[#F7F3EB] dark:bg-[#12100C] rounded-2xl overflow-hidden shadow-2xl border border-[#76501F]/25 dark:border-[#D6A044]/25"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}

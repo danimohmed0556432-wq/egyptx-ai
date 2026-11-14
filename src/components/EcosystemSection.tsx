@@ -115,7 +115,7 @@ export default function EcosystemSection() {
   if (!mounted) return null;
 
   return (
-    <section className="relative py-24 bg-[#FDFBF7] dark:bg-[#0B0F19] overflow-hidden text-slate-900 dark:text-gray-100 transition-colors duration-200">
+    <section className="relative py-24 bg-[#F7F3EB] dark:bg-[#080705] overflow-hidden text-slate-900 dark:text-gray-100 transition-colors duration-200">
       {/* Background elements */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-sky-500/5 dark:bg-[#1B6B93]/10 rounded-full blur-[100px]"></div>
@@ -272,7 +272,7 @@ export default function EcosystemSection() {
                 }}
               >
                 <div className="flex flex-col items-center group cursor-pointer">
-                  <div className="w-[80px] h-[80px] rounded-full bg-[#F8F3E9] dark:bg-white/5 backdrop-blur-sm border border-[#C9A84C]/40 flex items-center justify-center group-hover:border-[#C9A84C] group-hover:shadow-[0_0_20px_rgba(201,168,76,0.2)] transition-all duration-300">
+                  <div className="w-[80px] h-[80px] rounded-full bg-[#EFE8D8] dark:bg-white/5 backdrop-blur-sm border border-[#C9A84C]/40 flex items-center justify-center group-hover:border-[#C9A84C] group-hover:shadow-[0_0_20px_rgba(201,168,76,0.2)] transition-all duration-300">
                     <div className="w-8 h-8 group-hover:scale-110 transition-transform duration-300">
                       <node.icon />
                     </div>
@@ -292,7 +292,7 @@ export default function EcosystemSection() {
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true }}
           >
-            <div className="w-24 h-24 rounded-full bg-[#F8F3E9] dark:bg-black/40 backdrop-blur-md border-2 border-[#C9A84C] flex items-center justify-center shadow-[0_0_30px_rgba(201,168,76,0.3)] relative">
+            <div className="w-24 h-24 rounded-full bg-[#EFE8D8] dark:bg-black/40 backdrop-blur-md border-2 border-[#C9A84C] flex items-center justify-center shadow-[0_0_30px_rgba(201,168,76,0.3)] relative">
               <div className="absolute inset-0 w-full h-full rounded-full border border-[#C9A84C]/50 animate-ping"></div>
               <div className="w-10 h-10 z-10">
                 <Icons.AI />
@@ -305,7 +305,7 @@ export default function EcosystemSection() {
             {nodes.map((node, index) => (
               <motion.div
                 key={`mobile-${node.id}`}
-                className="flex flex-col items-center bg-[#F8F3E9] dark:bg-white/5 p-4 rounded-xl border border-[#C9A84C]/25"
+                className="flex flex-col items-center bg-[#EFE8D8] dark:bg-white/5 p-4 rounded-xl border border-[#C9A84C]/25"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -330,13 +330,13 @@ export default function EcosystemSection() {
           ].map((stat, index) => (
             <motion.div
               key={index}
-              className="flex items-center gap-4 bg-[#F8F3E9] dark:bg-[#131A2A] border border-slate-200/80 dark:border-white/5 rounded-xl p-5 shadow-sm dark:shadow-none hover:shadow-md dark:hover:border-[#D4AF37]/30 transition-all"
+              className="flex items-center gap-4 bg-[#EFE8D8] dark:bg-[#12100C] border border-slate-200/80 dark:border-white/5 rounded-xl p-5 shadow-sm dark:shadow-none hover:shadow-md dark:hover:border-[#D4AF37]/30 transition-all"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 + (index * 0.1) }}
             >
-              <div className="w-12 h-12 rounded-full bg-[#FDFBF7] dark:bg-white/5 flex items-center justify-center text-yellow-600 dark:text-yellow-400">
+              <div className="w-12 h-12 rounded-full bg-[#F7F3EB] dark:bg-white/5 flex items-center justify-center text-yellow-600 dark:text-yellow-400">
                 <stat.icon />
               </div>
               <div className="text-[#1A2332] dark:text-gray-200 font-medium text-sm sm:text-base">{stat.label}</div>

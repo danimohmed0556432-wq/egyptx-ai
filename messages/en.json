@@ -109,7 +109,8 @@
         "title": "Smart Navigator",
         "subtitle": "Real-time GPS routing"
       }
-    }
+    },
+    "tutHall": "Tut Hall"
   },
   "home": {
     "title": "EgyptX AI",
@@ -287,7 +288,7 @@
   },
   "planner": {
     "title": "Plan Your Egypt Journey",
-    "prompt": "Tell us about your dream trip...",
+    "prompt": "Egypt is honored to host you.. craft your bespoke journey",
     "whereFrom": "Where are you from?",
     "targetGov": "Target Governorate",
     "anywhere": "Anywhere in Egypt",
@@ -304,7 +305,7 @@
     "accessibility": "Accessibility Needs",
     "avoid": "Places to Avoid",
     "lessCrowded": "Prefer less crowded locations",
-    "generateBtn": "Generate My Egypt Journey",
+    "generateBtn": "Generate Itinerary",
     "loading1": "Analyzing your preferences...",
     "loading2": "Building your journey...",
     "itineraryTitle": "Your Personalized Itinerary",
@@ -313,7 +314,7 @@
     "afternoon": "Afternoon",
     "evening": "Evening",
     "modifyBtn": "Modify Plan",
-    "selectCountry": "Select your country",
+    "selectCountry": "Select Country",
     "egTravelers": "e.g., 2 adults, 1 child",
     "egDuration": "e.g., 7 Days",
     "egBudget": "e.g., $2000 total",
@@ -360,7 +361,38 @@
     "activitiesPlanned": "{count} activities planned",
     "findingPhoto": "Finding Photo...",
     "tipLabel": "Tip:",
-    "didYouKnowLabel": "Did you know?"
+    "didYouKnowLabel": "Did you know?",
+    "badge": "AI-Powered Journey Planner",
+    "step1Title": "Step 1: Your Travel Group",
+    "royalNameLabel": "Your Royal Name / Title",
+    "hyperPersonalized": "Hyper-Personalized",
+    "royalNamePlaceholder": "e.g. Royal Traveler, Alexander, or your name",
+    "travelersLabel": "Number of Travelers",
+    "nextBtn": "Next",
+    "backBtn": "Back",
+    "step2Title": "Step 2: When are you going?",
+    "countryOrigin": "Country of Origin",
+    "step3Title": "Step 3: Top Destinations",
+    "step3Subtitle": "Choose your favorite Egyptian destinations or let our AI guide find them for you.",
+    "selectedCount": "Selected",
+    "aiChooseTitle": "AI Choose (Smart Finder)",
+    "aiChooseDesc": "Don't know the city name? Type any description or landmark (e.g. Abu Simbel or the temple carved in the mountain).",
+    "aiChoosePlaceholder": "Type any description, monument or vibe (e.g., Abu Simbel, blue hole, temple carved in the mountain)...",
+    "aiFinderBtn": "AI Finder",
+    "aiMatchIdentified": "AI Match Identified",
+    "autoSelected": "Auto-Selected for Trip",
+    "famousFor": "Famous for:",
+    "resetBtn": "Reset",
+    "quickPrompts": "Quick Prompts:",
+    "aiPick": "AI Pick",
+    "step4Title": "Step 4: Interests & Pace",
+    "interestsLabel": "Interests",
+    "paceLabel": "Pace",
+    "budgetLabel": "Total Budget (USD)",
+    "royalTraveler": "Royal Traveler:",
+    "changeNamePlaceholder": "Change name...",
+    "errorTitle": "Oops! Something went wrong.",
+    "heroTitle": "Welcome to Egypt"
   },
   "explore": {
     "title": "Explore Egypt",
@@ -383,6 +415,25 @@
       "nature": "Nature",
       "museum": "Museums",
       "beach": "Red Sea & Beaches"
+    },
+    "interactiveMap": "Interactive Map",
+    "loadingVerified": "Loading verified destinations...",
+    "noDestinations": "No destinations found for this category.",
+    "catReligious": "Religious",
+    "catCulture": "Culture",
+    "cities": {
+      "Cairo": "Cairo",
+      "Giza": "Giza",
+      "Luxor": "Luxor",
+      "Aswan": "Aswan",
+      "Siwa": "Siwa",
+      "Fayoum": "Fayoum",
+      "Matrouh": "Matrouh",
+      "Alexandria": "Alexandria",
+      "Red Sea": "Red Sea",
+      "Hurghada": "Hurghada",
+      "Sharm El Sheikh": "Sharm El Sheikh",
+      "Egypt": "Egypt"
     }
   },
   "passport": {
@@ -568,7 +619,7 @@
     },
     "featured": "Featured Destinations",
     "subtitle": "From ancient wonders to hidden oases",
-    "planJourney": "Plan My Journey Here →"
+    "planJourney": "Plan My Journey Here"
   },
   "footer": {
     "title": "EgyptX AI",
@@ -639,7 +690,20 @@
     "noData": "No hidden sites found for this category.",
     "aiRec": "AI Recommended",
     "missionDesc": "Discover less-crowded, unique sites recommended by our AI.",
-    "noAi": "No AI recommendation available."
+    "noAi": "No AI recommendation available.",
+    "missionDescFull": "Redirecting tourists to these destinations reduces congestion at major monuments while boosting local economies in underserved regions.",
+    "empty": "No hidden gems found.",
+    "lockedTitle": "Elite Exclusive Vault",
+    "lockedDesc": "Restricted secret tomb & heritage gem. Requires EgyptX Elite access.",
+    "lockedModalTitle": "Unlock Egypt's Secret Vaults",
+    "lockedModalDesc": "You've unlocked your 1 free secret vault! Upgrade to EgyptX Elite for unlimited access to all hidden gems & VIP tomb vaults.",
+    "unlockBtn": "Unlock Vault with Elite",
+    "vipPass": "VIP Vault Pass",
+    "freeVault": "1 Free Secret Vault",
+    "eliteVault": "Elite Vault",
+    "aiRecTitle": "AI Recommendation",
+    "aiRecAwaiting": "Awaiting AI model predictions for this location.",
+    "exploreDest": "Explore Destination"
   },
   "kids": {
     "title": "Kids Mode",
@@ -899,5 +963,33 @@
     "subtitle": "Unlimited AI Time Travel, 3D reconstructions, and VIP concierge access.",
     "upgradeBtn": "Upgrade to Elite",
     "laterBtn": "Maybe Later"
+  },
+  "ambassadors": {
+    "badge": "EgyptX Global Ambassadors",
+    "title": "Global Icons Exploring Timeless Egypt",
+    "filterAll": "All Ambassadors",
+    "filterGiza": "Giza & Cairo",
+    "filterLuxor": "Luxor",
+    "filterAswan": "Aswan & Alexandria",
+    "viewCarousel": "3D Carousel",
+    "viewGrid": "Modern Papyrus Grid",
+    "viewStory": "View Ambassador Story",
+    "exploreStory": "Explore Story",
+    "vipTag": "EXCLUSIVE VIP INVITATION",
+    "vipHeadline": "Your Story Belongs Among the Greats.",
+    "claimVip": "Claim Your VIP Status",
+    "monument": "Monument",
+    "location": "Location",
+    "role": "Role",
+    "storyHeading": "Ambassador Story & Reflection",
+    "removeCard": "Remove Custom Card",
+    "close": "Close",
+    "createTitle": "Create Your VIP Ambassador Card",
+    "formName": "Ambassador / Creator Name",
+    "formRole": "Role / Category Title",
+    "formMonument": "Associated Egyptian Monument",
+    "formPhoto": "Upload Monument / Ambassador Photo",
+    "formStory": "Your Experience / Heritage Story",
+    "publishBtn": "Publish VIP Ambassador Card"
   }
 }

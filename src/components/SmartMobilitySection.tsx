@@ -65,7 +65,7 @@ export default function SmartMobilitySection() {
   };
 
   return (
-    <section className="py-24 bg-[#FDFBF7] dark:bg-[#0B0F19] relative overflow-hidden transition-colors duration-200">
+    <section className="py-24 bg-[#F7F3EB] dark:bg-[#080705] relative overflow-hidden transition-colors duration-200">
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sky-500/5 dark:bg-[#1B6B93]/5 rounded-full blur-[100px] pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -97,16 +97,16 @@ export default function SmartMobilitySection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className="bg-[#F8F3E9] dark:bg-[#131A2A] border border-slate-200/80 dark:border-white/5 shadow-sm dark:shadow-none hover:shadow-md rounded-2xl p-6 hover:border-[#D4AF37]/50 transition-all duration-300 flex flex-col relative overflow-hidden"
+              className="bg-[#EFE8D8] dark:bg-[#12100C] border border-slate-200/80 dark:border-white/5 shadow-sm dark:shadow-none hover:shadow-md rounded-2xl p-6 hover:border-[#D4AF37]/50 transition-all duration-300 flex flex-col relative overflow-hidden"
             >
               {/* Badge */}
-              <div className="absolute top-4 right-4 bg-[#FDFBF7] dark:bg-white/10 border border-slate-200 dark:border-white/20 rounded-lg py-1 px-2">
+              <div className="absolute top-4 right-4 bg-[#F7F3EB] dark:bg-white/10 border border-slate-200 dark:border-white/20 rounded-lg py-1 px-2">
                 <span className="text-[10px] font-bold text-slate-700 dark:text-gray-200 uppercase tracking-widest">
                   {t('home.mobility.comingSoon')}
                 </span>
               </div>
 
-              <div className="w-16 h-16 rounded-2xl bg-[#FDFBF7] dark:bg-[#0B0F19] border border-slate-200 dark:border-white/10 flex items-center justify-center mb-6 mt-4">
+              <div className="w-16 h-16 rounded-2xl bg-[#F7F3EB] dark:bg-[#080705] border border-slate-200 dark:border-white/10 flex items-center justify-center mb-6 mt-4">
                 {service.icon}
               </div>
               <h3 className="text-xl font-bold text-[#1A2332] dark:text-white mb-2">{service.title}</h3>
@@ -114,7 +114,7 @@ export default function SmartMobilitySection() {
                 {service.description}
               </p>
 
-              <div className="bg-[#FDFBF7] dark:bg-[#0B0F19] rounded-xl p-4 border border-slate-200 dark:border-white/5">
+              <div className="bg-[#F7F3EB] dark:bg-[#080705] rounded-xl p-4 border border-slate-200 dark:border-white/5">
                 <p className="text-xs text-yellow-700 dark:text-yellow-400 font-bold uppercase tracking-wider mb-3 text-center">
                   {t('home.mobility.integration')}
                 </p>

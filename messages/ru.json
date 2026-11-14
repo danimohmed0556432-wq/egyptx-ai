@@ -20,91 +20,97 @@
     "experiences": "Впечатления",
     "official": "Официальный",
     "headers": {
-      "destinations": "Destinations",
-      "aiExperiences": "AI Experiences",
-      "lifeAndCulture": "Life & Culture",
-      "officialAndBookings": "Official & Bookings"
+      "destinations": "Направления",
+      "aiExperiences": "ИИ-впечатления",
+      "lifeAndCulture": "Жизнь и культура",
+      "officialAndBookings": "Официально и брони"
     },
-    "meresankhVr": "Meresankh VR",
-    "launchMeresankh": "Launch Meresankh VR",
+    "meresankhVr": "Мересанх VR",
+    "launchMeresankh": "Запустить Мересанх VR",
     "badges": {
       "ai": "AI",
-      "live": "Live",
+      "live": "Эфир",
       "new": "New",
-      "curated": "Curated",
-      "renaissance": "Renaissance",
+      "curated": "Отборное",
+      "renaissance": "Возрождение",
       "gps": "GPS"
     },
     "items": {
       "exploreEgypt": {
-        "title": "Explore Egypt",
-        "subtitle": "Ancient wonders & iconic monuments"
+        "title": "Исследуй Египет",
+        "subtitle": "Древние чудеса и памятники"
       },
       "hiddenEgypt": {
-        "title": "Hidden Egypt",
-        "subtitle": "Undiscovered desert secrets & oases"
+        "title": "Тайный Египет",
+        "subtitle": "Тайны пустыни и оазисы"
       },
       "culture": {
-        "title": "Egyptian Culture",
-        "subtitle": "Arts, music, literature & heritage"
+        "title": "Египетская культура",
+        "subtitle": "Искусство, музыка и наследие"
       },
       "aiPlanner": {
-        "title": "AI Planner",
-        "subtitle": "Smart custom itineraries & flow"
+        "title": "ИИ-планировщик",
+        "subtitle": "Умные маршруты под вас"
       },
       "aiGuide": {
-        "title": "AI Guide",
-        "subtitle": "Conversational audio heritage guide"
+        "title": "ИИ-гид",
+        "subtitle": "Голосовой ИИ-гид по наследию"
       },
       "vrEgypt": {
-        "title": "VR Egypt",
-        "subtitle": "360 degree virtual monument portals"
+        "title": "VR Египет",
+        "subtitle": "Виртуальные туры 360°"
       },
       "hieroglyphScanner": {
-        "title": "Hieroglyph Scanner",
-        "subtitle": "Epigraphic visual symbol translator"
+        "title": "Сканер иероглифов",
+        "subtitle": "Визуальный переводчик надписей"
       },
       "slang": {
-        "title": "EgyptSpeak",
-        "subtitle": "Authentic colloquial dialect engine"
+        "title": "Египетский диалект",
+        "subtitle": "Разговорный египетский диалект"
       },
       "memoryCore": {
-        "title": "Memory Core",
-        "subtitle": "Expedition travel journal & logs"
+        "title": "Дневник путешествий",
+        "subtitle": "Журнал и заметки экспедиции"
       },
       "journal": {
-        "title": "Journal",
-        "subtitle": "Editorial stories & essays"
+        "title": "Журнал",
+        "subtitle": "Редакционные очерки и статьи"
       },
       "cinema": {
-        "title": "Cinema",
-        "subtitle": "Cinematic visual features"
+        "title": "Кино",
+        "subtitle": "Кинематографические сюжеты"
       },
       "shorts": {
-        "title": "Shorts",
-        "subtitle": "Vertical creator vignettes"
+        "title": "Короткие видео",
+        "subtitle": "Вертикальные ролики"
       },
       "shop": {
-        "title": "Shop",
-        "subtitle": "Handcrafted authentic artifacts"
+        "title": "Магазин",
+        "subtitle": "Подлинные изделия ручной работы"
       },
       "egyptOfficial": {
-        "title": "Egypt Official",
-        "subtitle": "Presidency & sovereign heritage"
+        "title": "Официальный Египет",
+        "subtitle": "Государственные институты"
       },
       "nationalProjects": {
-        "title": "National Projects",
-        "subtitle": "Grand Egyptian Museum & renewals"
+        "title": "Национальные проекты",
+        "subtitle": "Большой Египетский музей"
       },
       "bookings": {
-        "title": "Concierge Bookings",
-        "subtitle": "Flights, palaces & private reservations"
+        "title": "Консьерж-бронирование",
+        "subtitle": "Перелёты, дворцы и VIP-брони"
       },
       "smartNavigator": {
         "title": "Умный Навигатор",
         "subtitle": "GPS-маршруты в реальном времени"
+      },
+      "egyptLife": {
+        "title": "Жизнь в Египте",
+        "subtitle": "Конвертер валют и гид"
       }
-    }
+    },
+    "brand": "EGYPTX AI",
+    "tutHall": "Зал Тутанхамона"
   },
   "home": {
     "title": "EgyptX ИИ",
@@ -142,7 +148,7 @@
         "desc": "Автоматически организовывайте и улучшайте фотографии вашего путешествия.",
         "action": "Просмотреть Воспоминания"
       },
-      "foundation": "The Foundation"
+      "foundation": "Фундамент"
     },
     "smartTourism": {
       "title": "Обзор Умного Туризма",
@@ -208,8 +214,8 @@
           "desc": "ИИ-доступ к историческим и археологическим данным Египта"
         }
       },
-      "heading": "The EgyptX AI Ecosystem",
-      "subheading": "An intelligent network connecting all pillars of Egyptian tourism"
+      "heading": "Экосистема EgyptX AI",
+      "subheading": "Интеллектуальная сеть, объединяющая все опоры туризма Египта"
     },
     "mobility": {
       "title": "Умная Мобильность",
@@ -236,53 +242,53 @@
         "desc": "Интегрированное бронирование аутентифицированных умных круизов по Нилу."
       }
     },
-    "heroTagline": "The sovereign AI ecosystem uniting 7,000 years of heritage with bespoke modern travel.",
+    "heroTagline": "Суверенная ИИ-экосистема, соединяющая 7000 лет наследия с премиальным туризмом.",
     "sponsors": {
-      "header": "Official Partners & Sovereign Patrons",
-      "footnote": "Operating under the national digital transformation framework of the Arab Republic of Egypt.",
+      "header": "Официальные партнёры и покровители",
+      "footnote": "Работает в рамках национальной программы цифровой трансформации Арабской Республики Египет.",
       "partners": {
         "tourismMinistry": {
-          "name": "MINISTRY OF TOURISM & ANTIQUITIES",
-          "category": "GOVERNMENT PATRON",
-          "tagline": "Sovereign Heritage Authority"
+          "name": "МИНИСТЕРСТВО ТУРИЗМА И ДРЕВНОСТЕЙ",
+          "category": "ГОСУДАРСТВЕННЫЙ ПОКРОВИТЕЛЬ",
+          "tagline": "Государственный орган наследия"
         },
         "antiquitiesCouncil": {
-          "name": "SUPREME COUNCIL OF ANTIQUITIES",
-          "category": "ARCHAEOLOGY",
-          "tagline": "Excavation & Preservation"
+          "name": "ВЫСШИЙ СОВЕТ ПО ДРЕВНОСТЯМ",
+          "category": "АРХЕОЛОГИЯ",
+          "tagline": "Раскопки и сохранение"
         },
         "unesco": {
-          "name": "UNESCO WORLD HERITAGE",
-          "category": "GLOBAL COOPERATION",
-          "tagline": "Memphis & Thebes Monuments"
+          "name": "ВСЕМИРНОЕ НАСЛЕДИЕ ЮНЕСКО",
+          "category": "МЕЖДУНАРОДНОЕ СОТРУДНИЧЕСТВО",
+          "tagline": "Памятники Мемфиса и Фив"
         },
         "gem": {
-          "name": "GRAND EGYPTIAN MUSEUM",
-          "category": "CULTURAL INSTITUTION",
-          "tagline": "Giza Plateau Foundation"
+          "name": "БОЛЬШОЙ ЕГИПЕТСКИЙ МУЗЕЙ",
+          "category": "КУЛЬТУРНЫЙ ИНСТИТУТ",
+          "tagline": "Комплекс плато Гиза"
         },
         "egyptair": {
           "name": "EGYPTAIR",
-          "category": "NATIONAL CARRIER",
-          "tagline": "Star Alliance Member"
+          "category": "НАЦИОНАЛЬНЫЙ ПЕРЕВОЗЧИК",
+          "tagline": "Член Star Alliance"
         },
         "nmec": {
-          "name": "NMEC FUSTAT",
-          "category": "CIVILIZATION MUSEUM",
-          "tagline": "Royal Mummies Gallery"
+          "name": "МУЗЕЙ ЦИВИЛИЗАЦИИ (NMEC)",
+          "category": "МУЗЕЙ ЦИВИЛИЗАЦИИ",
+          "tagline": "Зал королевских мумий"
         }
       }
     },
     "events": {
-      "calendarTag": "Cultural Calendar",
-      "title": "Upcoming Events",
-      "subtitle": "Curated ceremonies, concerts, and seasonal gatherings across the Nile.",
-      "access": "Event Access"
+      "calendarTag": "Культурный календарь",
+      "title": "Предстоящие события",
+      "subtitle": "Избранные церемонии, концерты и сезонные встречи вдоль Нила.",
+      "access": "Доступ на событие"
     }
   },
   "planner": {
     "title": "Спланируйте свое путешествие по Египту",
-    "prompt": "Расскажите нам о поездке своей мечты...",
+    "prompt": "Египет рад приветствовать вас.. создайте своё идеальное путешествие",
     "whereFrom": "Откуда вы?",
     "targetGov": "Целевая мухафаза",
     "anywhere": "Где угодно в Египте",
@@ -292,14 +298,14 @@
     "paceBalanced": "Balanced",
     "pacePacked": "Packed",
     "duration": "Trip Duration",
-    "budget": "Budget",
+    "budget": "Бюджет",
     "interests": "Что вас интересует?",
     "style": "Стиль путешествия",
     "constraints": "Дополнительные ограничения",
     "accessibility": "Требования к доступности",
     "avoid": "Места, которых следует избегать",
     "lessCrowded": "Предпочитать менее многолюдные места",
-    "generateBtn": "Generate My Egypt Journey",
+    "generateBtn": "Создать маршрут",
     "loading1": "Анализ ваших предпочтений...",
     "loading2": "Создание вашего путешествия...",
     "itineraryTitle": "Ваш индивидуальный маршрут",
@@ -326,10 +332,10 @@
     "intBeaches": "Beaches",
     "intAdventure": "Adventure",
     "intFood": "Food",
-    "intCulture": "Culture",
-    "intNature": "Nature",
-    "styleSolo": "Solo",
-    "styleCouple": "Couple",
+    "intCulture": "Культура",
+    "intNature": "Природа",
+    "styleSolo": "Соло",
+    "styleCouple": "Для пары",
     "styleFamily": "Family",
     "styleGroup": "Group",
     "planYour": "Спланируйте свое",
@@ -355,7 +361,38 @@
     "activitiesPlanned": "Запланировано активностей: {count}",
     "findingPhoto": "Поиск фото...",
     "tipLabel": "Совет:",
-    "didYouKnowLabel": "Знаете ли вы?"
+    "didYouKnowLabel": "Знаете ли вы?",
+    "badge": "ИИ-планировщик путешествий",
+    "step1Title": "Шаг 1: Ваша группа",
+    "royalNameLabel": "Ваше имя или титул",
+    "hyperPersonalized": "Персонализация",
+    "royalNamePlaceholder": "напр., Александр или ваше имя",
+    "travelersLabel": "Количество путешественников",
+    "nextBtn": "Далее",
+    "backBtn": "Назад",
+    "step2Title": "Шаг 2: Когда вы едете?",
+    "countryOrigin": "Страна отправления",
+    "step3Title": "Шаг 3: Главные направления",
+    "step3Subtitle": "Выберите любимые направления в Египте или позвольте ИИ-гиду подобрать их.",
+    "selectedCount": "Выбрано",
+    "aiChooseTitle": "Умный подбор ИИ",
+    "aiChooseDesc": "Не знаете название города? Опишите достопримечательность (напр., Абу-Симбел).",
+    "aiChoosePlaceholder": "Введите описание, памятник или атмосферу...",
+    "aiFinderBtn": "ИИ-поиск",
+    "aiMatchIdentified": "Найдено совпадение ИИ",
+    "autoSelected": "Автоматически выбрано",
+    "famousFor": "Известно благодаря:",
+    "resetBtn": "Сбросить",
+    "quickPrompts": "Быстрые подсказки:",
+    "aiPick": "Выбор ИИ",
+    "step4Title": "Шаг 4: Интересы и темп",
+    "interestsLabel": "Интересы",
+    "paceLabel": "Темп поездки",
+    "budgetLabel": "Общий бюджет (USD)",
+    "royalTraveler": "Почетный путешественник:",
+    "changeNamePlaceholder": "Изменить имя...",
+    "errorTitle": "Ой! Что-то пошло не так.",
+    "heroTitle": "Добро пожаловать в Египет"
   },
   "explore": {
     "title": "Исследуйте Египет",
@@ -372,6 +409,31 @@
       "nature": "Природа",
       "beach": "Пляжи",
       "hidden": "Скрытые"
+    },
+    "interactiveMap": "Интерактивная карта",
+    "loadingVerified": "Загрузка проверенных направлений...",
+    "noDestinations": "В этой категории направления не найдены.",
+    "catAll": "Все",
+    "catAncient": "Древность",
+    "catMuseum": "Музеи",
+    "catNature": "Природа",
+    "catReligious": "Религиозное наследие",
+    "catCulture": "Культура",
+    "catBeach": "Красное море и пляжи",
+    "catHidden": "Тайный Египет",
+    "cities": {
+      "Cairo": "Каир",
+      "Giza": "Гиза",
+      "Luxor": "Луксор",
+      "Aswan": "Асуан",
+      "Siwa": "Сива",
+      "Fayoum": "Эль-Файюм",
+      "Matrouh": "Матрух",
+      "Alexandria": "Александрия",
+      "Red Sea": "Красное море",
+      "Hurghada": "Хургада",
+      "Sharm El Sheikh": "Шарм-эш-Шейх",
+      "Egypt": "Египет"
     }
   },
   "passport": {
@@ -544,7 +606,7 @@
       "desc": "Сива..."
     },
     "fayoum": {
-      "name": "Файюм",
+      "name": "Эль-Файюм",
       "tagline": "Жемчужина",
       "highlights": "Киты",
       "desc": "Файюм..."
@@ -555,7 +617,9 @@
       "highlights": "Кораллы",
       "desc": "Хургада..."
     },
-    "planJourney": "Plan My Journey Here →"
+    "planJourney": "Спланировать поездку сюда",
+    "featured": "Избранные направления",
+    "subtitle": "От древних чудес до скрытых оазисов"
   },
   "footer": {
     "title": "EgyptX ИИ",
@@ -581,33 +645,33 @@
     "technology": "Технологии",
     "terms": "Условия и конфиденциальность",
     "copy": "© 2026 EgyptX ИИ. Национальная умная туристическая экосистема.",
-    "nationalProjects": "National Projects",
-    "egyptianCulture": "Egyptian Culture",
-    "journal": "Journal",
-    "contactUs": "Contact Us",
+    "nationalProjects": "Национальные проекты",
+    "egyptianCulture": "Египетская культура",
+    "journal": "Журнал",
+    "contactUs": "Связаться с нами",
     "contactModal": {
-      "badge": "Connect with EgyptX AI",
-      "title": "Get in Touch",
-      "subtitle": "Have questions about smart itineraries, enterprise tourism partnerships, or AI heritage experiences? We are here to assist.",
-      "emailLabel": "Email",
-      "hotlineLabel": "Hotline",
-      "hqLabel": "Cairo HQ",
-      "hqValue": "Zamalek, Cairo",
-      "nameLabel": "Your Full Name",
-      "emailInputLabel": "Email Address",
-      "subjectLabel": "Subject / Topic",
+      "badge": "Связаться с EgyptX AI",
+      "title": "Связаться с нами",
+      "subtitle": "Есть вопросы об умных маршрутах, туристическом партнёрстве или ИИ-опыте наследия? Мы готовы помочь.",
+      "emailLabel": "Эл. почта",
+      "hotlineLabel": "Горячая линия",
+      "hqLabel": "Штаб-квартира в Каире",
+      "hqValue": "Замалек, Каир",
+      "nameLabel": "Ваше полное имя",
+      "emailInputLabel": "Адрес эл. почты",
+      "subjectLabel": "Тема обращения",
       "subjects": {
-        "general": "General Inquiry",
-        "planning": "AI Itinerary & Planning",
-        "smartSite": "Smart Site & Museum Access",
-        "enterprise": "Enterprise / Tourism Partner",
-        "press": "Press & Media"
+        "general": "Общий запрос",
+        "planning": "ИИ-маршруты и планирование",
+        "smartSite": "Умный доступ к памятникам и музеям",
+        "enterprise": "Корпоративное и турпартнёрство",
+        "press": "Пресса и СМИ"
       },
-      "messageLabel": "Message",
-      "messagePlaceholder": "Tell us about your upcoming travel plans or question...",
-      "sendBtn": "Send Message",
-      "successTitle": "Thank you! Your message has been sent successfully.",
-      "successDesc": "An EgyptX representative will contact you shortly."
+      "messageLabel": "Сообщение",
+      "messagePlaceholder": "Расскажите о ваших планах поездки или вопросе...",
+      "sendBtn": "Отправить сообщение",
+      "successTitle": "Спасибо! Ваше сообщение успешно отправлено.",
+      "successDesc": "Представитель EgyptX скоро свяжется с вами."
     }
   },
   "hidden": {
@@ -615,7 +679,25 @@
     "reducedCrowding": "Reduced Crowding",
     "loading": "Loading hidden gems...",
     "noData": "Platform visit data unavailable",
-    "aiRec": "AI Recommendation"
+    "aiRec": "AI Recommendation",
+    "title": "Тайный Египет",
+    "subtitle": "Откройте нерассказанные истории самых загадочных мест Египта.",
+    "exploreBtn": "Исследовать тайные места",
+    "missionDesc": "Откройте уникальные малолюдные места, рекомендованные нашим ИИ.",
+    "missionDescFull": "Направление туристов к этим местам снижает нагрузку на главные памятники и поддерживает местную экономику.",
+    "empty": "Тайные жемчужины не найдены.",
+    "lockedTitle": "Эксклюзивное хранилище Элит",
+    "lockedDesc": "Закрытая тайная гробница и жемчужина наследия. Требуется доступ EgyptX Элит.",
+    "lockedModalTitle": "Откройте тайные хранилища Египта",
+    "lockedModalDesc": "Вы открыли 1 бесплатное тайное хранилище! Перейдите на EgyptX Элит для безлимитного доступа ко всем жемчужинам.",
+    "unlockBtn": "Открыть с Элит",
+    "vipPass": "VIP-пропуск",
+    "freeVault": "1 бесплатное хранилище",
+    "eliteVault": "Хранилище Элит",
+    "aiRecTitle": "Рекомендация ИИ",
+    "aiRecAwaiting": "Ожидание прогнозов модели ИИ для этого места.",
+    "exploreDest": "Исследовать место",
+    "noAi": "Рекомендации ИИ недоступны."
   },
   "cta": {
     "title": "Откройте для себя Египет. Интеллектуально.",
@@ -636,7 +718,10 @@
       "textiles": "Текстиль",
       "jewelry": "Ювелирные изделия",
       "wood": "Работа по дереву",
-      "traditional": "Традиционные"
+      "traditional": "Традиционные",
+      "woodwork": "Резьба по дереву",
+      "glass": "Стекло",
+      "leather": "Кожа"
     },
     "prod": {
       "1": "Расписанная вручную фаюмская керамическая чаша",
@@ -646,8 +731,23 @@
       "5": "Шкатулка, инкрустированная перламутром",
       "6": "Традиционная алебастровая ваза",
       "7": "Нубийская плетеная корзина",
-      "8": "Золотой кулон-картуш"
-    }
+      "8": "Золотой кулон-картуш",
+      "fayoum": "Керамическая тарелка из Эль-Файюма",
+      "scarab": "Серебряный кулон-скарабей",
+      "khayamiya": "Гобелен Хаямия",
+      "alabaster": "Алебастровая ваза",
+      "papyrus": "Расписной папирус ручной работы",
+      "copper": "Гравированный медный поднос",
+      "desc": {
+        "fayoum": "Тарелка ручной работы из Эль-Файюма",
+        "scarab": "Традиционный серебряный кулон",
+        "khayamiya": "Подлинная египетская аппликация",
+        "alabaster": "Ваза ручной резьбы из Луксора",
+        "papyrus": "Реплика древнего искусства на подлинном папирусе",
+        "copper": "Искусный медный поднос в мамлюкском стиле"
+      }
+    },
+    "shopBtn": "Купить сейчас"
   },
   "navigator": {
     "badge": "Умный навигатор в реальном времени",
@@ -843,5 +943,53 @@
     "subtitle": "Безлимитные ИИ-путешествия во времени, 3D-реконструкции и VIP-консьерж.",
     "upgradeBtn": "Перейти на Elite",
     "laterBtn": "Позже"
+  },
+  "kids": {
+    "title": "Детский режим",
+    "subtitle": "Волшебное образовательное приключение для юных исследователей",
+    "playBtn": "Играй и учись",
+    "start": "Начни приключение",
+    "games": "Обучающие игры"
+  },
+  "login": {
+    "title": "С возвращением",
+    "subtitle": "Войдите в свой аккаунт",
+    "email": "Адрес эл. почты",
+    "pass": "Пароль",
+    "btn": "Войти",
+    "register": "Создать аккаунт",
+    "signIn": "Войти",
+    "access": "Доступ к аккаунту",
+    "demoTourist": "Демо-аккаунт туриста",
+    "demoBusiness": "Демо-аккаунт бизнеса",
+    "govLogin": "Государственный вход"
+  },
+  "ambassadors": {
+    "badge": "Глобальные послы EgyptX",
+    "title": "Мировые иконы открывают вечный Египет",
+    "filterAll": "Все послы",
+    "filterGiza": "Гиза и Каир",
+    "filterLuxor": "Луксор",
+    "filterAswan": "Асуан и Александрия",
+    "viewCarousel": "3D-карусель",
+    "viewGrid": "Сетка папирусов",
+    "viewStory": "Смотреть историю",
+    "exploreStory": "Подробнее",
+    "vipTag": "ЭКСКЛЮЗИВНОЕ VIP-ПРИГЛАШЕНИЕ",
+    "vipHeadline": "Ваша история достойна места среди великих.",
+    "claimVip": "Получить VIP-статус",
+    "monument": "Памятник",
+    "location": "Расположение",
+    "role": "Роль",
+    "storyHeading": "История и впечатления посла",
+    "removeCard": "Удалить карточку",
+    "close": "Закрыть",
+    "createTitle": "Создать VIP-карту посла",
+    "formName": "Имя посла / автора",
+    "formRole": "Роль / Категория",
+    "formMonument": "Связанный памятник Египта",
+    "formPhoto": "Загрузить фото",
+    "formStory": "Ваша история и впечатления",
+    "publishBtn": "Опубликовать VIP-карту"
   }
 }

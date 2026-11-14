@@ -8,6 +8,7 @@ import { LanguageProvider } from '@/context/LanguageContext';
 import FloatingAssistant from '@/components/FloatingAssistant';
 import ContinuousVoiceAssistant from '@/components/ContinuousVoiceAssistant';
 import DailyNewsWidget from '@/components/DailyNewsWidget';
+import MasperoOverlay from '@/components/MasperoOverlay';
 
 export default function Providers({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -18,6 +19,7 @@ export default function Providers({ children }: { children: ReactNode }) {
       <ThemeProvider>
         <LanguageProvider>
           {children}
+          <MasperoOverlay />
           <FloatingAssistant />
           {isNewsPage && <DailyNewsWidget />}
           <ContinuousVoiceAssistant />

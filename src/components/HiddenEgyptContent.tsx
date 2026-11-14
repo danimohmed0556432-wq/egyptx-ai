@@ -12,6 +12,7 @@ import { trackEvent } from '@/lib/analytics';
 import Image from 'next/image';
 import { useEliteTrials } from '@/lib/elite-trials';
 import EliteModal from '@/components/EliteModal';
+import { getLocalizedLandmark } from '@/data/exploreLandmarksI18n';
 
 // Helper to get SVG based on attraction name
 function getHiddenSvg(name_en: string) {
@@ -151,7 +152,7 @@ const HIDDEN_DESTINATIONS = [
 ];
 
 export default function HiddenEgyptContent() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const { isElite, useTrial, hiddenGemsUsed } = useEliteTrials();
   const [showEliteModal, setShowEliteModal] = useState(false);
   const [eliteContext, setEliteContext] = useState({ title: '', message: '' });
@@ -182,7 +183,7 @@ export default function HiddenEgyptContent() {
   }, [supabase]);
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#030712] text-slate-900 dark:text-white pt-24 pb-16 font-sans transition-colors duration-200">
+    <div dir={locale === 'ar' ? 'rtl' : 'ltr'} className="min-h-screen bg-[#FDFBF7] dark:bg-[#030712] text-slate-900 dark:text-white pt-24 pb-16 font-sans transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
@@ -193,7 +194,7 @@ export default function HiddenEgyptContent() {
             className="text-4xl md:text-5xl font-bold text-[#C9A84C] mb-4 uppercase tracking-wide flex items-center justify-center gap-3"
           >
             <Map className="w-10 h-10 hidden sm:block" />
-            Beyond the Famous Egypt
+            {t('hidden.title')}
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -201,7 +202,7 @@ export default function HiddenEgyptContent() {
             transition={{ delay: 0.1 }}
             className="text-xl text-slate-700 dark:text-gray-300 max-w-3xl mx-auto font-medium"
           >
-            Discover Egypt&apos;s hidden gems and help preserve its most treasured sites.
+            {t('hidden.subtitle')}
           </motion.p>
         </div>
 
@@ -219,10 +220,10 @@ export default function HiddenEgyptContent() {
             <div className="w-16 h-16 shrink-0 bg-[#C9A84C]/20 rounded-full flex items-center justify-center border border-[#C9A84C]/50">
               <Target className="w-8 h-8 text-[#C9A84C]" />
             </div>
-            <div className="flex-1 text-center md:text-left">
+            <div className={`flex-1 text-center ${locale === 'ar' ? 'md:text-right' : 'md:text-left'}`}>
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2 uppercase tracking-wide">{t('hidden.mission')}</h2>
               <p className="text-lg text-slate-700 dark:text-gray-300">
-                Redirecting tourists to these destinations reduces congestion at major monuments while boosting local economies in underserved regions. Data models for impact are currently awaiting verified data sources.
+                {t('hidden.missionDescFull')}
               </p>
             </div>
             <div className="hidden lg:flex items-center gap-4 text-[#C9A84C] font-bold">
@@ -245,13 +246,14 @@ export default function HiddenEgyptContent() {
           </div>
         ) : attractions.length === 0 ? (
           <div className="text-center py-20 text-slate-700 dark:text-gray-300 font-semibold">
-            No hidden gems found.
+            {t('hidden.empty')}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {attractions.map((dest, idx) => {
               const isLocked = !isElite && idx > 0;
               const isFirstFreeVault = !isElite && idx === 0;
+              const locDest = getLocalizedLandmark(dest, locale);
 
               return (
                 <motion.div
@@ -268,23 +270,23 @@ export default function HiddenEgyptContent() {
                         <Lock className="w-7 h-7 text-amber-400 animate-pulse drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
                       </div>
                       <span className="text-lg font-black text-amber-300 mb-1 flex items-center gap-1.5">
-                        Elite Exclusive Vault 
+                        {t('hidden.lockedTitle')}
                       </span>
                       <p className="text-xs text-slate-300/80 mb-5 max-w-xs leading-relaxed font-normal">
-                        Restricted secret tomb & heritage gem. Requires EgyptX Elite access.
+                        {t('hidden.lockedDesc')}
                       </p>
                       <button
                         onClick={() => {
                           setEliteContext({
-                            title: "Unlock Egypt's Secret Vaults ",
-                            message: "You've unlocked your 1 free secret vault! Upgrade to EgyptX Elite for unlimited access to all hidden gems & VIP tomb vaults."
+                            title: t('hidden.lockedModalTitle'),
+                            message: t('hidden.lockedModalDesc')
                           });
                           setShowEliteModal(true);
                         }}
                         className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-500 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-[0_0_25px_rgba(245,158,11,0.45)] hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
                       >
                         <Sparkles className="w-3.5 h-3.5 text-slate-950" />
-                        Unlock Vault with Elite 
+                        {t('hidden.unlockBtn')}
                       </button>
                     </div>
                   )}
@@ -296,17 +298,17 @@ export default function HiddenEgyptContent() {
                       {isElite ? (
                         <span className="px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase border shadow-lg flex items-center gap-1 bg-amber-400/20 text-amber-300 border-amber-400/40">
                           <Crown className="w-3 h-3 text-amber-400" />
-                          VIP Vault Pass
+                          {t('hidden.vipPass')}
                         </span>
                       ) : isFirstFreeVault ? (
                         <span className="px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase border shadow-lg flex items-center gap-1 bg-gradient-to-r from-amber-400/25 to-yellow-500/25 text-amber-300 border-amber-400/50 shadow-[0_0_15px_rgba(245,158,11,0.25)]">
                           <Sparkles className="w-3 h-3 text-amber-400 animate-spin" />
-                           1 Free Secret Vault
+                          {t('hidden.freeVault')}
                         </span>
                       ) : (
                         <span className="px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase border shadow-lg flex items-center gap-1 bg-amber-500/20 text-amber-400 border-amber-500/50">
                           <Crown className="w-3 h-3 text-amber-400" />
-                          Elite Vault
+                          {t('hidden.eliteVault')}
                         </span>
                       )}
                     </div>
@@ -315,10 +317,9 @@ export default function HiddenEgyptContent() {
                   {/* Content */}
                   <div className="p-6 flex flex-col flex-grow">
                     <div className="flex justify-between items-start mb-1">
-                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{dest.name_en}</h3>
-                      {dest.name_ar && <span className="text-xl text-[#C9A84C] font-arabic">{dest.name_ar}</span>}
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{locDest.name}</h3>
                     </div>
-                    <p className="text-slate-700 dark:text-gray-300 text-sm mb-6 font-normal">{dest.description_en || `Experience the beauty of ${dest.name_en}`}</p>
+                    <p className="text-slate-700 dark:text-gray-300 text-sm mb-6 font-normal">{locDest.description}</p>
 
                     {/* Stats & Capacity Bar */}
                     <div className="bg-white dark:bg-[#0A1628] rounded-xl p-4 mb-6 border border-gray-200 dark:border-white/5 flex flex-col items-center justify-center min-h-[80px]">
@@ -330,10 +331,10 @@ export default function HiddenEgyptContent() {
                     {/* AI Recommendation Callout */}
                     <div className="bg-[#1B6B93]/10 border border-[#1B6B93]/30 rounded-xl p-4 mb-6 flex-grow">
                       <h4 className="text-[#1B6B93] dark:text-[#4CC9F0] text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1">
-                        <Sparkles className="w-4 h-4" /> AI Recommendation
+                        <Sparkles className="w-4 h-4" /> {t('hidden.aiRecTitle')}
                       </h4>
                       <p className="text-slate-700 dark:text-gray-300 text-sm leading-relaxed italic font-medium">
-                        Awaiting AI model predictions for this location.
+                        {t('hidden.aiRecAwaiting')}
                       </p>
                     </div>
 
@@ -346,8 +347,8 @@ export default function HiddenEgyptContent() {
                       }}
                       className="w-full py-3 bg-black/[0.05] dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 border border-gray-300 dark:border-white/10 rounded-xl text-gray-900 dark:text-white font-medium flex justify-center items-center gap-2 transition-colors mt-auto group-hover:bg-[#C9A84C] group-hover:text-[#030712] group-hover:border-[#C9A84C] cursor-pointer"
                     >
-                      Explore Destination
-                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                      {t('hidden.exploreDest')}
+                      <ArrowRight className={`w-4 h-4 transition-transform ${locale === 'ar' ? 'rotate-180 group-hover:-translate-x-1' : 'group-hover:translate-x-1'}`} />
                     </button>
                   </div>
                 </motion.div>

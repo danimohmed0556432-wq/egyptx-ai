@@ -21,6 +21,7 @@ const getUpcomingFeatures = (t: any) => [
     icon: Globe,
     href: '/vr-egypt',
     bgImage: '/vr-bg.jpg',
+    fallbackImage: '/destinations/giza.jpg',
   },
   {
     id: 2,
@@ -29,6 +30,7 @@ const getUpcomingFeatures = (t: any) => [
     icon: Smile,
     href: '/kids',
     bgImage: '/kids-bg.jpg',
+    fallbackImage: '/destinations/cairo.jpg',
   },
   {
     id: 3,
@@ -37,6 +39,7 @@ const getUpcomingFeatures = (t: any) => [
     icon: Siren,
     href: '/emergency',
     bgImage: '/emergency-bg.jpg',
+    fallbackImage: '/destinations/aswan.jpg',
   },
   {
     id: 4,
@@ -45,6 +48,7 @@ const getUpcomingFeatures = (t: any) => [
     icon: Camera,
     href: '/memories',
     bgImage: '/ai-bg.jpg',
+    fallbackImage: '/destinations/luxor.jpg',
   },
   {
     id: 5,
@@ -52,6 +56,7 @@ const getUpcomingFeatures = (t: any) => [
     desc: t('home.ecosystem.features.treasureHunt.desc'),
     icon: Map,
     bgImage: '/treasure-bg.jpg',
+    fallbackImage: '/destinations/luxor.jpg',
   },
   {
     id: 6,
@@ -59,6 +64,7 @@ const getUpcomingFeatures = (t: any) => [
     desc: t('home.ecosystem.features.sustainability.desc'),
     icon: Leaf,
     bgImage: '/sustain-bg.jpg',
+    fallbackImage: '/destinations/siwa-oasis.jpg',
   },
   {
     id: 7,
@@ -66,6 +72,7 @@ const getUpcomingFeatures = (t: any) => [
     desc: t('home.ecosystem.features.researchHub.desc'),
     icon: Search,
     bgImage: '/research-bg.jpg',
+    fallbackImage: '/destinations/alexandria.jpg',
   },
 ];
 
@@ -74,6 +81,7 @@ export default function FutureEcosystemSection() {
   const { user } = useAuth();
   const router = useRouter();
   const [isKidsModalOpen, setIsKidsModalOpen] = React.useState(false);
+  const [failedImages, setFailedImages] = React.useState<Record<number, boolean>>({});
 
   const handleCardClick = (feature: any, e: React.MouseEvent) => {
     if (feature.href === '/kids') {
@@ -88,7 +96,7 @@ export default function FutureEcosystemSection() {
   };
 
   return (
-    <section className="relative w-full py-24 bg-[#FDFBF7] dark:bg-[#0B0F19] overflow-hidden border-t border-slate-200/60 dark:border-white/5 transition-colors duration-200">
+    <section className="relative w-full py-24 bg-[#F7F3EB] dark:bg-[#080705] overflow-hidden border-t border-[#76501F]/20 dark:border-[#D6A044]/15 transition-colors duration-200">
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[400px] bg-sky-500/5 dark:bg-[#1B6B93]/5 rounded-full blur-[120px] pointer-events-none" />
       
@@ -122,16 +130,17 @@ export default function FutureEcosystemSection() {
                 {/* Background Image */}
                 {feature.bgImage && (
                   <Image
-                    src={feature.bgImage}
+                    src={failedImages[feature.id] ? feature.fallbackImage : feature.bgImage}
                     alt={feature.title}
                     fill
                     className="object-cover z-0 transition-transform duration-700 ease-out group-hover:scale-110"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    onError={() => setFailedImages((prev) => ({ ...prev, [feature.id]: true }))}
                   />
                 )}
 
                 {/* Dark Gradient Overlay */}
-                <div className="z-10 absolute inset-0 bg-gradient-to-t from-[#0a0f16] via-[#0a0f16]/75 to-transparent pointer-events-none" />
+                <div className="z-10 absolute inset-0 bg-gradient-to-t from-[#080705]/95 via-[#080705]/65 to-transparent pointer-events-none" />
 
                 {/* Coming Soon Badge - Only show if no href */}
                 {!feature.href && (
@@ -159,7 +168,7 @@ export default function FutureEcosystemSection() {
               </>
             );
 
-            const cardClasses = "relative bg-[#0a0f16] border border-white/10 shadow-lg rounded-2xl p-6 flex flex-col justify-between min-h-[260px] overflow-hidden group transition-all duration-300 " + (feature.href ? "hover:border-[#D4AF37]/60 hover:shadow-[#D4AF37]/10" : "opacity-90 hover:opacity-100");
+            const cardClasses = "relative bg-white dark:bg-[#12100C] border border-[#76501F]/25 dark:border-[#D6A044]/25 shadow-lg rounded-2xl p-6 flex flex-col justify-between min-h-[260px] overflow-hidden group transition-all duration-300 " + (feature.href ? "hover:border-[#D6A044]/60 hover:shadow-[#D6A044]/10" : "opacity-95 hover:opacity-100");
 
             return (
               <motion.div

@@ -20,91 +20,97 @@
     "experiences": "体验",
     "official": "官方机构",
     "headers": {
-      "destinations": "Destinations",
-      "aiExperiences": "AI Experiences",
-      "lifeAndCulture": "Life & Culture",
-      "officialAndBookings": "Official & Bookings"
+      "destinations": "目的地",
+      "aiExperiences": "AI 体验",
+      "lifeAndCulture": "生活与文化",
+      "officialAndBookings": "官方与预订"
     },
-    "meresankhVr": "Meresankh VR",
-    "launchMeresankh": "Launch Meresankh VR",
+    "meresankhVr": "梅雷桑克 VR",
+    "launchMeresankh": "启动梅雷桑克 VR",
     "badges": {
       "ai": "AI",
-      "live": "Live",
+      "live": "实时",
       "new": "New",
-      "curated": "Curated",
-      "renaissance": "Renaissance",
+      "curated": "精选",
+      "renaissance": "复兴",
       "gps": "GPS"
     },
     "items": {
       "exploreEgypt": {
-        "title": "Explore Egypt",
-        "subtitle": "Ancient wonders & iconic monuments"
+        "title": "探索埃及",
+        "subtitle": "古代奇观与标志性古迹"
       },
       "hiddenEgypt": {
-        "title": "Hidden Egypt",
-        "subtitle": "Undiscovered desert secrets & oases"
+        "title": "秘境埃及",
+        "subtitle": "隐秘沙漠奇境与绿洲"
       },
       "culture": {
-        "title": "Egyptian Culture",
-        "subtitle": "Arts, music, literature & heritage"
+        "title": "埃及文化",
+        "subtitle": "艺术、音乐、文学与遗产"
       },
       "aiPlanner": {
-        "title": "AI Planner",
-        "subtitle": "Smart custom itineraries & flow"
+        "title": "AI 行程规划",
+        "subtitle": "智能定制行程路线"
       },
       "aiGuide": {
-        "title": "AI Guide",
-        "subtitle": "Conversational audio heritage guide"
+        "title": "AI 导游",
+        "subtitle": "交互式语音遗产导览"
       },
       "vrEgypt": {
-        "title": "VR Egypt",
-        "subtitle": "360 degree virtual monument portals"
+        "title": "VR 埃及",
+        "subtitle": "360度虚拟古迹全景"
       },
       "hieroglyphScanner": {
-        "title": "Hieroglyph Scanner",
-        "subtitle": "Epigraphic visual symbol translator"
+        "title": "象形文字扫描仪",
+        "subtitle": "古埃及铭文视觉翻译"
       },
       "slang": {
-        "title": "EgyptSpeak",
-        "subtitle": "Authentic colloquial dialect engine"
+        "title": "埃及方言通",
+        "subtitle": "地道埃及口语翻译引擎"
       },
       "memoryCore": {
-        "title": "Memory Core",
-        "subtitle": "Expedition travel journal & logs"
+        "title": "旅行记忆库",
+        "subtitle": "探索日志与旅行手记"
       },
       "journal": {
-        "title": "Journal",
-        "subtitle": "Editorial stories & essays"
+        "title": "期刊",
+        "subtitle": "深度文化故事与随笔"
       },
       "cinema": {
-        "title": "Cinema",
-        "subtitle": "Cinematic visual features"
+        "title": "影像馆",
+        "subtitle": "电影级视觉专题片"
       },
       "shorts": {
-        "title": "Shorts",
-        "subtitle": "Vertical creator vignettes"
+        "title": "短视频",
+        "subtitle": "创作者竖屏精选短片"
       },
       "shop": {
-        "title": "Shop",
-        "subtitle": "Handcrafted authentic artifacts"
+        "title": "文创商店",
+        "subtitle": "地道手工匠心工艺品"
       },
       "egyptOfficial": {
-        "title": "Egypt Official",
-        "subtitle": "Presidency & sovereign heritage"
+        "title": "官方机构",
+        "subtitle": "国家机构与主权遗产"
       },
       "nationalProjects": {
-        "title": "National Projects",
-        "subtitle": "Grand Egyptian Museum & renewals"
+        "title": "国家工程",
+        "subtitle": "大埃及博物馆与国家复兴"
       },
       "bookings": {
-        "title": "Concierge Bookings",
-        "subtitle": "Flights, palaces & private reservations"
+        "title": "礼宾预订",
+        "subtitle": "航班、宫殿酒店与私人定制"
       },
       "smartNavigator": {
         "title": "智能导航器",
         "subtitle": "实时 GPS 路线指引"
+      },
+      "egyptLife": {
+        "title": "埃及生活",
+        "subtitle": "汇率换算与日常指南"
       }
-    }
+    },
+    "brand": "EGYPTX AI",
+    "tutHall": "图坦卡蒙展厅"
   },
   "home": {
     "title": "EgyptX AI",
@@ -142,7 +148,7 @@
         "desc": "自动整理和优化您的旅行照片。",
         "action": "查看回忆"
       },
-      "foundation": "The Foundation"
+      "foundation": "核心基石"
     },
     "smartTourism": {
       "title": "智慧旅游概览",
@@ -208,8 +214,8 @@
           "desc": "AI驱动访问埃及历史和考古数据"
         }
       },
-      "heading": "The EgyptX AI Ecosystem",
-      "subheading": "An intelligent network connecting all pillars of Egyptian tourism"
+      "heading": "EgyptX AI 生态系统",
+      "subheading": "连接埃及旅游全产业支柱的智能网络"
     },
     "mobility": {
       "title": "智能出行",
@@ -236,53 +242,53 @@
         "desc": "集成预订经认证的智能尼罗河游轮。"
       }
     },
-    "heroTagline": "The sovereign AI ecosystem uniting 7,000 years of heritage with bespoke modern travel.",
+    "heroTagline": "融合七千年文明遗产与定制化现代旅行的主权人工智能生态平台。",
     "sponsors": {
-      "header": "Official Partners & Sovereign Patrons",
-      "footnote": "Operating under the national digital transformation framework of the Arab Republic of Egypt.",
+      "header": "官方合作伙伴与主权赞助机构",
+      "footnote": "在阿拉伯埃及共和国国家数字化转型框架下运行。",
       "partners": {
         "tourismMinistry": {
-          "name": "MINISTRY OF TOURISM & ANTIQUITIES",
-          "category": "GOVERNMENT PATRON",
-          "tagline": "Sovereign Heritage Authority"
+          "name": "埃及旅游与文物部",
+          "category": "政府主管机构",
+          "tagline": "国家遗产权威机构"
         },
         "antiquitiesCouncil": {
-          "name": "SUPREME COUNCIL OF ANTIQUITIES",
-          "category": "ARCHAEOLOGY",
-          "tagline": "Excavation & Preservation"
+          "name": "埃及最高文物委员会",
+          "category": "考古研究",
+          "tagline": "发掘与保护"
         },
         "unesco": {
-          "name": "UNESCO WORLD HERITAGE",
-          "category": "GLOBAL COOPERATION",
-          "tagline": "Memphis & Thebes Monuments"
+          "name": "联合国教科文组织世界遗产",
+          "category": "全球合作",
+          "tagline": "孟菲斯与底比斯遗迹"
         },
         "gem": {
-          "name": "GRAND EGYPTIAN MUSEUM",
-          "category": "CULTURAL INSTITUTION",
-          "tagline": "Giza Plateau Foundation"
+          "name": "大埃及博物馆",
+          "category": "文化机构",
+          "tagline": "吉萨高原文化地标"
         },
         "egyptair": {
           "name": "EGYPTAIR",
-          "category": "NATIONAL CARRIER",
-          "tagline": "Star Alliance Member"
+          "category": "国家航空公司",
+          "tagline": "星空联盟成员"
         },
         "nmec": {
-          "name": "NMEC FUSTAT",
-          "category": "CIVILIZATION MUSEUM",
-          "tagline": "Royal Mummies Gallery"
+          "name": "埃及国家文明博物馆",
+          "category": "文明博物馆",
+          "tagline": "皇家木乃伊展厅"
         }
       }
     },
     "events": {
-      "calendarTag": "Cultural Calendar",
-      "title": "Upcoming Events",
-      "subtitle": "Curated ceremonies, concerts, and seasonal gatherings across the Nile.",
-      "access": "Event Access"
+      "calendarTag": "文化日历",
+      "title": "近期活动",
+      "subtitle": "尼罗河畔精选盛典、音乐会与季节性聚会。",
+      "access": "活动入场"
     }
   },
   "planner": {
     "title": "规划您的埃及之旅",
-    "prompt": "告诉我们您的梦想之旅...",
+    "prompt": "埃及荣幸欢迎您的到来.. 定制您的专属旅程",
     "whereFrom": "您来自哪里？",
     "targetGov": "目标省份",
     "anywhere": "埃及任何地方",
@@ -292,14 +298,14 @@
     "paceBalanced": "Balanced",
     "pacePacked": "Packed",
     "duration": "Trip Duration",
-    "budget": "Budget",
+    "budget": "预算",
     "interests": "您对什么感兴趣？",
     "style": "旅行风格",
     "constraints": "额外限制",
     "accessibility": "无障碍需求",
     "avoid": "要避免的地方",
     "lessCrowded": "倾向于不拥挤的地方",
-    "generateBtn": "Generate My Egypt Journey",
+    "generateBtn": "生成行程",
     "loading1": "正在分析您的偏好...",
     "loading2": "正在构建您的旅程...",
     "itineraryTitle": "您的个性化行程",
@@ -326,10 +332,10 @@
     "intBeaches": "Beaches",
     "intAdventure": "Adventure",
     "intFood": "Food",
-    "intCulture": "Culture",
-    "intNature": "Nature",
-    "styleSolo": "Solo",
-    "styleCouple": "Couple",
+    "intCulture": "文化",
+    "intNature": "自然",
+    "styleSolo": "独自旅行",
+    "styleCouple": "情侣出游",
     "styleFamily": "Family",
     "styleGroup": "Group",
     "planYour": "规划您的",
@@ -355,7 +361,38 @@
     "activitiesPlanned": "已规划 {count} 项活动",
     "findingPhoto": "正在匹配实景照片...",
     "tipLabel": "贴士：",
-    "didYouKnowLabel": "历史冷知识："
+    "didYouKnowLabel": "历史冷知识：",
+    "badge": "AI 智能行程规划师",
+    "step1Title": "第 1 步：您的出行群体",
+    "royalNameLabel": "您的尊贵称呼",
+    "hyperPersonalized": "深度定制",
+    "royalNamePlaceholder": "例如：尊贵旅人、亚历山大或您的名字",
+    "travelersLabel": "出行人数",
+    "nextBtn": "下一步",
+    "backBtn": "上一步",
+    "step2Title": "第 2 步：出行时间",
+    "countryOrigin": "出发国家",
+    "step3Title": "第 3 步：热门目的地",
+    "step3Subtitle": "选择您心仪的埃及目的地，或让 AI 向导为您推荐。",
+    "selectedCount": "已选",
+    "aiChooseTitle": "AI 智选（智能发现）",
+    "aiChooseDesc": "不知道城市名？输入任何描述或地标（例如“阿布辛贝”或“山体凿刻的神庙”）。",
+    "aiChoosePlaceholder": "输入任何描述、古迹或氛围（如阿布辛贝、蓝洞）...",
+    "aiFinderBtn": "AI 搜索",
+    "aiMatchIdentified": "AI 匹配已识别",
+    "autoSelected": "已自动加入行程",
+    "famousFor": "著名景点：",
+    "resetBtn": "重置",
+    "quickPrompts": "快捷提示：",
+    "aiPick": "AI 精选",
+    "step4Title": "第 4 步：兴趣与节奏",
+    "interestsLabel": "兴趣偏好",
+    "paceLabel": "行程节奏",
+    "budgetLabel": "总预算（美元）",
+    "royalTraveler": "尊贵旅人：",
+    "changeNamePlaceholder": "修改名称...",
+    "errorTitle": "抱歉，出错了。",
+    "heroTitle": "欢迎来到埃及"
   },
   "explore": {
     "title": "探索埃及",
@@ -369,9 +406,34 @@
       "all": "全部",
       "ancient": "古代",
       "museum": "博物馆",
-      "nature": "自然",
+      "nature": "自然风光",
       "beach": "海滩",
       "hidden": "隐藏"
+    },
+    "interactiveMap": "交互式地图",
+    "loadingVerified": "正在加载已验证目的地...",
+    "noDestinations": "该分类下暂无目的地。",
+    "catAll": "全部",
+    "catAncient": "古代遗迹",
+    "catMuseum": "博物馆",
+    "catNature": "自然风光",
+    "catReligious": "宗教圣地",
+    "catCulture": "文化",
+    "catBeach": "红海与海滩",
+    "catHidden": "秘境埃及",
+    "cities": {
+      "Cairo": "开罗",
+      "Giza": "吉萨",
+      "Luxor": "卢克索",
+      "Aswan": "阿斯旺",
+      "Siwa": "锡瓦",
+      "Fayoum": "法尤姆",
+      "Matrouh": "马特鲁",
+      "Alexandria": "亚历山大港",
+      "Red Sea": "红海",
+      "Hurghada": "赫尔格达",
+      "Sharm El Sheikh": "沙姆沙伊赫",
+      "Egypt": "埃及"
     }
   },
   "passport": {
@@ -555,7 +617,9 @@
       "highlights": "珊瑚",
       "desc": "赫尔格达..."
     },
-    "planJourney": "Plan My Journey Here →"
+    "planJourney": "在此规划我的旅程",
+    "featured": "精选目的地",
+    "subtitle": "从古老奇观到秘境绿洲"
   },
   "footer": {
     "title": "EgyptX AI",
@@ -581,33 +645,33 @@
     "technology": "技术",
     "terms": "条款与隐私",
     "copy": "© 2026 EgyptX AI。国家智能旅游生态系统。",
-    "nationalProjects": "National Projects",
-    "egyptianCulture": "Egyptian Culture",
-    "journal": "Journal",
-    "contactUs": "Contact Us",
+    "nationalProjects": "国家工程",
+    "egyptianCulture": "埃及文化",
+    "journal": "期刊",
+    "contactUs": "联系我们",
     "contactModal": {
-      "badge": "Connect with EgyptX AI",
-      "title": "Get in Touch",
-      "subtitle": "Have questions about smart itineraries, enterprise tourism partnerships, or AI heritage experiences? We are here to assist.",
-      "emailLabel": "Email",
-      "hotlineLabel": "Hotline",
-      "hqLabel": "Cairo HQ",
-      "hqValue": "Zamalek, Cairo",
-      "nameLabel": "Your Full Name",
-      "emailInputLabel": "Email Address",
-      "subjectLabel": "Subject / Topic",
+      "badge": "联系 EgyptX AI",
+      "title": "联系我们",
+      "subtitle": "对智能行程、企业旅游合作或 AI 遗产体验有疑问吗？我们随时为您服务。",
+      "emailLabel": "电子邮件",
+      "hotlineLabel": "热线电话",
+      "hqLabel": "开罗总部",
+      "hqValue": "开罗扎马雷克",
+      "nameLabel": "您的全名",
+      "emailInputLabel": "电子邮箱",
+      "subjectLabel": "主题",
       "subjects": {
-        "general": "General Inquiry",
-        "planning": "AI Itinerary & Planning",
-        "smartSite": "Smart Site & Museum Access",
-        "enterprise": "Enterprise / Tourism Partner",
-        "press": "Press & Media"
+        "general": "一般咨询",
+        "planning": "AI 行程规划",
+        "smartSite": "智慧景区与博物馆通行",
+        "enterprise": "企业与旅游合作",
+        "press": "新闻与媒体"
       },
-      "messageLabel": "Message",
-      "messagePlaceholder": "Tell us about your upcoming travel plans or question...",
-      "sendBtn": "Send Message",
-      "successTitle": "Thank you! Your message has been sent successfully.",
-      "successDesc": "An EgyptX representative will contact you shortly."
+      "messageLabel": "留言内容",
+      "messagePlaceholder": "告诉我们您的旅行计划或问题...",
+      "sendBtn": "发送消息",
+      "successTitle": "谢谢！您的消息已成功发送。",
+      "successDesc": "EgyptX 代表将很快与您联系。"
     }
   },
   "hidden": {
@@ -615,7 +679,25 @@
     "reducedCrowding": "Reduced Crowding",
     "loading": "Loading hidden gems...",
     "noData": "Platform visit data unavailable",
-    "aiRec": "AI Recommendation"
+    "aiRec": "AI Recommendation",
+    "title": "秘境埃及",
+    "subtitle": "探索埃及最神秘之地的未解故事。",
+    "exploreBtn": "探索秘境遗址",
+    "missionDesc": "探索由我们的 AI 推荐的小众独特景点。",
+    "missionDescFull": "引导游客前往这些目的地可缓解热门古迹拥堵，同时促进当地经济发展。",
+    "empty": "未找到秘境景点。",
+    "lockedTitle": "尊享专属秘库",
+    "lockedDesc": "受限秘境古墓与遗产瑰宝，需要 EgyptX 尊享版权限。",
+    "lockedModalTitle": "解锁埃及秘境宝库",
+    "lockedModalDesc": "您已解锁 1 个免费秘境宝库！升级至 EgyptX 尊享版即可无限畅游全部秘境与 VIP 古墓。",
+    "unlockBtn": "用尊享版解锁",
+    "vipPass": "VIP 秘库通行证",
+    "freeVault": "1 个免费秘库",
+    "eliteVault": "尊享秘库",
+    "aiRecTitle": "AI 推荐",
+    "aiRecAwaiting": "正在等待该地点的 AI 模型预测。",
+    "exploreDest": "探索目的地",
+    "noAi": "暂无 AI 推荐。"
   },
   "cta": {
     "title": "智能体验埃及。",
@@ -632,11 +714,14 @@
     "cat": {
       "all": "全部",
       "pottery": "陶器",
-      "papyrus": "纸莎草",
+      "papyrus": "莎草纸",
       "textiles": "纺织品",
       "jewelry": "珠宝",
       "wood": "木工艺品",
-      "traditional": "传统工艺"
+      "traditional": "传统工艺",
+      "woodwork": "木工艺品",
+      "glass": "玻璃工艺",
+      "leather": "皮革工艺"
     },
     "prod": {
       "1": "手绘法尤姆陶碗",
@@ -646,8 +731,23 @@
       "5": "珍珠母镶嵌盒",
       "6": "传统雪花石膏花瓶",
       "7": "努比亚手工编织篮",
-      "8": "金质椭圆形吊坠"
-    }
+      "8": "金质椭圆形吊坠",
+      "fayoum": "法尤姆陶盘",
+      "scarab": "纯银圣甲虫吊坠",
+      "khayamiya": "哈亚米亚手工挂毯",
+      "alabaster": "雪花石膏花瓶",
+      "papyrus": "手绘莎草纸画",
+      "copper": "雕花铜盘",
+      "desc": {
+        "fayoum": "法尤姆手工陶盘",
+        "scarab": "传统纯银吊坠",
+        "khayamiya": "正宗埃及帐篷匠贴布绣",
+        "alabaster": "卢克索手工雕刻花瓶",
+        "papyrus": "正宗莎草纸古埃及艺术复刻画",
+        "copper": "精致马穆鲁克风格雕花铜盘"
+      }
+    },
+    "shopBtn": "立即选购"
   },
   "navigator": {
     "badge": "实时智能导航",
@@ -843,5 +943,53 @@
     "subtitle": "无限次 AI 时空穿越、3D 遗址复原与 VIP 礼宾服务。",
     "upgradeBtn": "升级至尊享版",
     "laterBtn": "以后再说"
+  },
+  "kids": {
+    "title": "儿童模式",
+    "subtitle": "为小小探险家打造的奇幻科普体验",
+    "playBtn": "边玩边学",
+    "start": "开启冒险",
+    "games": "益智游戏"
+  },
+  "login": {
+    "title": "欢迎回来",
+    "subtitle": "登录您的账户",
+    "email": "电子邮箱",
+    "pass": "密码",
+    "btn": "登录",
+    "register": "创建账户",
+    "signIn": "登录",
+    "access": "访问您的账户",
+    "demoTourist": "游客演示账户",
+    "demoBusiness": "商家演示账户",
+    "govLogin": "政务登录"
+  },
+  "ambassadors": {
+    "badge": "EgyptX 全球大使",
+    "title": "世界名流探索永恒埃及",
+    "filterAll": "全部大使",
+    "filterGiza": "吉萨与开罗",
+    "filterLuxor": "卢克索",
+    "filterAswan": "阿斯旺与亚历山大",
+    "viewCarousel": "3D 轮播",
+    "viewGrid": "现代莎草纸网格",
+    "viewStory": "查看大使故事",
+    "exploreStory": "探索故事",
+    "vipTag": "VIP 专属邀约",
+    "vipHeadline": "您的故事值得与传奇同行。",
+    "claimVip": "领取 VIP 身份",
+    "monument": "古迹",
+    "location": "地点",
+    "role": "身份",
+    "storyHeading": "大使故事与感悟",
+    "removeCard": "删除自定义卡片",
+    "close": "关闭",
+    "createTitle": "创建您的 VIP 大使名片",
+    "formName": "大使 / 创作者姓名",
+    "formRole": "头衔 / 类别",
+    "formMonument": "关联的埃及古迹",
+    "formPhoto": "上传照片",
+    "formStory": "您的体验与故事",
+    "publishBtn": "发布 VIP 大使名片"
   }
 }

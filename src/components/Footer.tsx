@@ -32,7 +32,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#F8F3E9] dark:bg-[#070B13] border-t border-black/[0.05] dark:border-[#D4AF37]/20 pt-24 pb-12 transition-colors duration-300">
+    <footer className="bg-[#EFE8D8] dark:bg-[#080705] border-t border-black/[0.05] dark:border-[#D4AF37]/20 pt-24 pb-12 transition-colors duration-300">
       <div className="container mx-auto px-6 max-w-7xl">
         
         <div className="mb-16">
@@ -109,7 +109,7 @@ export default function Footer() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsContactModalOpen(false)}
-              className="fixed inset-0 bg-slate-950/85 backdrop-blur-md cursor-pointer"
+              className="fixed inset-0 bg-[#080705]/85 backdrop-blur-md cursor-pointer"
             />
 
             {/* Modal Dialog with contact-bg.png */}
@@ -126,7 +126,7 @@ export default function Footer() {
               className="relative w-full max-w-2xl rounded-3xl overflow-hidden border border-[#C9A84C]/40 shadow-[0_0_60px_rgba(201,168,76,0.25),0_25px_80px_rgba(0,0,0,0.95)] z-[202] my-auto"
             >
               {/* Glassmorphic dark overlay */}
-              <div className="relative bg-[#FDFBF7]/92 dark:bg-[#060E1A]/85 backdrop-blur-xl p-6 sm:p-8 text-gray-900 dark:text-white max-h-[90vh] overflow-y-auto">
+              <div className="relative bg-[#F7F3EB]/92 dark:bg-[#12100C]/85 backdrop-blur-xl p-6 sm:p-8 text-gray-900 dark:text-white max-h-[90vh] overflow-y-auto">
                 {/* Close Button */}
                 <button
                   type="button"
@@ -155,7 +155,7 @@ export default function Footer() {
 
                 {/* Contact Badges Row */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-                  <div className="p-3 rounded-2xl bg-[#F8F3E9] dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 text-center">
+                  <div className="p-3 rounded-2xl bg-[#EFE8D8] dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 text-center">
                     <Mail className="w-4 h-4 text-[#C9A84C] mx-auto mb-1" />
                     <span className="text-[10px] text-gray-600 dark:text-gray-400 block font-mono">{t('footer.contactModal.emailLabel')}</span>
                     <a href="mailto:support@egyptx.ai" className="text-xs font-semibold text-gray-900 dark:text-white hover:text-[#C9A84C] transition-colors truncate block">
@@ -163,7 +163,7 @@ export default function Footer() {
                     </a>
                   </div>
 
-                  <div className="p-3 rounded-2xl bg-[#F8F3E9] dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 text-center">
+                  <div className="p-3 rounded-2xl bg-[#EFE8D8] dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 text-center">
                     <Phone className="w-4 h-4 text-[#C9A84C] mx-auto mb-1" />
                     <span className="text-[10px] text-gray-600 dark:text-gray-400 block font-mono">{t('footer.contactModal.hotlineLabel')}</span>
                     <a href="tel:19654" className="text-xs font-semibold text-gray-900 dark:text-white hover:text-[#C9A84C] transition-colors block">
@@ -171,7 +171,7 @@ export default function Footer() {
                     </a>
                   </div>
 
-                  <div className="p-3 rounded-2xl bg-[#F8F3E9] dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 text-center">
+                  <div className="p-3 rounded-2xl bg-[#EFE8D8] dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 text-center">
                     <MapPin className="w-4 h-4 text-[#C9A84C] mx-auto mb-1" />
                     <span className="text-[10px] text-gray-600 dark:text-gray-400 block font-mono">{t('footer.contactModal.hqLabel')}</span>
                     <span className="text-xs font-semibold text-gray-900 dark:text-white block truncate">
@@ -228,11 +228,11 @@ export default function Footer() {
                         onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-black/50 border border-slate-300 dark:border-white/15 focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] text-sm text-gray-900 dark:text-white outline-none transition-all cursor-pointer"
                       >
-                        <option value="General Inquiry" className="bg-white dark:bg-[#0A1628] text-gray-900 dark:text-white">{t('footer.contactModal.subjects.general')}</option>
-                        <option value="AI Itinerary & Planning" className="bg-white dark:bg-[#0A1628] text-gray-900 dark:text-white">{t('footer.contactModal.subjects.planning')}</option>
-                        <option value="Smart Site & Museum Access" className="bg-white dark:bg-[#0A1628] text-gray-900 dark:text-white">{t('footer.contactModal.subjects.smartSite')}</option>
-                        <option value="Enterprise / Tourism Partner" className="bg-white dark:bg-[#0A1628] text-gray-900 dark:text-white">{t('footer.contactModal.subjects.enterprise')}</option>
-                        <option value="Press & Media" className="bg-white dark:bg-[#0A1628] text-gray-900 dark:text-white">{t('footer.contactModal.subjects.press')}</option>
+                        <option value="General Inquiry" className="bg-white dark:bg-[#12100C] text-gray-900 dark:text-white">{t('footer.contactModal.subjects.general')}</option>
+                        <option value="AI Itinerary & Planning" className="bg-white dark:bg-[#12100C] text-gray-900 dark:text-white">{t('footer.contactModal.subjects.planning')}</option>
+                        <option value="Smart Site & Museum Access" className="bg-white dark:bg-[#12100C] text-gray-900 dark:text-white">{t('footer.contactModal.subjects.smartSite')}</option>
+                        <option value="Enterprise / Tourism Partner" className="bg-white dark:bg-[#12100C] text-gray-900 dark:text-white">{t('footer.contactModal.subjects.enterprise')}</option>
+                        <option value="Press & Media" className="bg-white dark:bg-[#12100C] text-gray-900 dark:text-white">{t('footer.contactModal.subjects.press')}</option>
                       </select>
                     </div>
 

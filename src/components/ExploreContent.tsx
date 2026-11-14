@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
+import { getLocalizedLandmark } from '@/data/exploreLandmarksI18n';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { Star, MapPin, Users, Calendar, Clock, ArrowRight, Cloud, Loader2, AlertCircle, Thermometer } from 'lucide-react';
@@ -118,10 +119,17 @@ function WeatherBadge({ lat, lon }: { lat: number, lon: number }) {
   );
 }
 
-const getCategories = (t: any): {id: Category, label: string}[] => [{id: 'All', label: t('explore.cat.all')}, {id: 'Ancient', label: t('explore.cat.ancient')}, {id: 'Museum', label: t('explore.cat.museum')}, {id: 'Nature', label: t('explore.cat.nature')}, {id: 'Beach', label: t('explore.cat.beach')}, {id: 'Hidden', label: t('explore.cat.hidden')}];
+const getCategories = (t: any): {id: Category, label: string}[] => [
+  {id: 'All', label: t('explore.catAll')},
+  {id: 'Ancient', label: t('explore.catAncient')},
+  {id: 'Museum', label: t('explore.catMuseum')},
+  {id: 'Nature', label: t('explore.catNature')},
+  {id: 'Beach', label: t('explore.catBeach')},
+  {id: 'Hidden', label: t('explore.catHidden')}
+];
 
 export default function ExploreContent() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<Category>('All');
   const [attractions, setAttractions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -233,8 +241,33 @@ export default function ExploreContent() {
     setSelectedMapId(id);
   };
 
+  const translateCategory = (cat: string) => {
+    if (!cat) return '';
+    const norm = cat.trim().toLowerCase();
+    const map: Record<string, string> = {
+      ancient: t('explore.catAncient'),
+      museum: t('explore.catMuseum'),
+      nature: t('explore.catNature'),
+      religious: t('explore.catReligious'),
+      culture: t('explore.catCulture'),
+      beach: t('explore.catBeach'),
+      hidden: t('explore.catHidden'),
+    };
+    return map[norm] || cat;
+  };
+
+  const translateCity = (city: string) => {
+    const raw = (city || 'Egypt').trim();
+    const key = `explore.cities.${raw}`;
+    const res = t(key);
+    return res !== key ? res : raw;
+  };
+
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-slate-900 dark:bg-[#0B0F19] dark:text-white pt-24 pb-16 transition-colors duration-200">
+    <div
+      dir={locale === 'ar' ? 'rtl' : 'ltr'}
+      className="min-h-screen bg-[#FDFBF7] text-slate-900 dark:bg-[#0B0F19] dark:text-white pt-24 pb-16 transition-colors duration-200"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
@@ -252,7 +285,7 @@ export default function ExploreContent() {
             transition={{ delay: 0.1 }}
             className="text-xl text-gray-400"
           >
-            From ancient wonders to hidden oases
+            {t('explore.subtitle')}
           </motion.p>
         </div>
 
@@ -279,7 +312,7 @@ export default function ExploreContent() {
             <div className="sticky top-24 bg-[#F8F3E9] dark:bg-[#131A2A] border border-slate-200/80 dark:border-[#C9A84C]/20 shadow-sm dark:shadow-none rounded-3xl p-6">
               <h3 className="text-xl font-semibold text-yellow-700 dark:text-[#C9A84C] mb-6 flex items-center gap-2">
                 <MapPin className="w-5 h-5" />
-                Interactive Map
+                {t('explore.interactiveMap')}
               </h3>
               <div className="relative w-full">
                 <MapLeaflet 
@@ -296,7 +329,7 @@ export default function ExploreContent() {
             {loading ? (
               <div className="flex flex-col items-center justify-center py-20 text-yellow-600 dark:text-[#C9A84C]">
                 <Loader2 className="w-10 h-10 animate-spin mb-4" />
-                <p>Loading verified destinations...</p>
+                <p>{t('explore.loadingVerified')}</p>
               </div>
             ) : error ? (
               <div className="flex flex-col items-center justify-center py-20 text-red-500 dark:text-red-400">
@@ -305,11 +338,13 @@ export default function ExploreContent() {
               </div>
             ) : filteredDestinations.length === 0 ? (
               <div className="text-center py-20 text-slate-500 dark:text-gray-400">
-                No destinations found for this category.
+                {t('explore.noDestinations')}
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredDestinations.map((dest, index) => (
+                {filteredDestinations.map((dest, index) => {
+                  const localized = getLocalizedLandmark(dest, locale);
+                  return (
                   <motion.div
                     key={dest.id}
                     id={dest.id}
@@ -326,7 +361,7 @@ export default function ExploreContent() {
                       {getAttractionImage(dest.name_en, dest.category)}
                       <div className="absolute top-4 left-4">
                         <span className="px-3 py-1 bg-black/60 backdrop-blur rounded-full text-xs font-medium text-[#C9A84C] border border-[#C9A84C]/30 capitalize">
-                          {dest.category}
+                          {translateCategory(dest.category)}
                         </span>
                       </div>
                       
@@ -337,17 +372,16 @@ export default function ExploreContent() {
                     </div>
 
                     {/* Details Section */}
-                    <div className="p-6 flex flex-col flex-grow bg-[#F8F3E9] dark:bg-[#131A2A]">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-2xl font-bold text-[#1A2332] dark:text-white">{dest.name_en}</h3>
-                        {dest.name_ar && <span className="text-xl text-yellow-700 dark:text-[#C9A84C] font-arabic">{dest.name_ar}</span>}
+                    <div className="p-6 flex flex-col flex-grow bg-[#F8F3E9] dark:bg-[#131A2A] text-start">
+                      <div className="mb-2">
+                        <h3 className="text-2xl font-bold text-[#1A2332] dark:text-white">{localized.name}</h3>
                       </div>
-                      <p className="text-slate-600 dark:text-gray-400 mb-6 flex-grow font-light">{dest.description_en || `Explore the beautiful ${dest.name_en}`}</p>
+                      <p className="text-slate-600 dark:text-gray-400 mb-6 flex-grow font-light">{localized.description}</p>
                       
                       <div className="grid grid-cols-2 gap-4 mb-6">
                         <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                           <MapPin className="w-4 h-4 text-[#C9A84C]" />
-                          <span>{dest.city || 'Egypt'}</span>
+                          <span>{translateCity(dest.city)}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                           <Star className="w-4 h-4 text-[#C9A84C]" />
@@ -367,7 +401,8 @@ export default function ExploreContent() {
                       </button>
                     </div>
                   </motion.div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

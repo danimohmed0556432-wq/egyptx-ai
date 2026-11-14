@@ -65,9 +65,9 @@ const getCards = (t: any) => [
 export default function SmartTourismSection() {
   const { t } = useLanguage();
   return (
-    <section className="relative w-full py-28 md:py-36 bg-[#FDFBF7] dark:bg-[#0B0F19] overflow-hidden">
+    <section className="relative w-full py-28 md:py-36 bg-[#F7F3EB] dark:bg-[#080705] overflow-hidden">
       {/* Background Torchlight & Nile Gradient */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-500/5 via-[#FDFBF7] to-[#FDFBF7] dark:from-[#D4AF37]/5 dark:via-[#0B0F19] dark:to-[#0B0F19] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-500/5 via-[#FDFBF7] to-[#FDFBF7] dark:from-[#D4AF37]/5 dark:via-[#080705] dark:to-[#080705] pointer-events-none" />
       
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
@@ -103,10 +103,10 @@ export default function SmartTourismSection() {
               transition={{ duration: 0.7, delay: index * 0.15 }}
               className="group relative"
             >
-              <div className="h-full relative overflow-hidden bg-[#F8F3E9] dark:bg-[#131A2A] rounded-2xl p-8 md:p-10 border border-slate-200/80 dark:border-white/5 shadow-sm dark:shadow-none hover:shadow-md dark:hover:border-[#D4AF37]/30 transition-all duration-300 hover:-translate-y-1 flex flex-col">
+              <div className="h-full relative overflow-hidden bg-[#EFE8D8] dark:bg-[#12100C] rounded-2xl p-8 md:p-10 border border-slate-200/80 dark:border-white/5 shadow-sm dark:shadow-none hover:shadow-md dark:hover:border-[#D4AF37]/30 transition-all duration-300 hover:-translate-y-1 flex flex-col">
                 
                 <div className="relative z-10 flex-grow">
-                  <div className="mb-6 w-14 h-14 rounded-xl bg-[#FDFBF7] dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center">
+                  <div className="mb-6 w-14 h-14 rounded-xl bg-[#F7F3EB] dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center">
                     {card.icon}
                   </div>
                   <h3 className="text-xl md:text-2xl font-serif-editorial font-bold text-[#1A2332] dark:text-gray-100 mb-4 group-hover:text-yellow-600 dark:group-hover:text-yellow-500 transition-colors">
