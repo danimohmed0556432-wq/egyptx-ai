@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 import { motion } from 'framer-motion';
 import {
   cleanEntityTitle,
@@ -25,10 +26,14 @@ export interface Activity {
   description: string;
   type: string;
   cost?: string;
+  estimated_cost_usd?: string;
   tip?: string;
   fact?: string;
   imagePath?: string;
+  image_search_query?: string;
   transport?: string;
+  transport_mode?: string;
+  transport_tip?: string;
 }
 
 export interface DayPlan {
@@ -48,85 +53,55 @@ export const DEFAULT_FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1539768942893-daf53e448371?auto=format&fit=crop&w=800&q=80';
 
 export default function ActivityCard({ act, actIdx, dayIdx, cityName = 'Cairo' }: ActivityCardProps) {
+  const { t } = useLanguage();
   const rawTitle = (act.title || act.name || cityName || 'Egypt').trim();
   const smartFallback = getSmartCategoryFallback(rawTitle, act.description || '');
 
-  const [imageUrl, setImageUrl] = useState<string>(smartFallback);
-  const [loading, setLoading] = useState<boolean>(true);
+  const preResolvedUrl =
+    act.imagePath && /^https?:\/\//i.test(act.imagePath) ? act.imagePath : null;
 
-  // Bulletproof Wikipedia Fuzzy Search + SVG/Flag/Portrait Filter + Smart Category Fallback
+  const [imageUrl, setImageUrl] = useState<string>(preResolvedUrl || smartFallback);
+  const [loading, setLoading] = useState<boolean>(!preResolvedUrl);
+
+  // 3-tier Egyptian monument photography resolution (pre-resolved or via /api/fetch-image)
   useEffect(() => {
+    if (preResolvedUrl) {
+      setImageUrl(preResolvedUrl);
+      setLoading(false);
+      return;
+    }
+
     let isMounted = true;
-    const cleanedTitle = cleanEntityTitle(rawTitle);
+    const searchQuery = (act.image_search_query || cleanEntityTitle(rawTitle) || cityName).trim();
     const categoryFallbackUrl = getSmartCategoryFallback(rawTitle, act.description || '');
 
-    const fetchWikipediaImage = async () => {
+    const fetchVerifiedImage = async () => {
       try {
         setLoading(true);
-
-        // Bypass Wikipedia portrait search directly for Cleopatra Beach so it always renders a stunning beach photo
-        const lowerTitle = rawTitle.toLowerCase();
-        if (lowerTitle.includes('cleopatra') && (lowerTitle.includes('beach') || lowerTitle.includes('bay') || lowerTitle.includes('bath'))) {
-          if (isMounted) {
-            setImageUrl('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80');
-            setLoading(false);
-          }
+        const res = await fetch(
+          `/api/fetch-image?query=${encodeURIComponent(searchQuery)}&city=${encodeURIComponent(cityName)}`
+        );
+        if (!res.ok) throw new Error(`Image pipeline responded with ${res.status}`);
+        const data = await res.json();
+        if (isMounted && data?.url) {
+          setImageUrl(data.url);
           return;
         }
-
-        // Fuzzy Wikipedia Search (generator=search) with origin=* for CORS bypass
-        const endpoint = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(cleanedTitle + ' Egypt')}&gsrlimit=3&prop=pageimages&pithumbsize=800&format=json&origin=*`;
-        const res = await fetch(endpoint);
-
-        if (!res.ok) {
-          throw new Error(`Wikipedia API responded with status ${res.status}`);
-        }
-
-        const data = await res.json();
-        const pages = data?.query?.pages;
-
-        if (pages) {
-          // Sort pages by search index so the closest match is evaluated first
-          const sortedPages = Object.values(pages).sort(
-            (a: any, b: any) => (a?.index ?? 999) - (b?.index ?? 999)
-          ) as any[];
-
-          for (const page of sortedPages) {
-            const wikiImageUrl: string | undefined = page?.thumbnail?.source;
-            const pageTitle: string = page?.title || '';
-
-            // Strictly reject .svg, "Flag", "map", icons, and portrait mismatches
-            if (wikiImageUrl && isValidWikipediaImage(wikiImageUrl, pageTitle, rawTitle)) {
-              if (isMounted) {
-                setImageUrl(wikiImageUrl);
-              }
-              return;
-            }
-          }
-        }
-
-        // Smart Category Fallback if Wikipedia returns 0 valid results or only SVGs/Flags/Maps
-        if (isMounted) {
-          setImageUrl(categoryFallbackUrl);
-        }
+        if (isMounted) setImageUrl(categoryFallbackUrl);
       } catch (err) {
-        console.warn('[ActivityCard] Wikipedia search failed, using smart category fallback for:', cleanedTitle, err);
-        if (isMounted) {
-          setImageUrl(categoryFallbackUrl);
-        }
+        console.warn('[ActivityCard] Image pipeline failed, using category fallback:', searchQuery, err);
+        if (isMounted) setImageUrl(categoryFallbackUrl);
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        if (isMounted) setLoading(false);
       }
     };
 
-    fetchWikipediaImage();
+    fetchVerifiedImage();
 
     return () => {
       isMounted = false;
     };
-  }, [rawTitle, act.description]);
+  }, [preResolvedUrl, rawTitle, act.description, act.image_search_query, cityName]);
 
   const cardRef = useRef<HTMLDivElement>(null);
   const glareRef = useRef<HTMLDivElement>(null);
@@ -213,7 +188,7 @@ export default function ActivityCard({ act, actIdx, dayIdx, cityName = 'Cairo' }
                   <div className="flex flex-col items-center gap-2">
                     <div className="w-7 h-7 rounded-full border-2 border-[#C9A84C]/20 border-t-[#C9A84C] animate-spin" />
                     <span className="text-[11px] font-mono tracking-wider text-[#E2CB85]/60 uppercase">
-                      Finding Photo...
+                      {t('planner.findingPhoto')}
                     </span>
                   </div>
                 </div>
@@ -251,9 +226,9 @@ export default function ActivityCard({ act, actIdx, dayIdx, cityName = 'Cairo' }
                 <span className="text-xs px-3 py-1 rounded-full bg-[#C9A84C]/15 text-[#8A661C] dark:text-[#E2CB85] border border-[#C9A84C]/30 uppercase tracking-widest font-bold shadow-sm">
                   {act.type}
                 </span>
-                {act.cost && (
+                {(act.estimated_cost_usd || act.cost) && (
                   <span className="text-xs px-3 py-1 rounded-full bg-[#19A974]/15 text-[#19A974] border border-[#19A974]/30 font-semibold flex items-center gap-1 shadow-sm">
-                    {act.cost}
+                    {act.estimated_cost_usd || act.cost}
                   </span>
                 )}
               </div>
@@ -261,6 +236,21 @@ export default function ActivityCard({ act, actIdx, dayIdx, cityName = 'Cairo' }
               <h4 className="font-extrabold text-2xl text-slate-900 dark:text-white group-hover:text-[#C5A059] dark:group-hover:text-[#E2CB85] transition-colors leading-tight drop-shadow-md">
                 {displayName}
               </h4>
+              {(act.transport_mode || act.transport_tip || act.transport) && (
+                <div className="flex flex-wrap items-center gap-2 px-3 py-2 rounded-xl bg-[#FDFBF7] dark:bg-[#21170D]/90 border border-[#C5A059]/35 dark:border-[#D6A044]/40 text-xs shadow-sm">
+                  <span className="inline-flex items-center gap-1.5 font-bold text-[#8A661C] dark:text-[#F4C66A] shrink-0">
+                    <svg className="w-3.5 h-3.5 text-[#C5A059] dark:text-[#D6A044]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="3 11 22 2 13 21 11 13 3 11" />
+                    </svg>
+                    <span>{act.transport_mode || act.transport}</span>
+                  </span>
+                  {act.transport_tip && (
+                    <span className="text-slate-600 dark:text-[#C7B9A5] font-medium">
+                      {act.transport_tip}
+                    </span>
+                  )}
+                </div>
+              )}
               <p className="text-sm text-slate-600 dark:text-white/70 leading-relaxed font-medium">
                 {act.description}
               </p>
@@ -269,13 +259,13 @@ export default function ActivityCard({ act, actIdx, dayIdx, cityName = 'Cairo' }
                 {act.tip && (
                   <div className="flex items-start gap-3 text-sm text-[#1B6B93] bg-[#1B6B93]/10 p-2.5 rounded-lg border border-[#1B6B93]/20">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#1B6B93] mt-1.5 shrink-0" />
-                    <span><strong className="text-gray-900 dark:text-white/90">Tip:</strong> {act.tip}</span>
+                    <span><strong className="text-gray-900 dark:text-white/90">{t('planner.tipLabel')}</strong> {act.tip}</span>
                   </div>
                 )}
                 {act.fact && (
                   <div className="flex items-start gap-3 text-sm text-[#8A661C] dark:text-[#C9A84C]/90 bg-[#C9A84C]/10 dark:bg-[#C9A84C]/5 p-2.5 rounded-lg border border-[#C9A84C]/25">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#C9A84C] mt-1.5 shrink-0" />
-                    <span><strong className="text-gray-900 dark:text-[#E2CB85]">Did you know?</strong> {act.fact}</span>
+                    <span><strong className="text-gray-900 dark:text-[#E2CB85]">{t('planner.didYouKnowLabel')}</strong> {act.fact}</span>
                   </div>
                 )}
               </div>

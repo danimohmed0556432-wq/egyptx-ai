@@ -33,7 +33,7 @@ const getNews = (t: any): Article[] => [
     title: t('news.items.gem.title'),
     description: t('news.items.gem.desc'),
     category: 'Museums',
-    date: "2023-11-18",
+    date: "2025-11-01",
     source: "Grand Egyptian Museum Official",
     sourceUrl: "https://gem.gov.eg",
     image: '/news/gem.jpg'
@@ -43,7 +43,7 @@ const getNews = (t: any): Article[] => [
     title: t('news.items.luxor.title'),
     description: t('news.items.luxor.desc'),
     category: 'Archaeology',
-    date: "2024-03-15",
+    date: "2025-02-18",
     source: "Ministry of Tourism and Antiquities",
     sourceUrl: "https://www.antiquities.go.eg",
     image: '/news/luxor-tomb.jpg'

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Camera, ScanLine, Info, Images, ExternalLink, MapPin, Search } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface ArtifactData {
   id: string;
@@ -51,6 +52,7 @@ const ARTIFACTS: ArtifactData[] = [
 ];
 
 export default function MuseumAIContent() {
+  const { t } = useLanguage();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analyzedArtifact, setAnalyzedArtifact] = useState<ArtifactData | null>(null);
 
@@ -83,7 +85,7 @@ export default function MuseumAIContent() {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl font-bold text-[#C9A84C] mb-4 flex items-center justify-center gap-3"
           >
-            <Search className="w-10 h-10 hidden sm:block" /> Museum Companion
+            <Search className="w-10 h-10 hidden sm:block" /> {t('museumAI.title')}
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -91,7 +93,7 @@ export default function MuseumAIContent() {
             transition={{ delay: 0.1 }}
             className="text-xl text-slate-600 dark:text-gray-400"
           >
-            Point, scan, discover. Uncover the history behind any artifact.
+            {t('museumAI.subtitle')}
           </motion.p>
         </div>
 
@@ -134,7 +136,7 @@ export default function MuseumAIContent() {
               }`}
             >
               <Camera className="w-5 h-5" />
-              {isAnalyzing ? 'Analyzing Image...' : 'Identify Artifact'}
+              {isAnalyzing ? t('museumAI.analyzing') : t('museumAI.identifyBtn')}
             </button>
           </div>
 
@@ -150,7 +152,7 @@ export default function MuseumAIContent() {
                   className="flex flex-col items-center justify-center text-[#C9A84C]"
                 >
                   <ScanLine className="w-16 h-16 animate-pulse mb-4" />
-                  <p className="font-semibold text-lg animate-pulse">Running Vision AI Model...</p>
+                  <p className="font-semibold text-lg animate-pulse">{t('museumAI.runningVision')}</p>
                 </motion.div>
               ) : analyzedArtifact ? (
                 <motion.div

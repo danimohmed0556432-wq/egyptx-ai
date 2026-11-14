@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import egyptNews from '@/data/egypt-news';
+import { getLanguageMeta, normalizeLocale } from '@/lib/i18n-ai';
 
 interface NewsItem {
   title: string;
@@ -92,10 +93,15 @@ function formatItems(items: NewsItem[], arabic: boolean): string {
     .join('\n\n');
 }
 
-function buildSystemPrompt(arabic: boolean, today: string, context: string): string {
-  return `Act as a lightning-fast, highly accurate news wire. Today's date is ${today}. Use ONLY the LIVE NEWS FEED below (real Google News Egypt headlines) plus well-known verified facts. Output only verified, factual news concisely. For EACH news item state the source name (${arabic ? 'المصدر' : 'Source'}) and date (${arabic ? 'التاريخ' : 'Date'}). NEVER hallucinate and never invent items not in the feed. Do not use Markdown symbols (no asterisks or hashes); use plain text with line breaks.
+function buildSystemPrompt(arabic: boolean, today: string, context: string, targetLanguageName?: string): string {
+  return `Act as a lightning-fast, highly accurate Egypt news wire. Today's date is ${today}. Use ONLY the LIVE NEWS FEED below (real Google News Egypt headlines) plus well-known verified facts. Output only verified, factual news concisely. For EACH news item state the source name (${arabic ? 'المصدر' : 'Source'}) and date (${arabic ? 'التاريخ' : 'Date'}). NEVER hallucinate and never invent items not in the feed.
 
-CRITICAL RULE: You MUST answer in the EXACT SAME LANGUAGE as the user's prompt. If the user speaks English, reply in English. If Arabic, reply in Arabic.
+FORMATTING RULES (CRITICAL FOR NARROW WIDGET):
+- NEVER output wide Markdown tables (e.g. | col | col | or |---|---|) inside the chat window.
+- Structure every response using clean short paragraphs, bold lead-in bullet points (e.g. - **Headline:** concise summary with Source and Date), and clear line breaks.
+- NEVER use emojis or decorative unicode icons.
+
+CRITICAL LANGUAGE RULE: You MUST answer in the EXACT SAME LANGUAGE as the user's prompt${targetLanguageName ? ` (active UI language: ${targetLanguageName})` : ''}. If the user speaks English, reply in English. If Arabic, reply in Arabic.
 
 If the user asks about the opening date of the Grand Egyptian Museum (المتحف المصري الكبير), state that the official full opening date is November 1, 2025.
 
@@ -125,7 +131,7 @@ async function callChat(
   const data = await res.json();
   const text = data?.choices?.[0]?.message?.content;
   if (!text || typeof text !== 'string' || !text.trim()) throw new Error('empty');
-  return text.replace(/<think>[\s\S]*?<\/think>/g, '').replace(/\*\*/g, '').trim();
+  return text.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
 }
 
 async function synthesize(messages: Msg[]): Promise<string | null> {
@@ -163,7 +169,9 @@ export async function POST(req: Request) {
   let items: NewsItem[] = [];
   try {
     const body = await req.json();
-    const { messages, query } = body;
+    const { messages, query, language, locale } = body;
+    const targetLocale = normalizeLocale(language || locale);
+    const langMeta = getLanguageMeta(targetLocale);
 
     let userMessage = '';
     if (Array.isArray(messages) && messages.length > 0) {
@@ -198,7 +206,7 @@ export async function POST(req: Request) {
       : [{ role: 'user', content: userMessage }];
 
     const reply = await synthesize([
-      { role: 'system', content: buildSystemPrompt(arabic, today, context) },
+      { role: 'system', content: buildSystemPrompt(arabic, today, context, langMeta.name) },
       ...history,
     ]);
 

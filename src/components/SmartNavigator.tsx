@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/context/LanguageContext';
 import {
   Navigation,
   MapPin,
@@ -16,8 +18,24 @@ import {
   LocateFixed,
   Loader2,
   Compass,
-  Building
+  Building,
+  Map as MapIcon,
+  List
 } from 'lucide-react';
+
+function MapLoadingFallback() {
+  const { t } = useLanguage();
+  return (
+    <div className="h-[430px] sm:h-[490px] rounded-2xl bg-[#17100A] border border-[#76501F] flex items-center justify-center text-xs font-semibold text-[#C7B9A5]">
+      {t('navigator.loadingMap')}
+    </div>
+  );
+}
+
+const EgyptXNavigatorMap = dynamic(() => import('./EgyptXNavigatorMap'), {
+  ssr: false,
+  loading: () => <MapLoadingFallback />,
+});
 
 interface TransitDetails {
   lineName: string;
@@ -30,11 +48,19 @@ interface TransitDetails {
   lineColor?: string;
 }
 
+interface LatLngPoint {
+  lat: number;
+  lng: number;
+}
+
 interface TransitStep {
   instruction: string;
   distance: string;
   duration: string;
   travelMode: string;
+  startLocation?: LatLngPoint;
+  endLocation?: LatLngPoint;
+  encodedPolyline?: string;
   transitDetails?: TransitDetails;
 }
 
@@ -46,6 +72,8 @@ interface ModeRouteResult {
   summary?: string;
   departureTime?: string;
   arrivalTime?: string;
+  encodedPolyline?: string;
+  destinationCoords?: LatLngPoint;
   steps?: TransitStep[];
   error?: string;
 }
@@ -71,6 +99,7 @@ const QUICK_HOTELS = [
 ];
 
 export default function SmartNavigator() {
+  const { t, locale } = useLanguage();
   // Geolocation state
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [geoLoading, setGeoLoading] = useState(false);
@@ -79,16 +108,22 @@ export default function SmartNavigator() {
   // Search state
   const [destination, setDestination] = useState('');
   const [selectedMode, setSelectedMode] = useState<'transit' | 'driving' | 'walking'>('transit');
+  const [viewMode, setViewMode] = useState<'map' | 'text'>('map');
+  const [activeStepIdx, setActiveStepIdx] = useState(0);
 
   // API query state
   const [isSearching, setIsSearching] = useState(false);
   const [navData, setNavData] = useState<NavigationResponse | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  useEffect(() => {
+    setActiveStepIdx(0);
+  }, [selectedMode, navData]);
+
   // Detect current GPS position
   const detectLocation = () => {
     if (!navigator.geolocation) {
-      setGeoError('Geolocation is not supported by your browser.');
+      setGeoError(t('navigator.geoUnsupported'));
       return;
     }
 
@@ -107,16 +142,16 @@ export default function SmartNavigator() {
         setGeoLoading(false);
         switch (err.code) {
           case err.PERMISSION_DENIED:
-            setGeoError('Location permission denied. Please allow location access in your browser settings.');
+            setGeoError(t('navigator.geoDenied'));
             break;
           case err.POSITION_UNAVAILABLE:
-            setGeoError('Location information is unavailable. Try again in an open area.');
+            setGeoError(t('navigator.geoUnavailable'));
             break;
           case err.TIMEOUT:
-            setGeoError('Location request timed out. Retrying...');
+            setGeoError(t('navigator.geoTimeout'));
             break;
           default:
-            setGeoError('Could not determine your location.');
+            setGeoError(t('navigator.geoUnknown'));
             break;
         }
       },
@@ -139,7 +174,7 @@ export default function SmartNavigator() {
     if (!destination.trim()) return;
 
     if (!coords) {
-      setErrorMsg('Please allow GPS location access to calculate routes from where you are right now.');
+      setErrorMsg(t('navigator.gpsRequired'));
       return;
     }
 
@@ -153,19 +188,19 @@ export default function SmartNavigator() {
         body: JSON.stringify({
           origin: coords,
           destination: destination.trim(),
-          language: 'en'
+          language: locale || 'en'
         })
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to fetch navigation routes.');
+        throw new Error(data.error || t('navigator.fetchFailed'));
       }
 
       setNavData(data);
     } catch (err: any) {
-      setErrorMsg(err.message || 'Error communicating with navigation service.');
+      setErrorMsg(err.message || t('navigator.serviceError'));
     } finally {
       setIsSearching(false);
     }
@@ -186,13 +221,13 @@ export default function SmartNavigator() {
       <div className="text-center mb-8">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#8A661C] dark:text-[#D4AF37] text-xs font-bold uppercase tracking-widest mb-3 shadow-[0_0_20px_rgba(212,175,55,0.15)]">
           <Compass className="w-4 h-4 text-[#D4AF37] animate-spin" style={{ animationDuration: '10s' }} />
-          <span>Real-Time Smart Navigator</span>
+          <span>{t('navigator.badge')}</span>
         </div>
         <h1 className="text-2xl sm:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-2">
-          Never Get Lost in Cairo & Giza
+          {t('navigator.title')}
         </h1>
         <p className="text-gray-600 dark:text-slate-400 text-sm max-w-xl mx-auto">
-          Instant real-time Google Maps routing from your exact live position. Navigate metro lines, stations, and streets directly to your hotel.
+          {t('navigator.subtitle')}
         </p>
       </div>
 
@@ -209,19 +244,19 @@ export default function SmartNavigator() {
               <MapPin className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[11px] font-mono uppercase tracking-wider text-gray-500 dark:text-slate-400">Your Current Position</p>
+              <p className="text-[11px] font-mono uppercase tracking-wider text-gray-500 dark:text-slate-400">{t('navigator.currentPosition')}</p>
               {geoLoading ? (
                 <p className="text-xs text-amber-600 dark:text-amber-300 flex items-center gap-1.5 font-medium">
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  Acquiring high-precision GPS coordinates...
+                  {t('navigator.acquiringGps')}
                 </p>
               ) : coords ? (
                 <p className="text-xs text-emerald-600 dark:text-emerald-400 font-mono font-medium">
-                  {coords.lat.toFixed(5)}° N, {coords.lng.toFixed(5)}° E (GPS Verified)
+                  {coords.lat.toFixed(5)}° N, {coords.lng.toFixed(5)}° E ({t('navigator.gpsVerified')})
                 </p>
               ) : (
                 <p className="text-xs text-rose-500 dark:text-rose-400 font-medium">
-                  {geoError || 'GPS location not detected yet.'}
+                  {geoError || t('navigator.gpsNotDetected')}
                 </p>
               )}
             </div>
@@ -234,7 +269,7 @@ export default function SmartNavigator() {
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white text-xs font-semibold transition-all cursor-pointer disabled:opacity-50 shadow-sm dark:shadow-none"
           >
             <LocateFixed className={`w-3.5 h-3.5 text-[#D4AF37] ${geoLoading ? 'animate-spin' : ''}`} />
-            <span>{coords ? 'Refresh GPS' : 'Enable GPS'}</span>
+            <span>{coords ? t('navigator.refreshGps') : t('navigator.enableGps')}</span>
           </button>
         </div>
 
@@ -242,7 +277,7 @@ export default function SmartNavigator() {
         <form onSubmit={handleSearch} className="relative z-10 space-y-4 mb-6">
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-[#8A661C] dark:text-[#E2CB85] mb-2 font-mono">
-              Where do you want to go? (Hotel, Station, or Landmark)
+              {t('navigator.destLabel')}
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 dark:text-slate-400">
@@ -253,7 +288,7 @@ export default function SmartNavigator() {
                 required
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
-                placeholder="e.g. The Nile Ritz-Carlton, Cairo or Marriott Mena House"
+                placeholder={t('navigator.destPlaceholder')}
                 className="w-full pl-11 pr-32 py-3.5 rounded-2xl bg-gray-50 dark:bg-[#131A2A] border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all shadow-inner"
               />
               <button
@@ -264,12 +299,12 @@ export default function SmartNavigator() {
                 {isSearching ? (
                   <>
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    <span>Routing...</span>
+                    <span>{t('navigator.routing')}</span>
                   </>
                 ) : (
                   <>
                     <Navigation className="w-3.5 h-3.5" />
-                    <span>Find Route</span>
+                    <span>{t('navigator.findRoute')}</span>
                   </>
                 )}
               </button>
@@ -280,7 +315,7 @@ export default function SmartNavigator() {
           <div>
             <p className="text-[11px] font-mono uppercase text-gray-500 dark:text-slate-400 mb-2 flex items-center gap-1">
               <Building className="w-3 h-3 text-[#D4AF37]" />
-              <span>Popular Tourist Hotels in Cairo & Giza:</span>
+              <span>{t('navigator.popularHotels')}</span>
             </p>
             <div className="flex flex-wrap gap-2">
               {QUICK_HOTELS.map((hotel) => (
@@ -316,7 +351,7 @@ export default function SmartNavigator() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-300 hover:underline pt-1 font-bold"
                 >
-                  Open destination directly in Google Maps <ExternalLink className="w-3 h-3" />
+                  {t('navigator.openGoogleMaps')} <ExternalLink className="w-3 h-3" />
                 </a>
               )}
             </div>
@@ -334,7 +369,7 @@ export default function SmartNavigator() {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-widest text-[#8A661C] dark:text-[#D4AF37] block mb-0.5 font-bold">
-                  Route Calculated
+                  {t('navigator.routeCalculated')}
                 </span>
                 <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-rose-500 shrink-0" />
@@ -350,7 +385,7 @@ export default function SmartNavigator() {
                 className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#E2CB85] text-stone-950 font-bold text-xs uppercase tracking-wider hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] transition-all flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95"
               >
                 <Navigation className="w-4 h-4 fill-stone-950" />
-                <span>Navigate with Google Maps</span>
+                <span>{t('navigator.navigateGoogleMaps')}</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
@@ -372,7 +407,7 @@ export default function SmartNavigator() {
                     <div className="p-2 rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400">
                       <Train className="w-5 h-5" />
                     </div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-slate-300">Metro / Transit</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-slate-300">{t('navigator.metroTransit')}</span>
                   </div>
                   {selectedMode === 'transit' && <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" />}
                 </div>
@@ -382,7 +417,7 @@ export default function SmartNavigator() {
                     <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5 font-medium">{navData.modes.transit.distance}</p>
                   </div>
                 ) : (
-                  <p className="text-xs text-gray-500 dark:text-slate-500 italic">No direct metro line found</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-500 italic">{t('navigator.noMetroFound')}</p>
                 )}
               </button>
 
@@ -401,7 +436,7 @@ export default function SmartNavigator() {
                     <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
                       <Car className="w-5 h-5" />
                     </div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-slate-300">Taxi / Car</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-slate-300">{t('navigator.taxiCar')}</span>
                   </div>
                   {selectedMode === 'driving' && <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" />}
                 </div>
@@ -411,7 +446,7 @@ export default function SmartNavigator() {
                     <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5 font-medium">{navData.modes.driving.distance}</p>
                   </div>
                 ) : (
-                  <p className="text-xs text-gray-500 dark:text-slate-500 italic">Driving info unavailable</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-500 italic">{t('navigator.drivingUnavailable')}</p>
                 )}
               </button>
 
@@ -430,7 +465,7 @@ export default function SmartNavigator() {
                     <div className="p-2 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-400">
                       <Footprints className="w-5 h-5" />
                     </div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-slate-300">Walking</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-slate-300">{t('navigator.walking')}</span>
                   </div>
                   {selectedMode === 'walking' && <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" />}
                 </div>
@@ -440,23 +475,65 @@ export default function SmartNavigator() {
                     <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5 font-medium">{navData.modes.walking.distance}</p>
                   </div>
                 ) : (
-                  <p className="text-xs text-gray-500 dark:text-slate-500 italic">Too far to walk</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-500 italic">{t('navigator.tooFarToWalk')}</p>
                 )}
               </button>
             </div>
 
+            {/* View Mode Toggle: Interactive Map vs. Step-by-Step Text */}
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="inline-flex p-1 rounded-xl bg-gray-100 dark:bg-[#17100A] border border-gray-200 dark:border-[#76501F]">
+                <button
+                  type="button"
+                  onClick={() => setViewMode('map')}
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
+                    viewMode === 'map'
+                      ? 'bg-[#D6A044] text-[#080705] shadow-[0_0_16px_rgba(214,160,68,0.35)]'
+                      : 'text-gray-600 dark:text-[#C7B9A5] hover:text-gray-900 dark:hover:text-[#F4C66A]'
+                  }`}
+                >
+                  <MapIcon className="w-3.5 h-3.5" />
+                  <span>{t('navigator.interactiveMap')}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('text')}
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
+                    viewMode === 'text'
+                      ? 'bg-[#D6A044] text-[#080705] shadow-[0_0_16px_rgba(214,160,68,0.35)]'
+                      : 'text-gray-600 dark:text-[#C7B9A5] hover:text-gray-900 dark:hover:text-[#F4C66A]'
+                  }`}
+                >
+                  <List className="w-3.5 h-3.5" />
+                  <span>{t('navigator.stepByStepText')}</span>
+                </button>
+              </div>
+            </div>
+
+            {viewMode === 'map' && (
+              <EgyptXNavigatorMap
+                origin={navData.origin}
+                destination={navData.destination}
+                selectedMode={selectedMode}
+                activeModeData={activeModeData}
+                activeStepIdx={activeStepIdx}
+                onSelectStep={setActiveStepIdx}
+              />
+            )}
+
             {/* Step-by-Step Transit Instructions */}
+            {viewMode === 'text' && (
             <div className="p-5 rounded-2xl bg-gray-50 dark:bg-[#131A2A] border border-gray-200 dark:border-white/5 space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-white/10">
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-[#D4AF37]" />
                   <span className="text-xs font-bold uppercase tracking-wider text-gray-900 dark:text-white">
-                    {selectedMode === 'transit' ? 'Metro & Public Transit Route' : selectedMode === 'driving' ? 'Driving Directions' : 'Walking Route'}
+                    {selectedMode === 'transit' ? t('navigator.metroTransitRoute') : selectedMode === 'driving' ? t('navigator.drivingDirections') : t('navigator.walkingRoute')}
                   </span>
                 </div>
                 {activeModeData?.departureTime && activeModeData?.arrivalTime && (
                   <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
-                    Depart {activeModeData.departureTime} · Arrive {activeModeData.arrivalTime}
+                    {t('navigator.depart')} {activeModeData.departureTime} · {t('navigator.arrive')} {activeModeData.arrivalTime}
                   </span>
                 )}
               </div>
@@ -468,7 +545,7 @@ export default function SmartNavigator() {
                     const td = step.transitDetails;
 
                     return (
-                      <div key={idx} className="flex items-start gap-3 text-xs">
+                      <div key={idx} onClick={() => { setActiveStepIdx(idx); setViewMode('map'); }} className={`flex items-start gap-3 text-xs cursor-pointer rounded-xl p-2 -mx-2 transition-colors ${activeStepIdx === idx ? 'bg-[#D6A044]/10' : 'hover:bg-black/5 dark:hover:bg-white/5'}`}>
                         <div className="shrink-0 w-6 h-6 rounded-full bg-gray-200 dark:bg-white/10 text-gray-800 dark:text-white font-mono flex items-center justify-center text-[10px] font-bold mt-0.5">
                           {idx + 1}
                         </div>
@@ -479,18 +556,18 @@ export default function SmartNavigator() {
                               <div className="flex items-center gap-2">
                                 <Train className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
                                 <span className="font-bold text-blue-900 dark:text-blue-300 text-sm">
-                                  {td.lineName || td.lineShortName || 'Metro Line'} {td.headsign ? `towards ${td.headsign}` : ''}
+                                  {td.lineName || td.lineShortName || t('navigator.metroLineFallback')} {td.headsign ? `${t('navigator.towards')} ${td.headsign}` : ''}
                                 </span>
                               </div>
 
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-gray-700 dark:text-slate-300">
                                 <div>
-                                  <span className="text-gray-500 dark:text-slate-400 block font-mono text-[10px]">Board at:</span>
+                                  <span className="text-gray-500 dark:text-slate-400 block font-mono text-[10px]">{t('navigator.boardAt')}</span>
                                   <span className="font-semibold text-gray-900 dark:text-white">{td.departureStop}</span>
                                 </div>
                                 <div>
-                                  <span className="text-gray-500 dark:text-slate-400 block font-mono text-[10px]">Get off at:</span>
-                                  <span className="font-semibold text-gray-900 dark:text-white">{td.arrivalStop} ({td.numStops} {td.numStops === 1 ? 'stop' : 'stops'})</span>
+                                  <span className="text-gray-500 dark:text-slate-400 block font-mono text-[10px]">{t('navigator.getOffAt')}</span>
+                                  <span className="font-semibold text-gray-900 dark:text-white">{td.arrivalStop} ({td.numStops} {td.numStops === 1 ? t('navigator.stop') : t('navigator.stops')})</span>
                                 </div>
                               </div>
                             </div>
@@ -511,10 +588,11 @@ export default function SmartNavigator() {
                 </div>
               ) : (
                 <p className="text-xs text-gray-500 dark:text-slate-400 italic">
-                  {activeModeData?.error || 'Route steps unavailable for this mode.'}
+                  {activeModeData?.error || t('navigator.stepsUnavailable')}
                 </p>
               )}
             </div>
+            )}
           </motion.div>
         )}
       </div>

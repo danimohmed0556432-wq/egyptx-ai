@@ -17,6 +17,7 @@ import {
   ArrowLeftRight,
 } from 'lucide-react';
 import { stripEmojis } from '@/lib/strip-emojis';
+import { useLanguage } from '@/context/LanguageContext';
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -476,6 +477,7 @@ function TypingIndicator() {
 
 /* ─── Main Slang Chat Component ───────────────────────────────────────────── */
 export default function SlangTranslatorContent() {
+  const { t, locale } = useLanguage();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -555,6 +557,7 @@ export default function SlangTranslatorContent() {
           mode: activeInputMode,
           sourceLang: activeInputMode === 'local' ? localLang : touristLang,
           targetLang: activeInputMode === 'local' ? currentTouristObj.name : currentLocalObj.name,
+          language: locale || 'en',
         }),
       });
 
@@ -646,17 +649,17 @@ export default function SlangTranslatorContent() {
             </div>
             <div>
               <h1 className="text-base font-bold bg-gradient-to-r from-[#C9A84C] to-[#E3C973] bg-clip-text text-transparent leading-none drop-shadow-lg">
-                EgyptX Slang & Voice Bridge
+                {t('slang.title')}
               </h1>
               <p className="text-[11px] text-[#E2CB85]/90 mt-0.5 drop-shadow-md">
-                Dual-Language Speech & Dialect AI
+                {t('slang.subtitle')}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-full bg-black/30 border border-[#C9A84C]/40 text-[#E2CB85] font-mono font-semibold drop-shadow-lg">
               <span className="w-1.5 h-1.5 rounded-full bg-[#19A974] animate-pulse" />
-              Voice AI Ready
+              {t('slang.voiceReady')}
             </span>
           </div>
         </div>

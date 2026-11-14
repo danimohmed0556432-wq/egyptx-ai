@@ -143,6 +143,7 @@ export default function AIGuideContent() {
     }
   };
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const lastAnalyzedLocaleRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -202,6 +203,7 @@ export default function AIGuideContent() {
           ai_description: rawText,
         };
       }
+      lastAnalyzedLocaleRef.current = activeLanguage;
       setResult(data);
     } catch (err: any) {
       setError(err.message || 'An error occurred during analysis.');
@@ -209,6 +211,20 @@ export default function AIGuideContent() {
       setAnalyzing(false);
     }
   };
+
+  useEffect(() => {
+    const activeLanguage = locale || 'en';
+    if (
+      selectedFile &&
+      result &&
+      !analyzing &&
+      lastAnalyzedLocaleRef.current &&
+      lastAnalyzedLocaleRef.current !== activeLanguage
+    ) {
+      handleIdentify();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale]);
 
   if (authLoading || !user) {
     return <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#030712] flex items-center justify-center"><Loader2 className="w-8 h-8 text-[#C9A84C] animate-spin" /></div>;
@@ -230,7 +246,7 @@ export default function AIGuideContent() {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white uppercase tracking-wider mb-4"
           >
-            AI Vision Guide
+            {t('aiGuide.title')}
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -238,7 +254,7 @@ export default function AIGuideContent() {
             transition={{ delay: 0.1 }}
             className="text-slate-700 dark:text-gray-300 text-lg max-w-2xl mx-auto font-medium"
           >
-            Snap a photo of any monument, statue, or artifact to instantly identify it using EgyptX Vision AI.
+            {t('aiGuide.subtitle')}
           </motion.p>
         </div>
 
@@ -270,8 +286,8 @@ export default function AIGuideContent() {
                 <div className="w-16 h-16 rounded-full bg-[#030712] border border-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <Camera className="w-8 h-8 text-[#C9A84C]" />
                 </div>
-                <p className="text-slate-900 dark:text-white font-bold text-lg mb-2">Tap to Use Camera</p>
-                <p className="text-slate-600 dark:text-gray-400 text-sm font-medium">or upload an image</p>
+                <p className="text-slate-900 dark:text-white font-bold text-lg mb-2">{t('aiGuide.tapCamera')}</p>
+                <p className="text-slate-600 dark:text-gray-400 text-sm font-medium">{t('aiGuide.orUpload')}</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -281,7 +297,7 @@ export default function AIGuideContent() {
                     onClick={() => { setSelectedFile(null); setPreviewUrl(null); setResult(null); }}
                     className="absolute top-4 right-4 p-2 bg-black/60 text-white hover:text-red-400 rounded-full backdrop-blur-md"
                   >
-                    Change
+                    {t('aiGuide.change')}
                   </button>
                 </div>
                 <button
@@ -290,7 +306,7 @@ export default function AIGuideContent() {
                   className="w-full py-4 bg-[#C9A84C] hover:bg-[#E3C973] text-[#0A1628] font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(201,168,76,0.2)] hover:shadow-[0_0_30px_rgba(201,168,76,0.4)] flex items-center justify-center gap-2 disabled:opacity-70 text-lg uppercase tracking-wider"
                 >
                   {analyzing ? (
-                    <><Loader2 className="w-5 h-5 animate-spin" /> Analyzing Image...</>
+                    <><Loader2 className="w-5 h-5 animate-spin" /> {t('aiGuide.analyzing')}</>
                   ) : (
                     <><Sparkles className="w-5 h-5" /> {t('aiGuide.identify')}</>
                   )}
@@ -316,8 +332,8 @@ export default function AIGuideContent() {
             {!result && !error && (
               <div className="bg-[#F8F3E9] dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-3xl p-8 flex-grow flex flex-col items-center justify-center text-center">
                 <Sparkles className="w-12 h-12 text-gray-600 mb-4 opacity-50" />
-                <h3 className="text-xl font-bold text-slate-700 dark:text-gray-300 mb-2">Awaiting Image</h3>
-                <p className="text-slate-600 dark:text-gray-400 font-medium">Capture a monument to see its verified history and details.</p>
+                <h3 className="text-xl font-bold text-slate-700 dark:text-gray-300 mb-2">{t('aiGuide.awaitingImage')}</h3>
+                <p className="text-slate-600 dark:text-gray-400 font-medium">{t('aiGuide.awaitingSubtitle')}</p>
               </div>
             )}
 
@@ -326,13 +342,14 @@ export default function AIGuideContent() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-[#F8F3E9] dark:bg-[#0A1628] border border-slate-200 dark:border-[#C9A84C]/30 rounded-3xl p-6 sm:p-8 flex-grow flex flex-col text-slate-900 dark:text-white relative overflow-hidden"
+                dir={locale === 'ar' ? 'rtl' : 'ltr'}
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#C9A84C]/10 rounded-full blur-[50px]" />
                 
                 {result.confidence_level === 'unable' ? (
                   <div className="flex-grow flex flex-col items-center justify-center text-center">
                     <AlertCircle className="w-12 h-12 text-yellow-500 mb-4" />
-                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Cannot Identify</h2>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{t('aiGuide.cannotIdentify')}</h2>
                     <p className="text-slate-600 dark:text-gray-400">{result.ai_description}</p>
                   </div>
                 ) : (
@@ -345,7 +362,7 @@ export default function AIGuideContent() {
                           result.confidence_level === 'medium' ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' :
                           'bg-red-500/20 text-red-400 border-red-500/30'
                         }`}>
-                          {result.confidence_level} Confidence
+                          {result.confidence_level} {t('aiGuide.confidenceSuffix')}
                         </span>
                       </div>
                     </div>
@@ -357,7 +374,7 @@ export default function AIGuideContent() {
                         </p>
                       </div>
                       <p className="text-xs text-orange-400/80 mt-4 font-medium flex items-start gap-1.5">
-                        AI identification may not be 100% accurate. Always verify with official sources or on-site information.
+                        {t('aiGuide.disclaimer')}
                       </p>
                     </div>
 
@@ -365,7 +382,7 @@ export default function AIGuideContent() {
                       <div className="mt-auto bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl p-4 flex items-start gap-3">
                         <AlertCircle className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
                         <p className="text-xs text-gray-400">
-                          <span className="font-bold text-gray-800 dark:text-gray-300">{t('aiGuide.desc')}</span> — Not from EgyptX verified database.
+                          <span className="font-bold text-gray-800 dark:text-gray-300">{t('aiGuide.desc')}</span> — {t('aiGuide.notFromDb')}
                         </p>
                       </div>
                     )}
@@ -392,7 +409,7 @@ export default function AIGuideContent() {
                     <div className="mt-8 pt-6 border-t border-gray-200 dark:border-white/10">
                       <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                         <Sparkles className="w-5 h-5 text-[#C9A84C]" />
-                        Ask About This Artifact
+                        {t('aiGuide.askAboutArtifact')}
                       </h3>
                       
                       <div className="bg-white dark:bg-[#030712]/50 border border-gray-200 dark:border-white/10 rounded-2xl flex flex-col h-[400px] shadow-lg relative overflow-hidden">
@@ -401,11 +418,11 @@ export default function AIGuideContent() {
                           {chatMessages.length === 0 && (
                             <div className="flex flex-col items-center justify-center h-full text-center space-y-6 px-4">
                               <p className="text-gray-400 text-sm">
-                                I am your dedicated AI guide for this artifact. Ask me anything about its history, architecture, or significance!
+                                {t('aiGuide.chatIntro')}
                               </p>
                               
                               <div className="flex flex-wrap justify-center gap-2 mt-4">
-                                {["When was this built?", "Who built it?", "What is it famous for?", "How do I get here?"].map((q, i) => (
+                                {[t('aiGuide.quickQ1'), t('aiGuide.quickQ2'), t('aiGuide.quickQ3'), t('aiGuide.quickQ4')].map((q, i) => (
                                   <button 
                                     key={i}
                                     onClick={() => handleSendChat(q)}
@@ -461,14 +478,14 @@ export default function AIGuideContent() {
                             value={chatInput}
                             onChange={(e) => setChatInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSendChat()}
-                            placeholder="Ask a question..."
+                            placeholder={t('aiGuide.askPlaceholder')}
                             className="flex-1 bg-white dark:bg-black/30 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-[#C9A84C]/50 transition-colors placeholder:text-gray-500"
                           />
                           {isChatLoading ? (
                             <button
                               type="button"
                               onClick={handleStopChat}
-                              title="Stop generating"
+                              title={t('aiGuide.stopGenerating')}
                               className="w-12 h-12 bg-red-600 hover:bg-red-500 text-white rounded-xl flex items-center justify-center transition-all flex-shrink-0 shadow-[0_0_15px_rgba(239,68,68,0.5)]"
                             >
                               <Square className="w-4 h-4 fill-white" />
@@ -502,7 +519,7 @@ export default function AIGuideContent() {
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsVoiceCallOpen(true)}
         className="fixed bottom-6 left-6 z-[90] flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-[#C9A84C] via-[#E2CB85] to-[#C9A84C] text-[#0A1628] font-extrabold shadow-[0_0_25px_rgba(201,168,76,0.6)] border border-white/40 hover:shadow-[0_0_35px_rgba(201,168,76,0.8)] transition-all duration-300 group cursor-pointer animate-pulse"
-        title={locale === 'ar' ? 'تحدث مع AI' : 'Call AI'}
+        title={t('aiGuide.callAi')}
       >
         <span className="relative flex h-3 w-3">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
@@ -513,7 +530,7 @@ export default function AIGuideContent() {
           <Sparkles className="w-3.5 h-3.5 text-[#0A1628]" />
         </div>
         <span className="text-xs md:text-sm font-black tracking-wide">
-          {locale === 'ar' ? 'تحدث مع AI' : 'Call AI'}
+          {t('aiGuide.callAi')}
         </span>
       </motion.button>
 

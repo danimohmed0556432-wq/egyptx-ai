@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
 import { createUniversalChatCompletion } from '@/lib/ai-client';
+import { getLanguageMeta, normalizeLocale } from '@/lib/i18n-ai';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { memories } = body;
+    const { memories, language, locale } = body;
+    const targetLocale = normalizeLocale(language || locale);
+    const langMeta = getLanguageMeta(targetLocale);
 
     if (!memories || !Array.isArray(memories) || memories.length === 0) {
       return NextResponse.json({ error: 'No memories provided' }, { status: 400 });
@@ -28,7 +31,8 @@ CRITICAL RULES:
 2. DO NOT invent or hallucinate visits to any attractions or cities that are not explicitly mentioned.
 3. Write in the second person ("You visited...", "Your journey began...").
 4. Keep the tone warm, reflective, and poetic, capturing the essence of their Egyptian adventure.
-5. If the memories are very brief, summarize them elegantly without adding fake details.`;
+5. If the memories are very brief, summarize them elegantly without adding fake details.
+6. OUTPUT LANGUAGE: ${langMeta.directive} Write the entire summary in ${langMeta.name}.`;
 
     const prompt = `Here are the user's memories:\n\n${memoriesContext}\n\nPlease generate the personalized trip summary.`;
 

@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client';
 import { trackEvent } from '@/lib/analytics';
 import { useEliteTrials } from '@/lib/elite-trials';
 import EliteModal from '@/components/EliteModal';
+import { useLanguage } from '@/context/LanguageContext';
 
 type TabType = 'overview' | 'timetravel' | 'timeline' | '3d' | 'translation' | 'ar';
 
@@ -37,6 +38,7 @@ function WeatherBadge({ lat, lon }: { lat: number, lon: number }) {
 }
 
 export default function SmartSiteContent() {
+  const { t } = useLanguage();
   const [attractions, setAttractions] = useState<any[]>([]);
   const [selectedSiteId, setSelectedSiteId] = useState<string>('');
   const [isScanning, setIsScanning] = useState(false);
@@ -131,7 +133,7 @@ export default function SmartSiteContent() {
     return (
       <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#030712] flex flex-col items-center justify-center text-[#C9A84C]">
         <Loader2 className="w-10 h-10 animate-spin mb-4" />
-        <p>Loading Smart Sites...</p>
+        <p>{t('smartSite.loading')}</p>
       </div>
     );
   }
@@ -140,7 +142,7 @@ export default function SmartSiteContent() {
     return (
       <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#030712] flex flex-col items-center justify-center text-red-500">
         <AlertCircle className="w-10 h-10 mb-4" />
-        <p>{error || 'No verified attractions found.'}</p>
+        <p>{error || t('smartSite.noAttractions')}</p>
       </div>
     );
   }
@@ -156,7 +158,7 @@ export default function SmartSiteContent() {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl font-bold text-[#C9A84C] mb-4"
           >
-            Smart Site Experience
+            {t('smartSite.title')}
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}

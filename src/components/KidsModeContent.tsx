@@ -324,37 +324,37 @@ export default function KidsModeContent() {
 
   // --- DASHBOARD VIEW ---
   return (
-    <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#0A1628] text-slate-900 dark:text-white pt-24 pb-16 font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#080705] text-slate-900 dark:text-[#F5EFE6] pt-24 pb-16 font-sans transition-colors duration-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         {/* Header Section (Dashboard view) */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between bg-[#F8F3E9] dark:bg-gradient-to-r dark:from-[#1B6B93]/40 dark:to-transparent p-6 rounded-3xl border border-slate-200 dark:border-[#1B6B93]/50 text-slate-900 dark:text-white">
+            <div className="flex flex-col md:flex-row md:items-center justify-between bg-[#F8F3E9] dark:bg-gradient-to-br dark:from-[#21170D] dark:to-[#120C07] p-6 rounded-3xl border border-slate-200 dark:border-[#76501F] text-slate-900 dark:text-[#F5EFE6] shadow-sm dark:shadow-[0_12px_36px_rgba(0,0,0,0.45)]">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 bg-[#C9A84C] rounded-full flex items-center justify-center text-[#0A1628] border-4 border-[#0A1628] shadow-lg">
                   <Smile className="w-8 h-8" />
                 </div>
                 <div>
-                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">Hi, {profile.nickname}!</h1>
-                  <p className="text-[#1B6B93] dark:text-[#4CC9F0] font-medium flex items-center gap-1.5">
+                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-[#FFD27A]">Hi, {profile.nickname}!</h1>
+                  <p className="text-[#1B6B93] dark:text-[#D6A044] font-medium flex items-center gap-1.5">
                     <Star className="w-4 h-4 fill-current" />
                     <span>Explorer Level</span>
                   </p>
                 </div>
               </div>
-              <div className="mt-4 md:mt-0 flex items-center gap-2 bg-white dark:bg-[#0A1628] px-6 py-3 rounded-2xl border border-slate-200 dark:border-white/10 shadow-inner">
-                <span className="text-[#C9A84C] font-bold text-3xl">{profile.points}</span>
-                <span className="text-gray-400 font-medium text-sm uppercase tracking-wider">Points</span>
+              <div className="mt-4 md:mt-0 flex items-center gap-2 bg-white dark:bg-[#17100A] px-6 py-3 rounded-2xl border border-slate-200 dark:border-[#76501F]/80 shadow-inner">
+                <span className="text-[#C9A84C] dark:text-[#FFD27A] font-bold text-3xl">{profile.points}</span>
+                <span className="text-gray-500 dark:text-[#F5EFE6]/75 font-medium text-sm uppercase tracking-wider">Points</span>
               </div>
             </div>
 
             {/* Welcome Video Section */}
-            <div className="bg-[#F8F3E9] dark:bg-gradient-to-br dark:from-[#1B6B93]/10 dark:to-[#0A1628] border border-slate-200 dark:border-[#1B6B93]/30 rounded-3xl overflow-hidden p-6 md:p-8 flex flex-col md:flex-row items-center gap-8">
+            <div className="bg-[#F8F3E9] dark:bg-gradient-to-br dark:from-[#21170D] dark:to-[#120C07] border border-slate-200 dark:border-[#76501F] rounded-3xl overflow-hidden p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 shadow-sm dark:shadow-[0_12px_36px_rgba(0,0,0,0.45)]">
               <div className="flex-1">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-3">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-[#FFD27A] mb-4 flex items-center gap-3">
                   <Sparkles className="w-7 h-7 text-[#C9A84C]" />
                   <span>Welcome to Kids Mode!</span>
                 </h2>
-            <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+            <p className="text-gray-700 dark:text-[#F5EFE6] mb-6 leading-relaxed">
               Watch this quick video to learn how to explore, earn points, and unlock awesome badges in your journey through Ancient Egypt!
             </p>
           </div>
@@ -487,8 +487,8 @@ export default function KidsModeContent() {
             ) : (
               <>
                 {/* Facts Carousel */}
-                <div className="bg-[#F8F3E9] dark:bg-gradient-to-br dark:from-[#1B6B93]/30 dark:to-[#0A1628] border border-slate-200 dark:border-[#1B6B93]/50 rounded-3xl p-6 md:p-8 backdrop-blur-md">
-                  <h2 className="text-[#1B6B93] dark:text-[#4CC9F0] font-bold uppercase text-sm tracking-wider mb-4 flex items-center gap-2">
+                <div className="bg-[#F8F3E9] dark:bg-gradient-to-br dark:from-[#21170D] dark:to-[#120C07] border border-slate-200 dark:border-[#76501F] rounded-3xl p-6 md:p-8 backdrop-blur-md shadow-sm dark:shadow-[0_12px_36px_rgba(0,0,0,0.45)]">
+                  <h2 className="text-[#1B6B93] dark:text-[#D6A044] font-bold uppercase text-sm tracking-wider mb-4 flex items-center gap-2">
                     <span className="text-xl"></span>
                     <span>Did you know?</span>
                   </h2>
@@ -500,12 +500,12 @@ export default function KidsModeContent() {
                       exit={{ opacity: 0, x: -20 }}
                       className="flex flex-col sm:flex-row gap-6 items-center sm:items-start"
                     >
-                      <div className="bg-white dark:bg-black/30 w-24 h-24 rounded-2xl flex items-center justify-center shrink-0 border border-slate-200 dark:border-white/10 shadow-inner">
+                      <div className="bg-white dark:bg-[#17100A] w-24 h-24 rounded-2xl flex items-center justify-center shrink-0 border border-slate-200 dark:border-[#76501F]/70 shadow-inner">
                         <Sparkles className="w-10 h-10 text-[#C9A84C]" />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-bold text-[#8A661C] dark:text-[#C9A84C] mb-2">{stripEmojis(currentFact.title)}</h3>
-                        <p className="text-lg text-gray-700 dark:text-gray-200 leading-relaxed">{stripEmojis(currentFact.description)}</p>
+                        <h3 className="text-2xl font-bold text-[#8A661C] dark:text-[#FFD27A] mb-2">{stripEmojis(currentFact.title)}</h3>
+                        <p className="text-lg text-gray-700 dark:text-[#F5EFE6] leading-relaxed">{stripEmojis(currentFact.description)}</p>
                       </div>
                     </motion.div>
                   </AnimatePresence>

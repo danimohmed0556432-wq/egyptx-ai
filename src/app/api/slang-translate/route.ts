@@ -1,17 +1,19 @@
 import { NextResponse } from 'next/server';
 import { createUniversalChatCompletion } from '@/lib/ai-client';
+import { getLanguageMeta, normalizeLocale } from '@/lib/i18n-ai';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { text, mode, sourceLang, targetLang } = body;
+    const { text, mode, sourceLang, targetLang, language, locale } = body;
 
     if (!text || typeof text !== 'string') {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 });
     }
 
     const isLocalInput = mode === 'local' || (typeof sourceLang === 'string' && sourceLang.startsWith('ar'));
-    const touristLanguageName = targetLang || 'English';
+    const uiLangMeta = getLanguageMeta(normalizeLocale(language || locale));
+    const touristLanguageName = targetLang || uiLangMeta.name;
 
     const systemPrompt = isLocalInput
       ? `You are an expert bilingual cultural bridge between Egyptian locals and visiting international tourists.
@@ -28,7 +30,7 @@ CRITICAL PRONUNCIATION & PHONETIC RULES FOR TTS ENGINES:
 2. DO NOT artificially elongate letters or repeat characters (NEVER write "ازييييك", "اييييه", "ياااا سطا"). Always write the clean native spelling so voice models pronounce whole words fluidly rather than spelling individual letters out loud.
 3. Include natural punctuation (. , ? !) to allow the voice synthesis engine to pause naturally and maintain correct Egyptian intonation.
 4. In "phonetic", provide an easy-to-read transliteration using English Latin letters (e.g., "Izzayak? 'Amel eh?").
-5. In "context", provide 1-2 friendly, culturally rich sentences explaining how and when locals say this.
+5. In "context", provide 1-2 friendly, culturally rich sentences in ${uiLangMeta.name} explaining how and when locals say this.
 
 Output MUST be strictly valid raw JSON without markdown or codeblocks:
 {"translation": "clean Egyptian Arabic text", "phonetic": "English phonetic transliteration", "context": "cultural context note"}`;

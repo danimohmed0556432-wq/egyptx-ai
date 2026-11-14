@@ -1,20 +1,20 @@
 const egyptNews = [
   {
     id: 1,
-    title: "Grand Egyptian Museum Opens to the World",
-    description: "The Grand Egyptian Museum (GEM) in Giza, the world's largest archaeological museum, officially opened in 2023. It houses over 100,000 artifacts including the complete treasures of Tutankhamun displayed together for the first time in history.",
+    title: "Grand Egyptian Museum Officially Opens in Giza",
+    description: "The Grand Egyptian Museum (GEM) in Giza, the world's largest archaeological museum dedicated to a single civilization, officially opened on November 1, 2025. It showcases over 100,000 artifacts, led by the monumental Grand Staircase and the complete Tutankhamun galleries displayed together for the first time in history.",
     category: "Museums",
-    date: "2023-11-18",
+    date: "2025-11-01",
     source: "Grand Egyptian Museum Official",
     sourceUrl: "https://gem.gov.eg",
     image: '/news/gem.jpg'
   },
   {
     id: 2,
-    title: "New Tomb Discovered in Luxor's Valley of the Kings",
-    description: "Egyptian archaeologists discovered a new tomb in the Valley of the Kings in Luxor, designated KV65. The discovery adds to our understanding of the New Kingdom period and the burial practices of ancient Egyptian nobles.",
+    title: "Tomb of King Thutmose II Discovered in Luxor's Western Wadis",
+    description: "An Egyptian-British archaeological mission announced by the Ministry of Tourism and Antiquities uncovered the tomb of King Thutmose II in the Western Wadis near Luxor—the first royal tomb of an ancient Egyptian pharaoh discovered since Tutankhamun's tomb in 1922.",
     category: "Archaeology",
-    date: "2024-03-15",
+    date: "2025-02-18",
     source: "Ministry of Tourism and Antiquities",
     sourceUrl: "https://www.antiquities.go.eg",
     image: '/news/luxor-tomb.jpg'

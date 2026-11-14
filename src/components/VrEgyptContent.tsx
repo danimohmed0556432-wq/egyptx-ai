@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Globe, MapPin, Lock, ArrowLeft, PlayCircle, Sparkles } from 'lucide-react';
 import VRAvatarOverlay from '@/components/VRAvatarOverlay';
+import { useLanguage } from '@/context/LanguageContext';
 
 const destinations = [
   {
@@ -84,6 +85,7 @@ const destinations = [
 ];
 
 export default function VrEgyptContent() {
+  const { t } = useLanguage();
   const [activeSite, setActiveSite] = useState<typeof destinations[0] | null>(null);
   const [showSplash, setShowSplash] = useState(true);
   const [vrPortalSite, setVrPortalSite] = useState<typeof destinations[0] | null>(null);
@@ -214,7 +216,7 @@ export default function VrEgyptContent() {
                           onClick={(e) => e.stopPropagation()}
                           className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-gradient-to-r from-[#C9A84C] to-[#E2CB85] text-[#0A1628] rounded-full text-xs font-bold hover:scale-105 transition-all shadow-md"
                         >
-                          <span>Tour Details →</span>
+                          <span>{t('vr.enterTour')} →</span>
                         </Link>
                         <button
                           onClick={(e) => {
@@ -253,7 +255,7 @@ export default function VrEgyptContent() {
                   onClick={() => setActiveSite(null)}
                   className="flex items-center gap-2 px-5 py-2.5 bg-black/50 hover:bg-[#C9A84C]/20 border border-white/20 hover:border-[#C9A84C] rounded-full text-sm font-medium transition-all backdrop-blur-md group"
                 >
-                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Discover
+                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t('vr.backToVr')}
                 </button>
               </div>
 

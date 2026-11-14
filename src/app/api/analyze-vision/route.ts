@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
-import { analyzeImageGrounded } from '@/lib/groundedGuide';
+import {
+  identifyLandmarkWithCohereVision,
+  parseRecognitionInput,
+} from '@/lib/landmark-recognition';
+import type { SupportedLocale } from '@/lib/i18n-ai';
 
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
@@ -8,56 +12,57 @@ const uncertainRecord = (lang: string) => ({
   transliteration: lang === 'ar' ? 'لم أتمكن من التعرف بدقة' : 'Could not identify accurately',
   englishTranslation: 'Could not accurately identify the inscription or monument.',
   arabicExplanation:
-    lang === 'ar'
-      ? 'لم أتمكن من التعرف بدقة على هذا المعلم أو النقش، أو لا تتوفر مصادر موثقة كافية حالياً. يرجى التقاط صورة أوضح أو بزاوية مباشرة.'
-      : 'Could not accurately identify this monument or inscription, or no verified sources are currently available. Please capture a clearer photo or a direct angle.',
+    'لم يتم التحقق من تطابق دقيق من قاعدة البيانات الأثرية. يرجى رفع صورة واضحة للمعلم أو القطعة الأثرية.',
   context: {
-    personOrKing: lang === 'ar' ? 'غير محدد' : 'Unspecified',
-    era: lang === 'ar' ? 'غير مؤكد' : 'Uncertain',
-    temple: lang === 'ar' ? 'غير محدد' : 'Unspecified',
-    meaning:
-      lang === 'ar'
-        ? 'لا يمكن التحقق الأثري القطعي.'
-        : 'Definitive archaeological verification is not possible.',
+    personOrKing: 'Unknown',
+    era: 'Unknown',
+    temple: 'Unknown',
+    meaning: 'Insufficient image data for verification.',
   },
-  metadata: { confidence: '0%', source: 'Strict Factual Verification' },
+  metadata: {
+    confidence: '0%',
+    source: 'EgyptX Vision + Verified Knowledge Base',
+  },
+  sources: [] as Array<{ title: string; url: string }>,
 });
 
 export async function POST(req: Request) {
-  let language = 'en';
+  let language: SupportedLocale = 'en';
   try {
-    const { image, prompt, language: reqLang } = await req.json();
-    if (reqLang) language = reqLang;
+    const parsed = await parseRecognitionInput(req);
+    language = parsed.language;
 
-    if (!image) {
+    if (!parsed.buffer) {
       return NextResponse.json({ error: 'No image payload provided' }, { status: 400 });
     }
 
-    const imageUrl = image.startsWith('data:') ? image : `data:image/jpeg;base64,${image}`;
-    const result = await analyzeImageGrounded(imageUrl, language, prompt);
-
-    if (result.status !== 'ok' || !result.data || !result.identity) {
-      return NextResponse.json(uncertainRecord(language));
-    }
-
-    const { data, identity, sources } = result;
-    const pct = { high: '95%', medium: '75%', low: '50%' }[data.confidence];
+    const visionResult = await identifyLandmarkWithCohereVision(parsed.buffer, {
+      language,
+      prompt: parsed.prompt,
+      filename: parsed.filename,
+    });
 
     return NextResponse.json({
-      transliteration: language === 'ar' ? identity.name_ar || data.identified_name : identity.name_en || data.identified_name,
-      englishTranslation: identity.name_en || data.identified_name,
-      arabicExplanation: data.description,
+      transliteration: visionResult.identified_name,
+      englishTranslation: visionResult.identified_name,
+      arabicExplanation: visionResult.historical_significance || visionResult.ai_description,
       context: {
-        personOrKing: data.person_or_king,
-        era: data.era,
-        temple: data.location,
-        meaning: data.meaning,
+        personOrKing: visionResult.builder,
+        era: visionResult.dynasty,
+        temple: visionResult.location,
+        meaning: visionResult.historical_significance,
       },
       metadata: {
-        confidence: pct,
-        source: result.verified ? 'EgyptX Verified Database + Live Web Search' : 'Live Web Search',
+        confidence: visionResult.confidence_percent,
+        model: visionResult.model_used,
+        source: 'EgyptX Vision + Verified Knowledge Base',
       },
-      sources,
+      sources: [
+        {
+          title: 'EgyptX Vision + Verified Archaeological Knowledge Base',
+          url: '',
+        },
+      ],
     });
   } catch (error: any) {
     console.error('[Analyze Vision Route Exception]:', error?.message || 'error');

@@ -2,34 +2,108 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 
 
 export default function ContinuousVoiceAssistant() {
   const router = useRouter();
+  const { locale, setLocale } = useLanguage();
   const recognitionRef = useRef<any>(null);
   const isListeningRef = useRef<boolean>(false);
   const restartTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const speechPauseTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const pendingTranscriptRef = useRef<string>('');
+  const isRecognitionActiveRef = useRef<boolean>(false);
   const lastCmdTime = useRef<number>(0);
+  const lastCmdKeyRef = useRef<string>('');
+  const lastAiTranscriptRef = useRef<string>('');
+  const lastAiTimeRef = useRef<number>(0);
+  const aiInFlightRef = useRef<boolean>(false);
+  const toastTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const micStreamRef = useRef<MediaStream | null>(null);
 
-  // Futuristic Mobile Widget State
-  const [isExpanded, setIsExpanded] = useState(false);
   const [isListeningUI, setIsListeningUI] = useState(false);
+  const [statusToast, setStatusToast] = useState<string | null>(null);
+  const [liveTranscript, setLiveTranscript] = useState<string>('');
+  const [micLangOverride, setMicLangOverride] = useState<'auto' | 'ar-EG' | 'en-US'>('auto');
+  const micLangOverrideRef = useRef<'auto' | 'ar-EG' | 'en-US'>('auto');
+  const localeRef = useRef<string>(locale || 'en');
+
+  useEffect(() => {
+    localeRef.current = locale || 'en';
+  }, [locale]);
+
+  useEffect(() => {
+    micLangOverrideRef.current = micLangOverride;
+  }, [micLangOverride]);
+
+  const showToast = (message: string) => {
+    if (!message) return;
+    setStatusToast(message);
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = setTimeout(() => {
+      setStatusToast(null);
+    }, 4500);
+  };
+
+  const speakConfirmation = (text: string) => {
+    if (!text || typeof window === 'undefined' || !window.speechSynthesis) return;
+    try {
+      const synth = window.speechSynthesis;
+      synth.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      const isAr = /[\u0600-\u06FF]/.test(text);
+      utterance.lang = isAr ? 'ar-SA' : 'en-US';
+      const voices = synth.getVoices();
+      const langPrefix = isAr ? 'ar' : 'en';
+      const preferred =
+        voices.find(
+          (v) =>
+            v.lang.toLowerCase().includes(langPrefix) &&
+            (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Online'))
+        ) || voices.find((v) => v.lang.toLowerCase().includes(langPrefix));
+      if (preferred) utterance.voice = preferred;
+      utterance.rate = 1.05;
+      synth.speak(utterance);
+    } catch {
+      // Ignore TTS errors
+    }
+  };
 
   // ── 1. DYNAMIC MULTILINGUAL RECOGNITION (The "Ears") ──
   const updateRecognitionLanguage = () => {
-    if (typeof window === 'undefined' || typeof document === 'undefined') return 'en-US';
-    const htmlLang = document.documentElement.lang.toLowerCase();
-    const url = window.location.href.toLowerCase();
-    if (htmlLang.includes('fr') || url.includes('/fr')) return 'fr-FR';
-    if (htmlLang.includes('ar') || url.includes('/ar')) return 'ar-EG';
-    return 'en-US';
+    if (micLangOverrideRef.current !== 'auto') {
+      return micLangOverrideRef.current;
+    }
+    const activeLang = (
+      localeRef.current ||
+      (typeof document !== 'undefined' ? document.documentElement.lang : '') ||
+      'en'
+    ).toLowerCase();
+    const langMap: Record<string, string> = {
+      ar: 'ar-EG',
+      en: 'en-US',
+      fr: 'fr-FR',
+      de: 'de-DE',
+      it: 'it-IT',
+      es: 'es-ES',
+      zh: 'zh-CN',
+      ru: 'ru-RU',
+    };
+    const prefix = activeLang.slice(0, 2);
+    return langMap[prefix] || 'en-US';
   };
 
-  // Helper for restarting recognition cleanly
+  // Helper for restarting recognition cleanly without overlapping instances
   const startRecognition = () => {
     if (!isListeningRef.current || !recognitionRef.current) return;
+    if (isRecognitionActiveRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch {}
+      isRecognitionActiveRef.current = false;
+    }
     try {
       recognitionRef.current.lang = updateRecognitionLanguage();
       recognitionRef.current.start();
@@ -119,10 +193,29 @@ export default function ContinuousVoiceAssistant() {
     });
   };
 
-  // Central activation and deactivation
+  // Central activation and deactivation with single-speaker noise isolation
   const activateAssistant = async () => {
+    if (recognitionRef.current && isRecognitionActiveRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch {}
+      isRecognitionActiveRef.current = false;
+    }
     isListeningRef.current = true;
     setIsListeningUI(true);
+    try {
+      if (typeof navigator !== 'undefined' && navigator.mediaDevices?.getUserMedia) {
+        micStreamRef.current = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+          },
+        });
+      }
+    } catch {
+      // Fall back to SpeechRecognition default mic if getUserMedia is restricted
+    }
     await playGreeting();
     if (isListeningRef.current) {
       startRecognition();
@@ -131,8 +224,16 @@ export default function ContinuousVoiceAssistant() {
 
   const deactivateAssistant = () => {
     isListeningRef.current = false;
+    isRecognitionActiveRef.current = false;
     setIsListeningUI(false);
+    setLiveTranscript('');
     if (restartTimerRef.current) clearTimeout(restartTimerRef.current);
+    if (speechPauseTimerRef.current) clearTimeout(speechPauseTimerRef.current);
+    pendingTranscriptRef.current = '';
+    if (micStreamRef.current) {
+      micStreamRef.current.getTracks().forEach((t) => t.stop());
+      micStreamRef.current = null;
+    }
     if (recognitionRef.current) {
       try {
         recognitionRef.current.abort();
@@ -167,17 +268,389 @@ export default function ContinuousVoiceAssistant() {
     return normalized;
   };
 
-  // ── 6. ZERO-LAG INTENT ENGINE & DEBOUNCING ──
-  const processCommand = (rawTranscript: string) => {
-    // Strict Debounce: 2000ms
-    const now = Date.now();
-    if (now - lastCmdTime.current < 2000) return;
-    lastCmdTime.current = now;
+  type VoiceAction = {
+    type: string;
+    path?: string;
+    menu?: string;
+    fieldHint?: string;
+    value?: string;
+    label?: string;
+    code?: string;
+    mode?: string;
+    direction?: string;
+  };
 
+  const BILINGUAL_ALIASES: Record<string, string[]> = {
+    luxor: ['luxor', 'الأقصر', 'الاقصر', 'اقصر'],
+    aswan: ['aswan', 'أسوان', 'اسوان'],
+    cairo: ['cairo', 'القاهرة', 'القاهره', 'قاهره'],
+    giza: ['giza', 'الجيزة', 'الجيزه', 'جيزه'],
+    alexandria: ['alexandria', 'alex', 'الإسكندرية', 'الاسكندرية', 'اسكندرية', 'اسكندريه'],
+    sharm: ['sharm', 'sharm el sheikh', 'شرم الشيخ', 'شرم'],
+    hurghada: ['hurghada', 'الغردقة', 'الغردقه'],
+    siwa: ['siwa', 'سيوة', 'سيوه'],
+    next: ['next', 'continue', 'التالي', 'التالى', 'استمرار'],
+    generate: ['generate', 'create', 'plan', 'إنشاء', 'انشاء', 'توليد', 'اصنع', 'خطط'],
+    'find route': ['find route', 'get route', 'navigate', 'ابحث عن المسار', 'إيجاد المسار', 'ايجاد المسار', 'احسب المسار'],
+    identify: ['identify', 'scan', 'analyze', 'تعرف', 'تحليل', 'افحص'],
+    'start call': ['start call', 'call', 'ابدأ المكالمة', 'ابدا المكالمة', 'اتصل'],
+    solo: ['solo', 'فردي', 'وحدي', 'سولو'],
+    couple: ['couple', 'زوجين', 'رومانسي'],
+    family: ['family', 'عائلة', 'عائلي', 'اسرة'],
+    group: ['group', 'مجموعة', 'مجموعه', 'اصدقاء'],
+  };
+
+  const sleepMs = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const isElementVisible = (el: HTMLElement): boolean => {
+    if (el.closest('[data-voice-ui="true"]')) return false;
+    const style = window.getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+      return false;
+    }
+    const rect = el.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  };
+
+  const collectVisibleElements = () => {
+    if (typeof document === 'undefined') return [];
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>(
+        'input, textarea, select, button, [role="button"], [role="tab"], [role="option"]'
+      )
+    ).filter(isElementVisible);
+
+    return els.slice(0, 45).map((el) => {
+      const inp = el as HTMLInputElement;
+      const labelText =
+        el.id && document.querySelector(`label[for="${CSS.escape(el.id)}"]`)?.textContent?.trim();
+      return {
+        tag: el.tagName.toLowerCase(),
+        type: inp.type || undefined,
+        name: inp.name || undefined,
+        id: el.id || undefined,
+        placeholder: inp.placeholder || undefined,
+        ariaLabel: el.getAttribute('aria-label') || undefined,
+        label: labelText || undefined,
+        text: el.textContent?.replace(/\s+/g, ' ').trim().slice(0, 60) || undefined,
+      };
+    });
+  };
+
+  const setReactInputValue = (el: HTMLInputElement | HTMLTextAreaElement, value: string) => {
+    const proto =
+      el.tagName === 'TEXTAREA'
+        ? window.HTMLTextAreaElement.prototype
+        : window.HTMLInputElement.prototype;
+    const nativeSetter = Object.getOwnPropertyDescriptor(proto, 'value')?.set;
+    if (nativeSetter) {
+      nativeSetter.call(el, value);
+    } else {
+      el.value = value;
+    }
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+
+  const executeFillInput = (fieldHint: string, value: string): boolean => {
+    const hint = (fieldHint || '').toLowerCase();
+    const inputs = Array.from(
+      document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')
+    ).filter((el) => {
+      const inp = el as HTMLInputElement;
+      if (inp.type === 'hidden' || inp.type === 'checkbox' || inp.type === 'radio' || inp.type === 'file') {
+        return false;
+      }
+      return isElementVisible(el);
+    });
+    if (!inputs.length) return false;
+
+    const getMeta = (el: HTMLInputElement | HTMLTextAreaElement) => {
+      const inp = el as HTMLInputElement;
+      const assocLabel =
+        el.id && document.querySelector(`label[for="${CSS.escape(el.id)}"]`)?.textContent;
+      const parentLabel = el.closest('label')?.textContent;
+      return [
+        inp.type,
+        inp.name,
+        el.id,
+        inp.placeholder,
+        el.getAttribute('aria-label'),
+        assocLabel,
+        parentLabel,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+    };
+
+    let target: HTMLInputElement | HTMLTextAreaElement | undefined;
+
+    if (hint === 'startdate' || hint === 'enddate' || /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      const dateInputs = inputs.filter((el) => (el as HTMLInputElement).type === 'date');
+      if (dateInputs.length > 0) {
+        if (hint === 'enddate' && dateInputs.length > 1) {
+          target = dateInputs[1];
+        } else if (hint === 'startdate') {
+          target = dateInputs[0];
+        } else {
+          target = dateInputs.find((el) => getMeta(el).includes(hint)) || dateInputs[0];
+        }
+      }
+    }
+
+    if (!target) {
+      const hintKeywords: Record<string, string[]> = {
+        startdate: ['start', 'from', 'checkin', 'check-in', 'بداية', 'من', 'وصول'],
+        enddate: ['end', 'to', 'checkout', 'check-out', 'نهاية', 'إلى', 'مغادرة'],
+        budget: ['budget', 'price', 'cost', 'money', 'ميزانية', 'ميزانيه', 'تكلفة', '500', '$'],
+        travelers: ['traveler', 'guest', 'person', 'people', 'مسافر', 'أشخاص', 'افراد'],
+        destination: ['destination', 'city', 'place', 'to', 'where', 'وجهة', 'مدينة', 'مكان', 'أين'],
+        search: ['search', 'query', 'find', 'where', 'destination', 'بحث', 'ابحث', 'أين'],
+        chat: ['message', 'ask', 'chat', 'type', 'رسالة', 'اسأل', 'دردشة'],
+      };
+      const keys = hintKeywords[hint] || [hint];
+      target =
+        inputs.find((el) => {
+          const meta = getMeta(el);
+          return keys.some((k) => meta.includes(k));
+        }) ||
+        (hint === 'search' || hint === 'destination' || hint === 'chat'
+          ? inputs.find((el) => (el as HTMLInputElement).type === 'text' || (el as HTMLInputElement).type === 'search' || el.tagName === 'TEXTAREA')
+          : undefined);
+    }
+
+    if (!target) return false;
+    target.focus();
+    setReactInputValue(target, value);
+    return true;
+  };
+
+  const executeSelectOrClick = (label: string): boolean => {
+    const rawLabel = (label || '').trim();
+    if (!rawLabel) return false;
+    const normLabel = normalizeText(rawLabel);
+
+    const expandedTargets = new Set<string>([normLabel, rawLabel.toLowerCase()]);
+    for (const [key, aliases] of Object.entries(BILINGUAL_ALIASES)) {
+      if (
+        normLabel === key ||
+        aliases.some((a) => normalizeText(a) === normLabel || normLabel.includes(normalizeText(a)))
+      ) {
+        aliases.forEach((a) => expandedTargets.add(normalizeText(a)));
+      }
+    }
+
+    // 1. Check <select> elements for matching <option>
+    const selects = Array.from(document.querySelectorAll<HTMLSelectElement>('select')).filter(isElementVisible);
+    for (const sel of selects) {
+      const opt = Array.from(sel.options).find((o) => {
+        const oNorm = normalizeText(o.textContent || o.value || '');
+        return Array.from(expandedTargets).some((t) => oNorm && (oNorm === t || oNorm.includes(t)));
+      });
+      if (opt) {
+        const setter = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, 'value')?.set;
+        if (setter) setter.call(sel, opt.value);
+        else sel.value = opt.value;
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+        return true;
+      }
+    }
+
+    // 2. Match visible clickable elements
+    const candidates = Array.from(
+      document.querySelectorAll<HTMLElement>(
+        'button, a, [role="button"], [role="tab"], [role="option"], label, div.cursor-pointer, span.cursor-pointer'
+      )
+    ).filter(isElementVisible);
+
+    let bestMatch: HTMLElement | null = null;
+    let bestScore = 0;
+
+    for (const el of candidates) {
+      const text =
+        el.getAttribute('aria-label') ||
+        el.getAttribute('title') ||
+        el.textContent ||
+        '';
+      const elNorm = normalizeText(text);
+      if (!elNorm) continue;
+
+      for (const t of expandedTargets) {
+        if (!t) continue;
+        if (elNorm === t) {
+          bestMatch = el;
+          bestScore = 3;
+          break;
+        }
+        if (elNorm.includes(t) && bestScore < 2) {
+          bestMatch = el;
+          bestScore = 2;
+        }
+      }
+      if (bestScore === 3) break;
+    }
+
+    if (!bestMatch) return false;
+    bestMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    bestMatch.focus();
+    bestMatch.dispatchEvent(
+      new MouseEvent('click', { view: window, bubbles: true, cancelable: true, buttons: 1 })
+    );
+    try {
+      bestMatch.click();
+    } catch {}
+    return true;
+  };
+
+  const normalizeNavPath = (path: string): string => {
+    const p = (path || '/').trim().toLowerCase();
+    const aliasMap: Record<string, string> = {
+      '/smart-navigator': '/navigator',
+      '/vision-guide': '/ai-guide',
+      '/concierge': '/bookings',
+      '/egypt-life': '/news',
+      '/kids-mode': '/kids',
+      '/ai-planner': '/planner',
+      '/hieroglyph': '/hieroglyph-scanner',
+      '/vr': '/vr-egypt',
+    };
+    return aliasMap[p] || p;
+  };
+
+  const executeAiActions = async (actions: VoiceAction[], reply: string) => {
+    const executedSummary: string[] = [];
+
+    for (const action of actions) {
+      const type = String(action.type || '').toUpperCase();
+      if (type === 'NAVIGATE' && action.path) {
+        const targetPath = normalizeNavPath(action.path);
+        router.push(targetPath);
+        executedSummary.push(`Opened ${targetPath}`);
+        await sleepMs(650);
+        continue;
+      }
+
+      if (type === 'OPEN_MENU' && action.menu) {
+        const menuKey = action.menu.toLowerCase();
+        window.dispatchEvent(new CustomEvent('egyptx:open-nav-menu', { detail: { menu: menuKey } }));
+        executedSummary.push(`Menu: ${menuKey}`);
+      } else if (type === 'FILL_INPUT' && action.value !== undefined) {
+        const ok = executeFillInput(action.fieldHint || 'search', String(action.value));
+        if (ok) executedSummary.push(`Set ${action.fieldHint || 'field'}: ${action.value}`);
+      } else if (type === 'SELECT_OPTION' && action.label) {
+        const ok = executeSelectOrClick(action.label);
+        if (ok) executedSummary.push(`Selected ${action.label}`);
+      } else if (type === 'CLICK_BUTTON' && action.label) {
+        const ok = executeSelectOrClick(action.label);
+        if (ok) executedSummary.push(`Clicked ${action.label}`);
+      } else if (type === 'SET_LANGUAGE' && action.code) {
+        setLocale(action.code.toLowerCase());
+        executedSummary.push(`Language: ${action.code.toUpperCase()}`);
+      } else if (type === 'SET_THEME' && action.mode) {
+        const wantDark = action.mode.toLowerCase() === 'dark';
+        document.documentElement.classList.toggle('dark', wantDark);
+        try {
+          localStorage.setItem('theme', wantDark ? 'dark' : 'light');
+        } catch {}
+        executedSummary.push(`Theme: ${wantDark ? 'Dark' : 'Light'}`);
+      } else if (type === 'SCROLL' && action.direction) {
+        const dir = action.direction.toLowerCase();
+        if (dir === 'top') window.scrollTo({ top: 0, behavior: 'smooth' });
+        else if (dir === 'up') window.scrollBy({ top: -700, behavior: 'smooth' });
+        else window.scrollBy({ top: 700, behavior: 'smooth' });
+        executedSummary.push(`Scrolled ${dir}`);
+      }
+
+      await sleepMs(400);
+    }
+
+    const toastText =
+      executedSummary.length > 0
+        ? `Executed: ${executedSummary.join(', ')}`
+        : reply || 'Command processed';
+    showToast(toastText);
+    if (reply) {
+      speakConfirmation(reply);
+    }
+  };
+
+  const runAiVoiceCommand = async (rawTranscript: string) => {
+    const trimmed = rawTranscript.trim();
+    if (!trimmed || aiInFlightRef.current) return;
+    const now = Date.now();
+    if (trimmed === lastAiTranscriptRef.current && now - lastAiTimeRef.current < 2500) {
+      return;
+    }
+
+    aiInFlightRef.current = true;
+    lastAiTranscriptRef.current = trimmed;
+    lastAiTimeRef.current = now;
+    showToast('Understanding command...');
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    try {
+      const d = new Date();
+      const localToday = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+        d.getDate()
+      ).padStart(2, '0')}`;
+
+      const res = await fetch('/api/voice-command', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          transcript: trimmed,
+          currentPath: typeof window !== 'undefined' ? window.location.pathname : '/',
+          language: locale || document.documentElement.lang || 'en',
+          visibleElements: collectVisibleElements(),
+          today: localToday,
+        }),
+        signal: controller.signal,
+      });
+
+      if (!res.ok) {
+        showToast('Could not parse voice command');
+        return;
+      }
+
+      const data = await res.json();
+      const actions: VoiceAction[] = Array.isArray(data?.actions) ? data.actions : [];
+      const reply = typeof data?.reply === 'string' ? data.reply : '';
+
+      if (actions.length > 0) {
+        await executeAiActions(actions, reply);
+      } else if (reply) {
+        showToast(reply);
+        speakConfirmation(reply);
+      }
+    } catch (err: any) {
+      showToast(err?.name === 'AbortError' ? 'Voice command timed out' : 'Voice command request failed');
+    } finally {
+      clearTimeout(timeoutId);
+      aiInFlightRef.current = false;
+    }
+  };
+
+  // ── 6. ZERO-LAG INTENT ENGINE & 300MS DEBOUNCING ──
+  const processCommand = (rawTranscript: string, isFinal = false) => {
     const raw = rawTranscript.trim();
+    if (raw.length < 2) return;
+
     const norm = normalizeText(raw);
-    const htmlLang = (document.documentElement.lang || 'en').toLowerCase();
-    const isAr = htmlLang.includes('ar');
+    if (!norm || norm.length < 2) return;
+    const isAr = (document.documentElement.lang || 'en').toLowerCase().includes('ar');
+
+    const now = Date.now();
+    // 300ms debounce lock per executed command to prevent double-firing on interim results
+    if (now - lastCmdTime.current < 300) return;
+    if (norm === lastCmdKeyRef.current && now - lastCmdTime.current < 1500) return;
+
+    const markExecuted = (key: string) => {
+      lastCmdTime.current = Date.now();
+      lastCmdKeyRef.current = key;
+    };
 
     // ── 6a. CLOSE AI INTENT ──
     if (
@@ -354,61 +827,157 @@ export default function ContinuousVoiceAssistant() {
       }
     }
 
-    // ── 6d. SILENT NAVIGATION (Zero-Lag, Wrapped in Timeout) ──
-    if (
-      norm.includes('انزل') ||
-      norm.includes('تحت') ||
-      norm.includes('scroll down') ||
-      norm.includes('down') ||
-      norm.includes('descendre') ||
-      norm.includes('bas')
-    ) {
+    const hasWholePhrase = (text: string, phrases: string[]): boolean => {
+      const padded = ` ${text} `;
+      return phrases.some((p) => padded.includes(` ${p} `));
+    };
+
+    // ── 6d. SILENT NAVIGATION (Clear Whole-Word / Phrase Matching) ──
+    if (hasWholePhrase(norm, ['انزل', 'تحت', 'scroll down', 'down', 'descendre'])) {
+      markExecuted('scroll-down');
       window.scrollBy({ top: 700, behavior: 'smooth' });
       return;
     }
 
-    if (
-      norm.includes('اطلع') ||
-      norm.includes('فوق') ||
-      norm.includes('scroll up') ||
-      norm.includes('up') ||
-      norm.includes('monter') ||
-      norm.includes('haut')
-    ) {
+    if (hasWholePhrase(norm, ['اطلع', 'فوق', 'scroll up', 'up', 'monter'])) {
+      markExecuted('scroll-up');
       window.scrollBy({ top: -700, behavior: 'smooth' });
       return;
     }
 
-    if (
-      norm.includes('ارجع') ||
-      norm.includes('خلف') ||
-      norm.includes('للخلف') ||
-      norm.includes('go back') ||
-      norm.includes('back') ||
-      norm.includes('retour')
-    ) {
+    if (hasWholePhrase(norm, ['ارجع', 'للخلف', 'go back', 'back', 'retour'])) {
+      markExecuted('go-back');
       setTimeout(() => window.history.back(), 100);
       return;
     }
 
-    if (norm.includes('مخطط') || norm.includes('planner') || norm.includes('planificateur')) {
-      setTimeout(() => router.push('/planner'), 50);
+    // ── PHARAOH AVATAR ON/OFF ──
+    if (
+      norm.includes('pharaoh avatar') ||
+      norm.includes('avatar') ||
+      norm.includes('افاتار') ||
+      norm.includes('الافاتار') ||
+      norm.includes('الفرعون')
+    ) {
+      const turnOff = norm.includes('off') || norm.includes('hide') || norm.includes('close') || norm.includes('اقفل') || norm.includes('اخفي') || norm.includes('اوقف');
+      const turnOn = norm.includes('on') || norm.includes('show') || norm.includes('open') || norm.includes('شغل') || norm.includes('افتح') || norm.includes('اظهر');
+      markExecuted('avatar');
+      window.dispatchEvent(
+        new CustomEvent('egyptx:toggle-pharaoh-avatar', {
+          detail: turnOff ? { active: false } : turnOn ? { active: true } : undefined,
+        })
+      );
       return;
     }
 
-    if (norm.includes('اخبار') || norm.includes('news') || norm.includes('actualite') || norm.includes('actualité')) {
-      setTimeout(() => router.push('/news'), 50);
+    // ── DARK / LIGHT MODE TOGGLE ──
+    if (
+      norm.includes('dark mode') ||
+      norm.includes('light mode') ||
+      norm.includes('الوضع الليلي') ||
+      norm.includes('الوضع الداكن') ||
+      norm.includes('الوضع النهاري') ||
+      norm.includes('الوضع الفاتح')
+    ) {
+      markExecuted('theme');
+      const root = document.documentElement;
+      const wantDark = norm.includes('dark') || norm.includes('ليلي') || norm.includes('داكن');
+      const wantLight = norm.includes('light') || norm.includes('نهاري') || norm.includes('فاتح');
+      const nextDark = wantDark ? true : wantLight ? false : !root.classList.contains('dark');
+      root.classList.toggle('dark', nextDark);
+      try {
+        localStorage.setItem('theme', nextDark ? 'dark' : 'light');
+      } catch {}
       return;
     }
 
-    if (norm.includes('استكشاف') || norm.includes('اكتشف') || norm.includes('explore') || norm.includes('explorer')) {
-      setTimeout(() => router.push('/explore'), 50);
-      return;
+    // ── SIMPLE FAST-PATH GUARD ──
+    // Only fast-path simple single-intent commands; multi-step or form commands go to /api/voice-command
+    const isComplexOrMultiStep =
+      norm.split(/\s+/).length > 4 ||
+      /\d/.test(norm) ||
+      /\b(and|then|with|set|fill|budget|date|start|end|search|tomorrow|next)\b/.test(norm) ||
+      /(وابحث|واختار|واملا|ميزانيه|تاريخ|بدايه|نهايه|بكره|غدا|ابحث|املا|غير)/.test(norm);
+
+    // ── NAVBAR DROPDOWN MENUS (AR & EN) ──
+    if (!isComplexOrMultiStep) {
+      const menuCommands: Array<{ menu: string; keys: string[] }> = [
+        {
+          menu: 'experiences',
+          keys: ['open experiences', 'show experiences', 'experiences menu', 'افتح تجارب', 'افتح قائمه تجارب', 'قائمه تجارب'],
+        },
+        {
+          menu: 'explore',
+          keys: ['open explore', 'show explore', 'explore menu', 'افتح استكشف', 'افتح قائمه استكشف'],
+        },
+        {
+          menu: 'egypt-life',
+          keys: ['open egypt life', 'show egypt life', 'egypt life menu', 'افتح حياه مصر', 'قائمه حياه مصر'],
+        },
+        {
+          menu: 'official',
+          keys: ['open official', 'show official', 'official menu', 'افتح جهات رسميه', 'افتح رسميه'],
+        },
+        {
+          menu: 'language',
+          keys: ['open language', 'show language', 'language menu', 'افتح لغه', 'قائمه لغه'],
+        },
+      ];
+      for (const mc of menuCommands) {
+        if (mc.keys.some((k) => norm.includes(k))) {
+          markExecuted(`menu-${mc.menu}`);
+          window.dispatchEvent(new CustomEvent('egyptx:open-nav-menu', { detail: { menu: mc.menu } }));
+          showToast(`Menu: ${mc.menu}`);
+          return;
+        }
+      }
     }
 
-    if (norm.includes('رئيسي') || norm.includes('home') || norm.includes('accueil')) {
-      setTimeout(() => router.push('/'), 50);
-      return;
+    // ── LANGUAGE SWITCHING (EN, AR, FR, DE, IT, ES, ZH, RU) ──
+    if (!isComplexOrMultiStep) {
+      const langCommands: Array<{ code: string; keys: string[] }> = [
+        { code: 'ar', keys: ['arabic', 'عربي', 'عربيه', 'عربية'] },
+        { code: 'en', keys: ['english', 'انجليزي', 'انجليزيه', 'انجليزية'] },
+        { code: 'fr', keys: ['french', 'francais', 'français', 'فرنسي', 'فرنسيه'] },
+        { code: 'de', keys: ['german', 'deutsch', 'الماني', 'المانيه'] },
+        { code: 'it', keys: ['italian', 'italiano', 'ايطالي', 'ايطاليه'] },
+        { code: 'es', keys: ['spanish', 'espanol', 'español', 'اسباني', 'اسبانيه'] },
+        { code: 'zh', keys: ['chinese', 'mandarin', 'صيني', 'صينيه'] },
+        { code: 'ru', keys: ['russian', 'روسي', 'روسيه'] },
+      ];
+      for (const lc of langCommands) {
+        if (hasWholePhrase(norm, lc.keys)) {
+          markExecuted(`lang-${lc.code}`);
+          setLocale(lc.code);
+          showToast(`Language: ${lc.code.toUpperCase()}`);
+          return;
+        }
+      }
+
+      // ── FULL-SITE ROUTE NAVIGATION (AR & EN, INCLUDING ALL EXPERIENCES SUB-PAGES) ──
+      const routeCommands: Array<{ path: string; keys: string[] }> = [
+        { path: '/vr-egypt', keys: ['vr egypt', 'vr', 'virtual reality', 'واقع افتراضي', 'في ار', 'جوله افتراضيه'] },
+        { path: '/navigator', keys: ['smart navigator', 'navigator', 'navigation', 'ملاحه ذكيه', 'ملاحه', 'خريطه', 'افتح خريطه'] },
+        { path: '/ai-guide', keys: ['vision guide', 'ai guide', 'مرشد رؤيه', 'مرشد ذكي', 'مرشد بصري', 'صور اثر'] },
+        { path: '/hieroglyph-scanner', keys: ['hieroglyph scanner', 'hieroglyph', 'هيروغليف', 'هيروغليفي', 'ترجم هيروغليفي', 'ماسح هيروغليف'] },
+        { path: '/slang', keys: ['egyptspeak', 'egypt speak', 'slang', 'عاميه', 'عاميه مصريه'] },
+        { path: '/memory-core', keys: ['memory core', 'memories', 'ذكريات'] },
+        { path: '/bookings', keys: ['concierge', 'bookings', 'حجوزات', 'فنادق'] },
+        { path: '/news', keys: ['egypt life', 'news', 'اخبار', 'حياه مصر'] },
+        { path: '/kids', keys: ['kids mode', 'kids', 'اطفال', 'وضع اطفال'] },
+        { path: '/command-center', keys: ['command center', 'مركز قياده', 'غرفه عمليات'] },
+        { path: '/planner', keys: ['ai planner', 'planner', 'مخطط', 'مخطط رحلات'] },
+        { path: '/explore', keys: ['explore', 'explore egypt', 'استكشف', 'استكشاف'] },
+        { path: '/', keys: ['go home', 'home', 'رئيسيه', 'صفحه رئيسيه'] },
+      ];
+      for (const rc of routeCommands) {
+        if (hasWholePhrase(norm, rc.keys)) {
+          markExecuted(`nav-${rc.path}`);
+          router.push(rc.path);
+          showToast(`Opened ${rc.path}`);
+          return;
+        }
+      }
     }
 
     // ── 6e. TYPE-SAFE AI PLANNER (Magic Fill) ──
@@ -604,6 +1173,12 @@ export default function ContinuousVoiceAssistant() {
         }
       }
     }
+
+    // ── 7. UNIVERSAL AI VOICE ACTION PARSER (Complex / Multi-Step / Form-Filling) ──
+    if (isFinal) {
+      markExecuted(`ai-${norm.slice(0, 32)}`);
+      void runAiVoiceCommand(raw);
+    }
   };
 
 
@@ -617,33 +1192,47 @@ export default function ContinuousVoiceAssistant() {
 
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
-    recognition.interimResults = false;
+    recognition.interimResults = true;
     recognitionRef.current = recognition;
 
     recognition.onresult = (event: any) => {
       const resultsLen = event.results.length;
       const lastResult = event.results[resultsLen - 1];
 
-      if (lastResult && lastResult.isFinal && lastResult[0]) {
+      if (lastResult && lastResult[0]) {
         const confidence = typeof lastResult[0].confidence === 'number' ? lastResult[0].confidence : 1;
-        // Strict noise rejection threshold: confidence must be >= 0.75
-        if (confidence > 0 && confidence < 0.75) {
+        // Reject noisy or low-confidence fragments
+        if (confidence > 0 && confidence < 0.55) {
           return;
         }
 
-        const transcript = lastResult[0].transcript;
-        // Offload processing to next tick to guarantee zero-lag
-        setTimeout(() => {
-          processCommand(transcript);
-        }, 0);
+        const transcript = String(lastResult[0].transcript || '').trim();
+        if (transcript.length < 2) return;
+
+        setLiveTranscript(transcript);
+
+        // Buffer transcript and wait for a natural 650ms speech-pause window
+        // so full multi-word commands are captured without cutting the user off
+        pendingTranscriptRef.current = transcript;
+        if (speechPauseTimerRef.current) clearTimeout(speechPauseTimerRef.current);
+        speechPauseTimerRef.current = setTimeout(() => {
+          const finalPhrase = pendingTranscriptRef.current.trim();
+          pendingTranscriptRef.current = '';
+          setLiveTranscript('');
+          if (finalPhrase.length >= 2) {
+            processCommand(finalPhrase, true);
+          }
+        }, 650);
       }
     };
 
     recognition.onstart = () => {
+      isRecognitionActiveRef.current = true;
       setIsListeningUI(true);
     };
 
     recognition.onerror = (event: any) => {
+      isRecognitionActiveRef.current = false;
       if (event.error === 'not-allowed') {
         isListeningRef.current = false;
         setIsListeningUI(false);
@@ -651,8 +1240,9 @@ export default function ContinuousVoiceAssistant() {
       }
     };
 
-    // onend restart guard with 500ms delay and isListening check
+    // onend restart guard with 300ms cooldown and isListening check
     recognition.onend = () => {
+      isRecognitionActiveRef.current = false;
       if (!isListeningRef.current) {
         setIsListeningUI(false);
       } else {
@@ -661,7 +1251,7 @@ export default function ContinuousVoiceAssistant() {
           if (isListeningRef.current && recognitionRef.current) {
             startRecognition();
           }
-        }, 500);
+        }, 300);
       }
     };
 
@@ -684,8 +1274,10 @@ export default function ContinuousVoiceAssistant() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       isListeningRef.current = false;
+      isRecognitionActiveRef.current = false;
       setIsListeningUI(false);
       if (restartTimerRef.current) clearTimeout(restartTimerRef.current);
+      if (speechPauseTimerRef.current) clearTimeout(speechPauseTimerRef.current);
       if (recognitionRef.current) {
         try {
           recognitionRef.current.abort();
@@ -737,8 +1329,69 @@ export default function ContinuousVoiceAssistant() {
     };
   }, []);
 
+  // Sync recognition language immediately when site locale or mic override changes
+  useEffect(() => {
+    if (!recognitionRef.current) return;
+    const nextLang = updateRecognitionLanguage();
+    recognitionRef.current.lang = nextLang;
+    if (isListeningRef.current) {
+      startRecognition();
+    }
+  }, [locale, micLangOverride]);
+
+  const effectiveMicLang =
+    micLangOverride !== 'auto'
+      ? micLangOverride
+      : (locale || 'en').toLowerCase().startsWith('ar')
+      ? 'ar-EG'
+      : 'en-US';
+
   return (
     <>
+      {/* ── DESKTOP VOICE STATUS BAR: LIVE TRANSCRIPT + [AR / EN] MIC TOGGLE (HIDDEN ON MOBILE) ── */}
+      {(isListeningUI || liveTranscript || statusToast) && (
+        <div
+          data-voice-ui="true"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[10000] flex items-center gap-2 max-w-[92vw]"
+        >
+          {(liveTranscript || statusToast) && (
+            <div className="pointer-events-none px-4 py-2 rounded-full bg-[#080705]/95 border border-[#D6A044]/60 text-[#F5EFE6] text-xs font-medium tracking-wide shadow-[0_8px_30px_rgba(0,0,0,0.65)] backdrop-blur-md truncate max-w-[70vw]">
+              <span className="inline-block w-2 h-2 rounded-full bg-[#D6A044] mr-2 align-middle animate-pulse" />
+              <span className="align-middle">
+                {liveTranscript ? `Heard: "${liveTranscript}"` : statusToast}
+              </span>
+            </div>
+          )}
+
+          {isListeningUI && (
+            <div className="hidden md:flex items-center rounded-full bg-[#080705]/95 border border-[#D6A044]/60 p-0.5 shadow-[0_8px_30px_rgba(0,0,0,0.65)] backdrop-blur-md">
+              <button
+                type="button"
+                onClick={() => setMicLangOverride('ar-EG')}
+                className={`px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wider transition-colors cursor-pointer ${
+                  effectiveMicLang === 'ar-EG'
+                    ? 'bg-[#D6A044] text-[#080705]'
+                    : 'text-[#F5EFE6]/70 hover:text-[#F5EFE6]'
+                }`}
+              >
+                AR
+              </button>
+              <button
+                type="button"
+                onClick={() => setMicLangOverride('en-US')}
+                className={`px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wider transition-colors cursor-pointer ${
+                  effectiveMicLang === 'en-US'
+                    ? 'bg-[#D6A044] text-[#080705]'
+                    : 'text-[#F5EFE6]/70 hover:text-[#F5EFE6]'
+                }`}
+              >
+                EN
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* ── 4. LIQUID SIRI-STYLE PULSING GRADIENT GLOW (No Text / No Icons) ── */}
       {isListeningUI && (
         <>
@@ -770,65 +1423,6 @@ export default function ContinuousVoiceAssistant() {
         </>
       )}
 
-      {/* ── 5. MOBILE-ONLY SLIDE-OUT AI WIDGET ── */}
-      <div
-        className={`fixed top-2/3 right-0 -translate-y-1/2 z-[9999] flex md:hidden items-center transition-transform duration-300 ease-in-out ${
-          isExpanded ? 'translate-x-0' : 'translate-x-[62px]'
-        }`}
-      >
-        {/* Slide-out Edge Tab Handle */}
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          aria-label="Toggle AI assistant widget"
-          className="w-8 h-14 bg-[#060E1A]/95 border-y border-l border-[#C9A84C]/50 rounded-l-2xl flex items-center justify-center text-[#C9A84C] shadow-[-4px_0_20px_rgba(0,0,0,0.6)] backdrop-blur-xl active:scale-95 transition-all"
-        >
-          {isExpanded ? (
-            <ChevronRight className="w-5 h-5 text-[#C9A84C]" />
-          ) : (
-            <ChevronLeft className="w-5 h-5 text-[#C9A84C] animate-pulse" />
-          )}
-        </button>
-
-        {/* Futuristic AI Icon Button (Sparkles) */}
-        <div className="bg-[#060E1A]/95 border-y border-r border-[#C9A84C]/40 p-2.5 shadow-2xl backdrop-blur-xl flex items-center justify-center">
-          <button
-            onClick={() => {
-              if (isListeningRef.current) {
-                deactivateAssistant();
-              } else {
-                activateAssistant();
-              }
-            }}
-            aria-label={isListeningUI ? 'Stop AI' : 'Start AI'}
-            className="relative group flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 focus:outline-none"
-          >
-            {/* Active Glowing Radar Effect */}
-            {isListeningUI && (
-              <>
-                <span className="absolute -inset-2 rounded-full bg-gradient-to-r from-[#C9A84C]/50 via-amber-400/40 to-cyan-400/50 animate-ping pointer-events-none" />
-                <span className="absolute -inset-1 rounded-full bg-gradient-to-tr from-[#C9A84C] to-amber-300 opacity-60 blur-sm animate-pulse pointer-events-none" />
-              </>
-            )}
-
-            {/* AI Core Orb Body */}
-            <div
-              className={`relative z-10 w-full h-full rounded-full flex items-center justify-center border transition-all duration-500 shadow-xl ${
-                isListeningUI
-                  ? 'bg-gradient-to-tr from-[#0F2238] via-[#1B3654] to-[#0A1628] border-amber-400 text-amber-300 shadow-[0_0_25px_rgba(234,179,8,0.8)] scale-105'
-                  : 'bg-gradient-to-tr from-[#0A1628] via-[#0F2238] to-[#060E1A] border-[#C9A84C]/40 text-[#C9A84C] hover:border-[#C9A84C] hover:shadow-[0_0_18px_rgba(201,168,76,0.4)] active:scale-95'
-              }`}
-            >
-              <Sparkles
-                className={`w-6 h-6 ${
-                  isListeningUI
-                    ? 'text-amber-300 animate-pulse'
-                    : 'text-[#C9A84C] group-hover:scale-110 transition-transform'
-                }`}
-              />
-            </div>
-          </button>
-        </div>
-      </div>
     </>
   );
 }

@@ -21,6 +21,7 @@ import {
   VolumeX,
   Square,
   Image as ImageIcon,
+  ChevronDown,
 } from 'lucide-react';
 
 interface AIGuideVoiceCallProps {
@@ -104,6 +105,7 @@ export default function AIGuideVoiceCall({ isOpen, onClose }: AIGuideVoiceCallPr
 
   // Vision & AI state
   const [isCameraOn, setIsCameraOn] = useState(true);
+  const [isVideoPreviewHidden, setIsVideoPreviewHidden] = useState(false);
   const [contextImages, setContextImages] = useState<string[]>([]);
   const [lastResult, setLastResult] = useState<any | null>(null);
   const [userSpeechText, setUserSpeechText] = useState<string>('');
@@ -1392,7 +1394,7 @@ export default function AIGuideVoiceCall({ isOpen, onClose }: AIGuideVoiceCallPr
         </div>
 
         {/* ── USER CAMERA PREVIEW (Small Thumbnail in Corner) ──────────────── */}
-        <div className="absolute bottom-28 right-4 sm:bottom-28 sm:right-8 z-30">
+        <motion.div initial={false} animate={isVideoPreviewHidden ? { y: 260, opacity: 0, scale: 0.9, pointerEvents: 'none' } : { y: 0, opacity: 1, scale: 1, pointerEvents: 'auto' }} transition={{ type: 'spring', stiffness: 320, damping: 28 }} aria-hidden={isVideoPreviewHidden} className="absolute bottom-28 right-4 sm:bottom-28 sm:right-8 z-30">
           <div className="relative w-32 h-44 sm:w-40 sm:h-52 rounded-2xl overflow-hidden border-2 border-[#C9A84C]/80 shadow-[0_0_25px_rgba(0,0,0,0.85)] bg-black/90">
             {isCameraOn ? (
               <video
@@ -1416,11 +1418,20 @@ export default function AIGuideVoiceCall({ isOpen, onClose }: AIGuideVoiceCallPr
             )}
 
             {/* Camera Overlay Badges */}
-            <div className="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none">
+            <div className="absolute top-2 left-2 right-2 flex items-center justify-between gap-1">
               <span className="inline-flex items-center gap-1 text-[9px] uppercase font-mono px-1.5 py-0.5 rounded bg-black/70 text-emerald-400 border border-emerald-500/30">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 {isCameraOn ? 'Vision' : 'Audio-Only'}
               </span>
+              <button
+                type="button"
+                onClick={() => setIsVideoPreviewHidden(true)}
+                className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-black/75 hover:bg-black/95 text-white/90 hover:text-[#FFD27A] border border-white/20 text-[10px] font-medium transition-colors cursor-pointer"
+                title={isRTL ? 'إخفاء الكاميرا' : 'Hide Camera'}
+              >
+                <ChevronDown className="w-3 h-3" />
+                <span className="hidden sm:inline">{isRTL ? 'إخفاء' : 'Hide'}</span>
+              </button>
             </div>
 
             {/* Camera Controls row */}
@@ -1467,7 +1478,23 @@ export default function AIGuideVoiceCall({ isOpen, onClose }: AIGuideVoiceCallPr
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
+
+        <AnimatePresence>
+          {isVideoPreviewHidden && (
+            <motion.button
+              type="button"
+              initial={{ opacity: 0, y: 16, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.9 }}
+              onClick={() => setIsVideoPreviewHidden(false)}
+              className="absolute bottom-28 right-4 sm:bottom-28 sm:right-8 z-30 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#120C07]/95 hover:bg-[#21170D] text-[#FFD27A] border border-[#C9A84C]/60 shadow-[0_6px_20px_rgba(0,0,0,0.65)] text-xs font-semibold transition-colors cursor-pointer"
+            >
+              <Camera className="w-3.5 h-3.5" />
+              <span>{isRTL ? 'إظهار الفيديو' : 'Show Video'}</span>
+            </motion.button>
+          )}
+        </AnimatePresence>
 
         {/* ── BOTTOM CALL CONTROLS BAR ────────────────────────────────────── */}
         <div className="relative z-20 px-6 pb-6 pt-3 flex flex-col items-center gap-3">

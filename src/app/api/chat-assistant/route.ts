@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { getLanguageMeta, normalizeLocale } from '@/lib/i18n-ai';
 import {
   ARCHAEOLOGICAL_ACCURACY_RULE,
   VERIFIED_EGYPT_HERITAGE_KB,
@@ -25,6 +26,12 @@ YOUR PERSONA & TONE:
 - Match the user's language 100% (if the user writes in Arabic, reply in warm, natural Arabic; if in English, reply in warm, natural English; if in French, reply in French).
 - Greet the user back naturally (e.g., if they say "مرحبا" or "أهلاً" or "ازيك", greet them warmly like a best friend and ask how you can make their day in Egypt unforgettable).
 
+OUTPUT FORMATTING RULES (CRITICAL FOR NARROW CHAT WINDOW):
+- NEVER output wide Markdown tables (e.g. | Col 1 | Col 2 | or |---|---|) inside the chat window because tables overflow and break readability.
+- Structure every response using clean short paragraphs, bold lead-in bullet points (e.g. - **Title:** concise fact), and clear line breaks.
+- Keep answers scannable, crisp, and well-spaced.
+- NEVER use emojis or decorative unicode icons anywhere in your response.
+
 COMPREHENSIVE EGYPTIAN SCOPE & 100% VERIFIED ACCURACY:
 - You are an authority on all eras of Egyptian history and civilization: Pharaonic/Ancient Egypt, Greco-Roman, Coptic, Islamic, Fatimid, Ayyubid, Mamluk, and Modern Egypt.
 - You know every temple (Karnak, Luxor, Abu Simbel, Philae, Hatshepsut, Edfu, Kom Ombo, Abydos, Dendera, Medinet Habu), pyramid (Giza, Saqqara Step Pyramid, Dahshur), museum (Grand Egyptian Museum opening November 1, 2025, NMEC, Egyptian Museum in Tahrir), historic street (Al-Muizz, Khan el-Khalili, Coptic Cairo, Citadel of Saladin), and tourist destination in Egypt.
@@ -46,7 +53,9 @@ ${VERIFIED_EGYPT_HERITAGE_KB}`;
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { messages, stream = false } = body;
+    const { messages, stream = false, language, locale } = body;
+    const targetLocale = normalizeLocale(language || locale);
+    const langMeta = getLanguageMeta(targetLocale);
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: 'Invalid messages format' }, { status: 400 });
@@ -123,6 +132,7 @@ export async function POST(req: Request) {
     ]);
 
     let enrichedSystemPrompt = SIDE_CHAT_SYSTEM_PROMPT;
+    enrichedSystemPrompt += `\n\n--- USER INTERFACE LANGUAGE PREFERENCE ---\nThe user's active interface language is ${langMeta.name} (${targetLocale}). ${langMeta.directive} If the user explicitly writes in a different language, match their message language; otherwise respond in ${langMeta.name}.`;
     if (weatherContext) {
       enrichedSystemPrompt += `\n\n--- LIVE EGYPT WEATHER (OpenWeather / Real-Time) ---\n${weatherContext}`;
     }

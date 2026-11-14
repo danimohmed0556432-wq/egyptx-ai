@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Brain, MapPin, Languages, Trash2, Sparkles, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface SavedTrip {
   destination?: string;
@@ -19,6 +20,7 @@ interface TranslationEntry {
 }
 
 export default function MemoryCoreContent() {
+  const { t } = useLanguage();
   const [savedTrips, setSavedTrips] = useState<SavedTrip[]>([]);
   const [translationHistory, setTranslationHistory] = useState<TranslationEntry[]>([]);
   const [vrVisited, setVrVisited] = useState<string[]>([]);
@@ -64,9 +66,9 @@ export default function MemoryCoreContent() {
           </div>
           <div>
             <h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-[#8A661C] to-[#C9A84C] dark:from-[#C9A84C] dark:to-yellow-200 bg-clip-text text-transparent">
-              EgyptX Memory Core
+              {t('memoryCore.title')}
             </h1>
-            <p className="text-slate-400 mt-2 text-lg">Your AI remembers everything</p>
+            <p className="text-slate-400 mt-2 text-lg">{t('memoryCore.subtitle')}</p>
           </div>
         </header>
 
@@ -81,7 +83,7 @@ export default function MemoryCoreContent() {
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-3 text-[#C9A84C]">
                 <MapPin className="w-6 h-6" />
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Saved Itineraries</h2>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('nav.planner')}</h2>
               </div>
               <span className="bg-[#C9A84C]/20 text-[#C9A84C] text-xs font-bold px-2.5 py-1 rounded-full">
                 {savedTrips.length}

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getLanguageMeta, normalizeLocale } from '@/lib/i18n-ai';
 import {
   ARCHAEOLOGICAL_ACCURACY_RULE,
   VERIFIED_EGYPT_HERITAGE_KB,
@@ -34,7 +35,9 @@ ${VERIFIED_EGYPT_HERITAGE_KB}`;
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { messages, context, stream } = body;
+    const { messages, context, stream, language, locale } = body;
+    const targetLocale = normalizeLocale(language || locale);
+    const langMeta = getLanguageMeta(targetLocale);
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: 'Invalid messages format' }, { status: 400 });
@@ -62,6 +65,7 @@ export async function POST(req: Request) {
     ]);
 
     let systemPrompt = TEXT_CHAT_SYSTEM_PROMPT;
+    systemPrompt += `\n\n--- USER INTERFACE LANGUAGE PREFERENCE ---\nThe user's active interface language is ${langMeta.name} (${targetLocale}). ${langMeta.directive} If the user explicitly writes in a different language, match their message language; otherwise respond in ${langMeta.name}.`;
     if (context?.identified_name && context.identified_name !== 'Egyptian Heritage Monument') {
       systemPrompt += `\n\nCURRENTLY VIEWED MONUMENT CONTEXT: "${context.identified_name}". ${
         context.ai_description || ''

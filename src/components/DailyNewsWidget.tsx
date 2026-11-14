@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { stripEmojis } from '@/lib/strip-emojis';
+import { useLanguage } from '@/context/LanguageContext';
 import {
   Newspaper,
   X,
@@ -108,6 +109,21 @@ function FormattedNewsMessage({ content: rawContent }: FormattedNewsMessageProps
               {children}
             </a>
           ),
+          table: ({ children }) => (
+            <div className="my-2 space-y-1.5 rounded-lg border border-[#00E5FF]/25 bg-black/5 dark:bg-white/5 p-2.5 text-xs overflow-x-auto">
+              <table className="w-full border-collapse">{children}</table>
+            </div>
+          ),
+          th: ({ children }) => (
+            <th className="py-1 px-1.5 text-left font-semibold text-[#1B6B93] dark:text-[#00E5FF] border-b border-[#00E5FF]/25">
+              {children}
+            </th>
+          ),
+          td: ({ children }) => (
+            <td className="py-1 px-1.5 border-b border-[#00E5FF]/10 align-top">
+              {children}
+            </td>
+          ),
         }}
       >
         {content}
@@ -117,6 +133,7 @@ function FormattedNewsMessage({ content: rawContent }: FormattedNewsMessageProps
 }
 
 export default function DailyNewsWidget() {
+  const { locale } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<NewsMessage[]>([]);
   const [inputText, setInputText] = useState('');
@@ -161,6 +178,7 @@ export default function DailyNewsWidget() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: [...messages, userMessage],
+          language: locale,
         }),
       });
 

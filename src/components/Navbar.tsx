@@ -38,8 +38,20 @@ function LanguageSelector({ locale, setLocale, solidNav }: { locale: string; set
     const handleClick = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
+    const handleVoiceMenu = (e: Event) => {
+      const menu = (e as CustomEvent)?.detail?.menu;
+      if (menu === 'language') {
+        setOpen((prev) => !prev);
+      } else if (menu) {
+        setOpen(false);
+      }
+    };
     document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    window.addEventListener('egyptx:open-nav-menu', handleVoiceMenu);
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      window.removeEventListener('egyptx:open-nav-menu', handleVoiceMenu);
+    };
   }, []);
 
   return (
@@ -86,6 +98,7 @@ function LanguageSelector({ locale, setLocale, solidNav }: { locale: string; set
 
 // ── Hover Dropdown Component (Editorial Layout - Zero Emojis) ────────────────
 function NavHoverDropdown({
+  menuId,
   label,
   href,
   headerTitle,
@@ -95,6 +108,7 @@ function NavHoverDropdown({
   scrolled,
   onVrClick,
 }: {
+  menuId: string;
   label: string;
   href: string;
   headerTitle: string;
@@ -107,6 +121,31 @@ function NavHoverDropdown({
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleVoiceMenu = (e: Event) => {
+      const targetMenu = (e as CustomEvent)?.detail?.menu;
+      if (!targetMenu) return;
+      if (timerRef.current) clearTimeout(timerRef.current);
+      if (targetMenu === menuId) {
+        setOpen((prev) => !prev);
+      } else {
+        setOpen(false);
+      }
+    };
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    window.addEventListener('egyptx:open-nav-menu', handleVoiceMenu);
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => {
+      window.removeEventListener('egyptx:open-nav-menu', handleVoiceMenu);
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [menuId]);
 
   const safeNav = (val: any, fallback: string): string => {
     if (typeof val !== 'string' || !val || val.toLowerCase().includes('nav.')) {
@@ -143,6 +182,7 @@ function NavHoverDropdown({
 
   return (
     <div
+      ref={containerRef}
       className="relative group/nav"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -317,6 +357,7 @@ export default function Navbar() {
 
             {/* 2. Explore */}
             <NavHoverDropdown
+              menuId="explore"
               label={safeNav(t('nav.explore'), 'Explore')}
               href="/explore"
               headerTitle={safeNav(t('nav.headers.destinations'), 'Destinations')}
@@ -328,6 +369,7 @@ export default function Navbar() {
 
             {/* 3. Experiences */}
             <NavHoverDropdown
+              menuId="experiences"
               label={safeNav(t('nav.experiences'), 'Experiences')}
               href="/planner"
               headerTitle={safeNav(t('nav.headers.aiExperiences'), 'AI Experiences')}
@@ -340,6 +382,7 @@ export default function Navbar() {
 
             {/* 4. Egypt Life */}
             <NavHoverDropdown
+              menuId="egypt-life"
               label={safeNav(t('nav.egyptLife'), 'Egypt Life')}
               href="/news"
               headerTitle={safeNav(t('nav.headers.lifeAndCulture'), 'Life & Culture')}
@@ -351,6 +394,7 @@ export default function Navbar() {
 
             {/* 5. Official */}
             <NavHoverDropdown
+              menuId="official"
               label={safeNav(t('nav.official'), 'Official')}
               href="/egypt-official"
               headerTitle={safeNav(t('nav.headers.officialAndBookings'), 'Official & Bookings')}

@@ -867,6 +867,10 @@ export default function PlannerContent() {
   const [step, setStep] = useState(1);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [dateError, setDateError] = useState<string | null>(null);
+  const [budgetError, setBudgetError] = useState<string | null>(null);
+  const todayDateStr = new Date().toISOString().split('T')[0];
+  const minTotalBudget = Math.max(1, duration) * Math.max(1, Number(travelers) || 1) * 40;
   const [destinations, setDestinations] = useState<string[]>([]);
 
   // AI Destination Smart Finder State
@@ -1090,6 +1094,8 @@ export default function PlannerContent() {
   const getPayload = () => ({ destinations, routePreference: "shortest-distance",
     country,
     duration,
+    startDate,
+    endDate,
     budget,
     interests,
     travelStyle,
@@ -1099,11 +1105,18 @@ export default function PlannerContent() {
     accessibility,
     avoidPlaces,
     avoidCrowds,
-    userName: displayName
+    userName: displayName,
+    language: locale || 'en'
   });
 
   const handleGenerate = async () => {
     if (!country || interests.length === 0 || !travelStyle) return;
+    const numericBudgetVal = parseFloat(String(budget).replace(/[^0-9.]/g, '')) || 0;
+    if (numericBudgetVal > 0 && numericBudgetVal < minTotalBudget) {
+      setBudgetError(t('planner.minBudgetError').replace('{days}', String(duration)).replace('{travelers}', String(travelers)).replace('{amount}', minTotalBudget.toLocaleString('en-US')));
+      return;
+    }
+    setBudgetError(null);
     
     trackEvent('planner_started', getPayload());
     
@@ -1439,20 +1452,33 @@ export default function PlannerContent() {
 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Step 2: When are you going?</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 dark:text-white/70 mb-2">Start Date</label>
-                      <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="custom-date-picker w-full bg-white dark:bg-[#060E1A] border border-slate-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-[#C9A84C]/50 transition-colors" />
+                      <label className="block text-sm font-semibold text-gray-700 dark:text-white/70 mb-2">{t('planner.startDateLabel')}</label>
+                      <input type="date" min={todayDateStr} value={startDate} onChange={e => {
+                        const nextStart = e.target.value;
+                        setStartDate(nextStart);
+                        setDateError(null);
+                        if (endDate && nextStart) {
+                          const diff = Math.round((new Date(endDate).getTime() - new Date(nextStart).getTime()) / (1000 * 60 * 60 * 24));
+                          if (diff >= 1 && diff <= 21) setDuration(diff);
+                        }
+                      }} className="custom-date-picker w-full bg-white dark:bg-[#060E1A] border border-slate-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-[#C9A84C]/50 transition-colors" />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 dark:text-white/70 mb-2">End Date (Calculates Duration)</label>
-                      <input type="date" value={endDate} onChange={e => {
-                        setEndDate(e.target.value);
-                        if(startDate && e.target.value) {
-                          const diff = (new Date(e.target.value).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24);
-                          if(diff > 0) setDuration(Math.min(Math.max(diff, 1), 14));
+                      <label className="block text-sm font-semibold text-gray-700 dark:text-white/70 mb-2">{t('planner.endDateLabel')}</label>
+                      <input type="date" min={startDate || todayDateStr} value={endDate} onChange={e => {
+                        const nextEnd = e.target.value;
+                        setEndDate(nextEnd);
+                        setDateError(null);
+                        if (startDate && nextEnd) {
+                          const diff = Math.round((new Date(nextEnd).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24));
+                          if (diff >= 1) setDuration(Math.min(diff, 21));
                         }
                       }} className="custom-date-picker w-full bg-white dark:bg-[#060E1A] border border-slate-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-[#C9A84C]/50 transition-colors" />
                     </div>
                   </div>
+                  {dateError && (
+                    <p className="text-sm text-red-500 dark:text-red-400 font-medium mt-2">{dateError}</p>
+                  )}
                   <div className="mt-4">
                     <label className="block text-sm font-semibold text-gray-700 dark:text-white/70 mb-2">Country of Origin</label>
                     <select value={country} onChange={e => setCountry(e.target.value)} className="w-full bg-white dark:bg-[#060E1A] border border-slate-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white">
@@ -1462,7 +1488,28 @@ export default function PlannerContent() {
                   </div>
                   <div className="flex justify-between pt-4">
                     <button onClick={() => setStep(1)} className="px-6 py-2 border border-slate-300 dark:border-white/20 text-gray-800 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-colors">← Back</button>
-                    <button onClick={() => setStep(3)} disabled={!startDate || !endDate || !country} className="px-6 py-2 bg-[#C9A84C] text-[#030712] font-bold rounded-xl disabled:opacity-50">Next →</button>
+                    <button onClick={() => {
+                      if (!startDate || !endDate || !country) {
+                        setDateError(t('planner.dateErrMissing'));
+                        return;
+                      }
+                      if (startDate < todayDateStr) {
+                        setDateError(t('planner.dateErrPast'));
+                        return;
+                      }
+                      const diffDays = Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24));
+                      if (isNaN(diffDays) || diffDays <= 0) {
+                        setDateError(t('planner.dateErrOrder'));
+                        return;
+                      }
+                      if (diffDays > 21) {
+                        setDateError(t('planner.dateErrMax'));
+                        return;
+                      }
+                      setDuration(diffDays);
+                      setDateError(null);
+                      setStep(3);
+                    }} disabled={!startDate || !endDate || !country} className="px-6 py-2 bg-[#C9A84C] text-[#030712] font-bold rounded-xl disabled:opacity-50">Next →</button>
                   </div>
                 </div>
               )}
@@ -1673,8 +1720,35 @@ export default function PlannerContent() {
                     </select>
                   </div>
                   <div className="mt-4">
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-white/70 mb-2">Total Budget</label>
-                    <input type="text" value={budget} onChange={e => setBudget(e.target.value)} placeholder="e.g. $2000" className="w-full bg-white dark:bg-[#060E1A] border border-slate-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white" />
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-white/70 mb-2">Total Budget (USD)</label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={budget}
+                      onChange={e => {
+                        const numericOnly = e.target.value.replace(/[^0-9]/g, '');
+                        setBudget(numericOnly);
+                        setBudgetError(null);
+                      }}
+                      onBlur={() => {
+                        const num = parseInt(String(budget).replace(/[^0-9]/g, ''), 10);
+                        if (!isNaN(num) && num > 0) {
+                          setBudget(`${num.toLocaleString('en-US')} USD`);
+                        }
+                      }}
+                      onFocus={() => {
+                        const digits = String(budget).replace(/[^0-9]/g, '');
+                        if (digits) setBudget(digits);
+                      }}
+                      placeholder={t('planner.budgetPlaceholder').replaceAll('{amount}', String(minTotalBudget))}
+                      className="w-full bg-white dark:bg-[#060E1A] border border-slate-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white"
+                    />
+                    <p className="text-xs text-gray-500 dark:text-white/50 mt-1.5">
+                      {t('planner.minBudgetHint').replace('{days}', String(duration)).replace('{travelers}', String(travelers)).replace('{amount}', minTotalBudget.toLocaleString('en-US'))}
+                    </p>
+                    {budgetError && (
+                      <p className="text-sm text-red-500 dark:text-red-400 font-medium mt-1.5">{budgetError}</p>
+                    )}
                   </div>
 
                   <div className="mt-4 p-3 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-between gap-3 flex-wrap">
@@ -1882,8 +1956,8 @@ export default function PlannerContent() {
                             {day.day}
                           </div>
                           <div>
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Day {day.day} — {day.city}</h3>
-                            <p className="text-gray-500 dark:text-white/30 text-sm">{day.activities.length} activities planned</p>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t('planner.dayLabel').replace('{day}', String(day.day))} — {day.city}</h3>
+                            <p className="text-gray-500 dark:text-white/30 text-sm">{t('planner.activitiesPlanned').replace('{count}', String(day.activities.length))}</p>
                           </div>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
@@ -1903,7 +1977,7 @@ export default function PlannerContent() {
                           >
                             <span className="absolute inset-0 bg-white/30 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out pointer-events-none" />
                             <Crown className="w-3.5 h-3.5 text-[#030712]" />
-                            <span>{isAr ? 'تسجيل / حجز الرحلة' : 'Register / Book Journey'}</span>
+                            <span>{t('planner.registerBookJourney')}</span>
                           </button>
                           <button
                             onClick={() => handleRegenerateDay(day.day)}
@@ -1911,7 +1985,7 @@ export default function PlannerContent() {
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-white dark:bg-white/5 text-gray-700 dark:text-white/70 text-xs font-medium hover:text-gray-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors border border-slate-200 dark:border-white/10"
                           >
                             <RotateCw className="w-3.5 h-3.5" />
-                            <span>Regenerate Day</span>
+                            <span>{t('planner.regenerateDay')}</span>
                           </button>
                           <button
                             onClick={() => handleCheckinDay(day.day, day.city, day.activities[0]?.name || '')}
@@ -1923,11 +1997,11 @@ export default function PlannerContent() {
                             }`}
                           >
                             {checkedInDays[day.day] ? (
-                              'تم التسجيل'
+                              t('planner.checkedIn')
                             ) : (
                               <>
                                 <MapPin className="w-3.5 h-3.5" />
-                                <span>تسجيل زيارة</span>
+                                <span>{t('planner.checkInVisit')}</span>
                               </>
                             )}
                           </button>

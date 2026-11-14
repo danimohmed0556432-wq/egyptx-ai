@@ -1,0 +1,310 @@
+{
+  "version": "1.0.0",
+  "source": "EgyptX Verified Archaeological Knowledge Base",
+  "landmarks": [
+    {
+      "id": "great-pyramid-of-giza",
+      "keywords": ["pyramid", "giza", "khufu", "cheops", "الهرم الأكبر", "خوفو", "الجيزة", "أهرامات"],
+      "name_en": "Great Pyramid of Giza (Pyramid of Khufu)",
+      "name_ar": "الهرم الأكبر بالجيزة (هرم خوفو)",
+      "dynasty_en": "4th Dynasty, Old Kingdom (c. 2560 BCE)",
+      "dynasty_ar": "الأسرة الرابعة، الدولة القديمة (نحو 2560 ق.م)",
+      "builder_en": "Pharaoh Khufu (Cheops), designed by vizier Hemiunu",
+      "builder_ar": "الملك خوفو، بتصميم الوزير والمعماري حم إيونو",
+      "location_en": "Giza Plateau, Giza Governorate, Egypt",
+      "location_ar": "هضبة الجيزة، محافظة الجيزة، مصر",
+      "historical_significance_en": "The oldest and largest of the three pyramids in the Giza complex and the only surviving Wonder of the Ancient World. Built from approximately 2.3 million limestone and granite blocks, it originally stood 146.6 meters tall and served as the royal tomb of Pharaoh Khufu, featuring the Grand Gallery and the King's Chamber.",
+      "historical_significance_ar": "أقدم وأكبر الأهرامات الثلاثة في هضبة الجيزة والعجيبة الوحيدة الباقية من عجائب الدنيا السبع القديمة. شُيد من نحو 2.3 مليون كتلة من الحجر الجيري والجرانيت، وبلغ ارتفاعه الأصلي 146.6 متراً ليكون مقبرة ملكية للملك خوفو، ويضم البهو العظيم وغرفة الملك.",
+      "visual_profile": {
+        "preferred_aspect": "landscape",
+        "palette": "limestone_gold",
+        "contrast": "medium"
+      }
+    },
+    {
+      "id": "great-sphinx-of-giza",
+      "keywords": ["sphinx", "khafre", "أبو الهول", "خفرع", "تمثال"],
+      "name_en": "Great Sphinx of Giza",
+      "name_ar": "تمثال أبو الهول العظيم بالجيزة",
+      "dynasty_en": "4th Dynasty, Old Kingdom (c. 2500 BCE)",
+      "dynasty_ar": "الأسرة الرابعة، الدولة القديمة (نحو 2500 ق.م)",
+      "builder_en": "Pharaoh Khafre (Chephren)",
+      "builder_ar": "الملك خفرع",
+      "location_en": "Giza Plateau, east of the Pyramid of Khafre, Egypt",
+      "location_ar": "هضبة الجيزة، شرق هرم خفرع، مصر",
+      "historical_significance_en": "Carved directly from a single massive ridge of Giza limestone, this 73-meter-long and 20-meter-high monolith combines the body of a recumbent lion with the head of a pharaoh wearing the royal nemes headdress, symbolizing royal strength and divine guardianship over the necropolis.",
+      "historical_significance_ar": "نُحت مباشرة من كتلة صخرية واحدة ضخمة من الحجر الجيري بطول 73 متراً وارتفاع 20 متراً، ويجمع بين جسد أسد رابض ورأس فرعون يرتدي غطاء الرأس الملكي النمس، رمزاً للقوة الملكية وحراسة الجبانة المقدسة.",
+      "visual_profile": {
+        "preferred_aspect": "landscape",
+        "palette": "limestone_gold",
+        "contrast": "high"
+      }
+    },
+    {
+      "id": "tutankhamun-mask",
+      "keywords": ["tutankhamun", "tut", "mask", "gold", "توت عنخ آمون", "القناع الذهبي", "قناع"],
+      "name_en": "Golden Funerary Mask of Tutankhamun",
+      "name_ar": "القناع الذهبي الجنائزي للملك توت عنخ آمون",
+      "dynasty_en": "18th Dynasty, New Kingdom (c. 1323 BCE)",
+      "dynasty_ar": "الأسرة الثامنة عشرة، الدولة الحديثة (نحو 1323 ق.م)",
+      "builder_en": "Royal Goldsmiths of Thebes for Pharaoh Tutankhamun",
+      "builder_ar": "صاغة البلاط الملكي في طيبة للملك توت عنخ آمون",
+      "location_en": "Discovered in KV62, Valley of the Kings; housed at the Grand Egyptian Museum / Cairo",
+      "location_ar": "اكتُشف في المقبرة KV62 بوادي الملوك؛ ويُعرض في المتحف المصري الكبير بالقاهرة",
+      "historical_significance_en": "Weighing 11 kilograms of solid gold and inlaid with lapis lazuli, quartz, obsidian, and turquoise, the mask covered the mummified head of the young pharaoh. The back is inscribed with Spell 151b from the Book of the Dead to guide and protect the king in the afterlife.",
+      "historical_significance_ar": "يزن 11 كيلوجراماً من الذهب الخالص والمرصع باللازورد والكوارتز والأوبسيديان والفيروز، وقد غطى رأس المومياء الملكية. نُقشت على ظهره التعويذة 151ب من كتاب الموتى لحماية الملك وإرشاده في العالم الآخر.",
+      "visual_profile": {
+        "preferred_aspect": "portrait",
+        "palette": "lapis_gold",
+        "contrast": "high"
+      }
+    },
+    {
+      "id": "karnak-temple",
+      "keywords": ["karnak", "hypostyle", "amun", "الكرنك", "الأقصر", "أعمدة"],
+      "name_en": "Karnak Temple Complex (Precinct of Amun-Ra)",
+      "name_ar": "مجمع معابد الكرنك (معبد آمون رع)",
+      "dynasty_en": "Middle Kingdom to Ptolemaic Period (c. 2055 BCE - 100 CE)",
+      "dynasty_ar": "من الدولة الوسطى حتى العصر البطلمي (2055 ق.م - 100 م)",
+      "builder_en": "Over 30 Pharaohs including Senusret I, Hatshepsut, Thutmose III, Seti I, and Ramesses II",
+      "builder_ar": "أكثر من 30 ملكاً أبرزهم سنوسرت الأول وحتشبسوت وتحتمس الثالث وسيتي الأول ورمسيس الثاني",
+      "location_en": "East Bank of the Nile, Luxor, Egypt",
+      "location_ar": "البر الشرقي للنيل، الأقصر، مصر",
+      "historical_significance_en": "The largest religious complex ever constructed in the ancient world, serving as the primary cult center of the Theban Triad (Amun, Mut, and Khonsu). Its Great Hypostyle Hall contains 134 massive sandstone columns arranged in 16 rows, with central columns rising 21 meters high.",
+      "historical_significance_ar": "أكبر مجمع ديني شُيد في العالم القديم، وكان المركز الرئيسي لعبادة ثالوث طيبة (آمون وموت وخونسو). تضم صالة الأعمدة الكبرى به 134 عموداً ضخماً من الحجر الرملي في 16 صفاً، يصل ارتفاع أعمدتها الوسطى إلى 21 متراً.",
+      "visual_profile": {
+        "preferred_aspect": "landscape",
+        "palette": "sandstone_ochre",
+        "contrast": "medium"
+      }
+    },
+    {
+      "id": "abu-simbel",
+      "keywords": ["abu simbel", "ramesses", "nubia", "أبو سمبل", "رمسيس الثاني", "أسوان"],
+      "name_en": "Great Temple of Ramesses II at Abu Simbel",
+      "name_ar": "معبد أبو سمبل الكبير للملك رمسيس الثاني",
+      "dynasty_en": "19th Dynasty, New Kingdom (c. 1264 BCE)",
+      "dynasty_ar": "الأسرة التاسعة عشرة، الدولة الحديثة (نحو 1264 ق.م)",
+      "builder_en": "Pharaoh Ramesses II (Ramesses the Great)",
+      "builder_ar": "الملك رمسيس الثاني",
+      "location_en": "Abu Simbel, Aswan Governorate, Upper Egypt (relocated above Lake Nasser)",
+      "location_ar": "أبو سمبل، محافظة أسوان، صعيد مصر (نُقل لحمايته من مياه بحيرة ناصر)",
+      "historical_significance_en": "Cut directly into a solid sandstone cliff, the facade features four colossal 20-meter seated statues of Ramesses II. Twice a year, on February 22 and October 22, sunlight penetrates 60 meters into the inner sanctuary to illuminate the statues of Amun-Ra, Ra-Horakhty, and the deified Ramesses II.",
+      "historical_significance_ar": "نُحت بالكامل في صخر الجبل الرملي، وتزين واجهته أربعة تماثيل عملاقة للملك رمسيس الثاني بارتفاع 20 متراً. تتعامد الشمس مرتين سنوياً في 22 فبراير و22 أكتوبر لتخترق 60 متراً وتضيء قدس الأقداس.",
+      "visual_profile": {
+        "preferred_aspect": "landscape",
+        "palette": "sandstone_ochre",
+        "contrast": "high"
+      }
+    },
+    {
+      "id": "rosetta-stone",
+      "keywords": ["rosetta", "granodiorite", "decree", "champollion", "حجر رشيد", "رشيد"],
+      "name_en": "The Rosetta Stone",
+      "name_ar": "حجر رشيد",
+      "dynasty_en": "Ptolemaic Dynasty (196 BCE)",
+      "dynasty_ar": "العصر البطلمي (196 ق.م)",
+      "builder_en": "Priests of Memphis under Pharaoh Ptolemy V Epiphanes",
+      "builder_ar": "كهنة منف في عهد الملك بطليموس الخامس إبيفانيس",
+      "location_en": "Discovered in Rashid (Rosetta), Nile Delta, Egypt (1799)",
+      "location_ar": "اكتُشف في مدينة رشيد بدلتا النيل، مصر (عام 1799)",
+      "historical_significance_en": "A granodiorite stele inscribed with the Memphis Decree in three scripts: Egyptian Hieroglyphs, Demotic script, and Ancient Greek. Because the Greek text could be read, Jean-Francois Champollion used it in 1822 to decipher Egyptian hieroglyphs and unlock three millennia of ancient Egyptian history.",
+      "historical_significance_ar": "لوح من الجرانوديوريت نُقش عليه مرسوم منف بثلاثة خطوط: الهيروغليفية والديموطيقية واليونانية القديمة. مكّن النص اليوناني العالم جان فرانسوا شامبليون عام 1822 من فك رموز اللغة المصرية القديمة.",
+      "visual_profile": {
+        "preferred_aspect": "portrait",
+        "palette": "granite_dark",
+        "contrast": "high"
+      }
+    },
+    {
+      "id": "hatshepsut-temple",
+      "keywords": ["hatshepsut", "deir el-bahari", "terraces", "حتشبسوت", "الدير البحري"],
+      "name_en": "Mortuary Temple of Hatshepsut (Deir el-Bahari)",
+      "name_ar": "معبد الملكة حتشبسوت بالدير البحري",
+      "dynasty_en": "18th Dynasty, New Kingdom (c. 1470 BCE)",
+      "dynasty_ar": "الأسرة الثامنة عشرة، الدولة الحديثة (نحو 1470 ق.م)",
+      "builder_en": "Queen-Pharaoh Hatshepsut and royal architect Senenmut",
+      "builder_ar": "الملكة حتشبسوت والمعماري الملكي سننموت",
+      "location_en": "Deir el-Bahari, West Bank of Luxor, Egypt",
+      "location_ar": "الدير البحري، البر الغربي بالأقصر، مصر",
+      "historical_significance_en": "A masterpiece of ancient terraced architecture built against sheer limestone cliffs. Its three colonnaded levels linked by monumental ramps record Hatshepsut's divine birth and her famous maritime expedition to the Land of Punt.",
+      "historical_significance_ar": "تحفة معمارية فريدة تتكون من ثلاثة مدرجات متصلة بمنحدرات صاعدة في حضن جبل القرنة الصخري، وتوثق نقوشه الولادة الإلهية للملكة حتشبسوت ورحلتها التجارية الشهيرة إلى بلاد بونت.",
+      "visual_profile": {
+        "preferred_aspect": "landscape",
+        "palette": "limestone_gold",
+        "contrast": "low"
+      }
+    },
+    {
+      "id": "nefertiti-bust",
+      "keywords": ["nefertiti", "amarna", "bust", "thutmose", "نفرتيتي", "تل العمارنة"],
+      "name_en": "Bust of Queen Nefertiti",
+      "name_ar": "تمثال الملكة نفرتيتي النصفي",
+      "dynasty_en": "18th Dynasty, Amarna Period (c. 1345 BCE)",
+      "dynasty_ar": "الأسرة الثامنة عشرة، عصر تل العمارنة (نحو 1345 ق.م)",
+      "builder_en": "Royal Sculptor Thutmose at Akhetaten (Amarna)",
+      "builder_ar": "النحات الملكي تحتمس في أخيتاتون (تل العمارنة)",
+      "location_en": "Excavated at Tell el-Amarna, Minya Governorate, Egypt",
+      "location_ar": "عُثر عليه في ورشة النحات تحتمس بتل العمارنة، محافظة المنيا، مصر",
+      "historical_significance_en": "A painted stucco-coated limestone bust of Nefertiti, Great Royal Wife of Pharaoh Akhenaten. Celebrated for its naturalistic proportions, slender neck, and iconic flat-topped blue crown, it exemplifies the artistic revolution of the Amarna Period.",
+      "historical_significance_ar": "تمثال نصفي من الحجر الجيري المغطى بالجص الملون للملكة نفرتيتي، الزوجة الملكية العظيمة للملك إخناتون. يتميز بدقة ملامحه الطبيعية وتاجه الأزرق الأيقوني، ويمثل ذروة الفن الواقعي في عصر العمارنة.",
+      "visual_profile": {
+        "preferred_aspect": "portrait",
+        "palette": "alabaster_warm",
+        "contrast": "medium"
+      }
+    },
+    {
+      "id": "luxor-temple",
+      "keywords": ["luxor", "obelisk", "avenue of sphinxes", "معبد الأقصر", "طريق الكباش"],
+      "name_en": "Luxor Temple",
+      "name_ar": "معبد الأقصر",
+      "dynasty_en": "18th and 19th Dynasties, New Kingdom (c. 1400 BCE)",
+      "dynasty_ar": "الأسرتان الثامنة عشرة والتاسعة عشرة، الدولة الحديثة (نحو 1400 ق.م)",
+      "builder_en": "Amenhotep III, Tutankhamun, Horemheb, and Ramesses II",
+      "builder_ar": "أمنحتب الثالث وتوت عنخ آمون وحورمحب ورمسيس الثاني",
+      "location_en": "East Bank of the Nile, Luxor, Egypt",
+      "location_ar": "البر الشرقي للنيل، مدينة الأقصر، مصر",
+      "historical_significance_en": "Dedicated to the rejuvenation of kingship and the annual Opet Festival, Luxor Temple is connected to Karnak by the 2.7-kilometer Avenue of Sphinxes. Its first pylon features seated colossi of Ramesses II and one of two original pink granite obelisks.",
+      "historical_significance_ar": "خُصص لتجديد الشرعية الملكية واحتفالات عيد الأوبت السنوية، ويرتبط بمعبد الكرنك عبر طريق الكباش بطول 2.7 كيلومتر. تتقدم صرحه الأول تماثيل ضخمة لرمسيس الثاني ومسلة من الجرانيت الوردي.",
+      "visual_profile": {
+        "preferred_aspect": "landscape",
+        "palette": "sandstone_ochre",
+        "contrast": "medium"
+      }
+    },
+    {
+      "id": "valley-of-the-kings",
+      "keywords": ["valley of the kings", "tomb", "kv", "وادي الملوك", "مقبرة"],
+      "name_en": "Valley of the Kings (Wadi el-Muluk)",
+      "name_ar": "وادي الملوك",
+      "dynasty_en": "18th to 20th Dynasties, New Kingdom (c. 1539 - 1075 BCE)",
+      "dynasty_ar": "من الأسرة الثامنة عشرة إلى العشرين، الدولة الحديثة (1539 - 1075 ق.م)",
+      "builder_en": "Royal craftsmen of Deir el-Medina for New Kingdom Pharaohs",
+      "builder_ar": "فنانو وحرفيو دير المدينة لملوك الدولة الحديثة",
+      "location_en": "West Bank of the Nile, opposite Luxor, Egypt",
+      "location_ar": "البر الغربي للنيل، الأقصر، مصر",
+      "historical_significance_en": "The royal necropolis containing over 60 rock-cut tombs of New Kingdom pharaohs and high nobles, including Tutankhamun (KV62), Seti I (KV17), and Ramesses VI. Tomb walls are richly painted with funerary texts such as the Amduat and Book of Gates.",
+      "historical_significance_ar": "الجبانة الملكية التي تضم أكثر من 60 مقبرة منحوتة في الصخر لملوك الدولة الحديثة وكبار النبلاء، من بينها مقبرة توت عنخ آمون وسيتي الأول. تزدان جدرانها بنصوص دينية ملونة مثل كتاب الإيمي دوات وكتاب البوابات.",
+      "visual_profile": {
+        "preferred_aspect": "landscape",
+        "palette": "sandstone_ochre",
+        "contrast": "low"
+      }
+    },
+    {
+      "id": "philae-temple",
+      "keywords": ["philae", "isis", "agilkia", "فيلة", "إيزيس", "أسوان"],
+      "name_en": "Temple of Isis at Philae",
+      "name_ar": "معبد إيزيس بجزيرة فيلة",
+      "dynasty_en": "Ptolemaic and Roman Periods (c. 380 BCE - 117 CE)",
+      "dynasty_ar": "العصر البطلمي والروماني (380 ق.م - 117 م)",
+      "builder_en": "Nectanebo I, Ptolemy II Philadelphus, and Roman Emperors",
+      "builder_ar": "نختنبو الأول وبطليموس الثاني وأباطرة الرومان",
+      "location_en": "Agilkia Island, Aswan, Egypt",
+      "location_ar": "جزيرة أجيليكا، أسوان، مصر",
+      "historical_significance_en": "Celebrated as the Pearl of Egypt, Philae was one of the last active centers of ancient Egyptian religion, where hieroglyphs were inscribed as late as 394 CE. In the 1970s, UNESCO dismantled and reassembled the entire temple on higher ground at Agilkia Island.",
+      "historical_significance_ar": "يُعرف بلؤلؤة النيل، وكان من آخر معاقل الديانة المصرية القديمة حيث سُجل فيه آخر نقش هيروغليفي معروف عام 394 م. نُقل المعبد بالكامل في السبعينيات ضمن حملة اليونسكو إلى جزيرة أجيليكا المرتفعة.",
+      "visual_profile": {
+        "preferred_aspect": "landscape",
+        "palette": "alabaster_warm",
+        "contrast": "medium"
+      }
+    },
+    {
+      "id": "dendera-temple",
+      "keywords": ["dendera", "hathor", "zodiac", "دندرة", "حتحور", "قنا"],
+      "name_en": "Temple of Hathor at Dendera",
+      "name_ar": "معبد حتحور بدندرة",
+      "dynasty_en": "Late Ptolemaic and Roman Periods (c. 54 BCE - 64 CE)",
+      "dynasty_ar": "أواخر العصر البطلمي والعصر الروماني (54 ق.م - 64 م)",
+      "builder_en": "Ptolemy XII Auletes, Cleopatra VII, and Emperor Tiberius",
+      "builder_ar": "بطليموس الثاني عشر وكليوباترا السابعة والإمبراطور تيبيريوس",
+      "location_en": "Dendera, Qena Governorate, Upper Egypt",
+      "location_ar": "دندرة، محافظة قنا، صعيد مصر",
+      "historical_significance_en": "One of the best-preserved temples in Egypt, renowned for its astronomical ceiling in the Great Hypostyle Hall, vivid original mineral pigments, Hathor-headed columns, and the famous Dendera Zodiac relief.",
+      "historical_significance_ar": "من أكثر المعابد المصرية حفظاً، ويشتهر بسقفه الفلكي الملون في صالة الأعمدة الكبرى وأعمدته المتوجة برأس الإلهة حتحور، إلى جانب لوحة الأبراج الفلكية الشهيرة بدندرة.",
+      "visual_profile": {
+        "preferred_aspect": "square",
+        "palette": "lapis_gold",
+        "contrast": "medium"
+      }
+    },
+    {
+      "id": "grand-egyptian-museum",
+      "keywords": ["gem", "grand egyptian museum", "المتحف المصري الكبير", "المتحف الكبير"],
+      "name_en": "Grand Egyptian Museum (GEM)",
+      "name_ar": "المتحف المصري الكبير",
+      "dynasty_en": "Modern Egyptian Cultural Landmark (Official Full Opening: November 1, 2025)",
+      "dynasty_ar": "صرح حضاري مصري حديث (الافتتاح الرسمي الكامل: 1 نوفمبر 2025)",
+      "builder_en": "Arab Republic of Egypt; designed by Heneghan Peng Architects",
+      "builder_ar": "جمهورية مصر العربية، بتصميم مكتب هينيجان بينج المعماري",
+      "location_en": "Giza Plateau, 2 km from the Pyramids of Giza, Egypt",
+      "location_ar": "هضبة الجيزة، على بُعد كيلومترين من أهرامات الجيزة، مصر",
+      "historical_significance_en": "The largest archaeological museum in the world dedicated to a single civilization, housing over 100,000 artifacts including the complete 5,000-piece Tutankhamun collection, the Grand Staircase, and the colossal statue of Ramesses II in its Atrium.",
+      "historical_significance_ar": "أكبر متحف أثري في العالم مخصص لحضارة واحدة، ويضم أكثر من 100 ألف قطعة أثرية من بينها المجموعة الكاملة للملك توت عنخ آمون والدرج العظيم وتمثال رمسيس الثاني في البهو الرئيسي.",
+      "visual_profile": {
+        "preferred_aspect": "landscape",
+        "palette": "museum_modern",
+        "contrast": "medium"
+      }
+    },
+    {
+      "id": "step-pyramid-djoser",
+      "keywords": ["djoser", "saqqara", "step pyramid", "imhotep", "زوسر", "سقارة", "الهرم المدرج"],
+      "name_en": "Step Pyramid of Djoser at Saqqara",
+      "name_ar": "هرم زوسر المدرج بسقارة",
+      "dynasty_en": "3rd Dynasty, Old Kingdom (c. 2670 BCE)",
+      "dynasty_ar": "الأسرة الثالثة، الدولة القديمة (نحو 2670 ق.م)",
+      "builder_en": "Pharaoh Djoser and royal architect Imhotep",
+      "builder_ar": "الملك زوسر والمهندس المعماري إمحوتب",
+      "location_en": "Saqqara Necropolis, Giza Governorate, Egypt",
+      "location_ar": "جبانة سقارة، محافظة الجيزة، مصر",
+      "historical_significance_en": "The earliest colossal stone building in human history and the prototype for all subsequent Egyptian pyramids. Designed by Imhotep, the six-tiered limestone structure rises 62.5 meters above a vast subterranean labyrinth of chambers.",
+      "historical_significance_ar": "أقدم بناء حجري ضخم في تاريخ البشرية والنموذج الأولي لجميع الأهرامات المصرية اللاحقة. صممه إمحوتب من ست مصاطب متدرجة من الحجر الجيري بارتفاع 62.5 متراً فوق شبكة غرف تحت الأرض.",
+      "visual_profile": {
+        "preferred_aspect": "landscape",
+        "palette": "limestone_gold",
+        "contrast": "low"
+      }
+    },
+    {
+      "id": "colossi-of-memnon",
+      "keywords": ["memnon", "amenhotep", "colossi", "ممنون", "أمنحتب الثالث"],
+      "name_en": "Colossi of Memnon",
+      "name_ar": "تمثالا ممنون",
+      "dynasty_en": "18th Dynasty, New Kingdom (c. 1350 BCE)",
+      "dynasty_ar": "الأسرة الثامنة عشرة، الدولة الحديثة (نحو 1350 ق.م)",
+      "builder_en": "Pharaoh Amenhotep III",
+      "builder_ar": "الملك أمنحتب الثالث",
+      "location_en": "Theban Necropolis, West Bank of Luxor, Egypt",
+      "location_ar": "البر الغربي بالأقصر، مصر",
+      "historical_significance_en": "Two twin seated quartzite sandstone statues of Pharaoh Amenhotep III standing 18 meters tall that originally guarded the entrance to his vast mortuary temple. Known in antiquity for the 'singing' sound heard at dawn after an earthquake cracked the northern statue.",
+      "historical_significance_ar": "تمثالان توأمان جالسان للملك أمنحتب الثالث من حجر الكوارتزيت بارتفاع 18 متراً، كانا يحرسان مدخل معبده الجنائزي الضخم، واشتُهرا في العصور القديمة بصوت الرنين عند شروق الشمس.",
+      "visual_profile": {
+        "preferred_aspect": "square",
+        "palette": "sandstone_ochre",
+        "contrast": "high"
+      }
+    },
+    {
+      "id": "edfu-temple",
+      "keywords": ["edfu", "horus", "falcon", "إدفو", "حورس"],
+      "name_en": "Temple of Horus at Edfu",
+      "name_ar": "معبد حورس بإدفو",
+      "dynasty_en": "Ptolemaic Kingdom (237 - 57 BCE)",
+      "dynasty_ar": "العصر البطلمي (237 - 57 ق.م)",
+      "builder_en": "Ptolemy III Euergetes through Ptolemy XII Neos Dionysos",
+      "builder_ar": "بطليموس الثالث حتى بطليموس الثاني عشر",
+      "location_en": "Edfu, Aswan Governorate, Upper Egypt",
+      "location_ar": "إدفو، محافظة أسوان، صعيد مصر",
+      "historical_significance_en": "The most completely preserved ancient temple in Egypt, dedicated to the falcon god Horus. Its monumental 36-meter-high pylon and intact sanctuary walls preserve detailed inscriptions describing temple construction rituals and the mythic triumph of Horus over Seth.",
+      "historical_significance_ar": "أكثر المعابد المصرية القديمة اكتمالاً وحفظاً، وخُصص لعبادة الإله حورس الصقر. يضم صرحاً ضخماً بارتفاع 36 متراً وجدراناً كاملة توثق طقوس البناء وأسطورة انتصار حورس على ست.",
+      "visual_profile": {
+        "preferred_aspect": "portrait",
+        "palette": "sandstone_ochre",
+        "contrast": "medium"
+      }
+    }
+  ]
+}

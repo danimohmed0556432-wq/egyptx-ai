@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { stripEmojis } from '@/lib/strip-emojis';
 
 interface Message {
@@ -96,6 +97,21 @@ function FormattedAssistantMessage({ content: rawContent }: FormattedMessageProp
               {children}
             </a>
           ),
+          table: ({ children }) => (
+            <div className="my-2 space-y-1.5 rounded-lg border border-[#C9A84C]/25 bg-black/5 dark:bg-white/5 p-2.5 text-xs overflow-x-auto">
+              <table className="w-full border-collapse">{children}</table>
+            </div>
+          ),
+          th: ({ children }) => (
+            <th className="py-1 px-1.5 text-left font-semibold text-[#8A661C] dark:text-[#E2CB85] border-b border-[#C9A84C]/25">
+              {children}
+            </th>
+          ),
+          td: ({ children }) => (
+            <td className="py-1 px-1.5 border-b border-[#C9A84C]/10 align-top">
+              {children}
+            </td>
+          ),
         }}
       >
         {content}
@@ -107,6 +123,7 @@ function FormattedAssistantMessage({ content: rawContent }: FormattedMessageProp
 export default function FloatingAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
+  const { t, locale } = useLanguage();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
@@ -117,8 +134,8 @@ export default function FloatingAssistant() {
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       const greeting = user
-        ? `Welcome, ${user.name.split(' ')[0]}! I am the **EgyptX Guide**, your friendly and encyclopedic Egyptian tour guide.\n\nAsk me anything about ancient or modern Egyptian history, monuments, Pharaohs, or current travel updates!`
-        : `Welcome! I am the **EgyptX Guide**, your friendly and encyclopedic Egyptian tour guide.\n\nAsk me anything about ancient or modern Egyptian history, monuments, Pharaohs, or current travel updates!`;
+        ? t('assistant.welcomeUser').replace('{name}', user.name.split(' ')[0])
+        : t('assistant.welcomeGuest');
 
       setMessages([{ role: 'assistant', content: greeting }]);
     }
@@ -141,7 +158,7 @@ export default function FloatingAssistant() {
       const response = await fetch('/api/chat-assistant', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [...messages, userMsg] }),
+        body: JSON.stringify({ messages: [...messages, userMsg], language: locale || 'en' }),
       });
 
       const data = await response.json();
@@ -158,7 +175,7 @@ export default function FloatingAssistant() {
         {
           role: 'assistant',
           content:
-            "I'm having a little trouble connecting right now. Please try again in a moment!",
+            t('assistant.errorReply'),
         },
       ]);
     } finally {
@@ -183,22 +200,58 @@ export default function FloatingAssistant() {
               <div className="absolute inset-0 rounded-full bg-[#C9A84C] opacity-40 animate-ping" />
 
               <svg
-                className="w-6 h-6 text-[#030712] relative z-10"
+                className="w-7 h-7 text-[#080705] relative z-10"
+                viewBox="0 0 64 64"
                 fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-label="Eye of Horus"
               >
+                {/* Brow of Horus */}
                 <path
+                  d="M11 21C19 14 34 12 52 17"
+                  stroke="#080705"
+                  strokeWidth="3.2"
+                  strokeLinecap="round"
+                />
+                {/* Outer Eye Almond */}
+                <path
+                  d="M12 31C19 22 39 21 51 30C41 39 22 40 12 31Z"
+                  stroke="#080705"
+                  strokeWidth="2.8"
+                  strokeLinejoin="round"
+                  fill="#080705"
+                  fillOpacity="0.08"
+                />
+                {/* Iris & Pupil */}
+                <circle cx="31.5" cy="30.5" r="5.5" fill="#080705" />
+                <circle cx="31.5" cy="30.5" r="2.1" fill="#D6A044" />
+                {/* Cosmetic Tail */}
+                <path
+                  d="M50 30L58 31.5"
+                  stroke="#080705"
+                  strokeWidth="2.8"
+                  strokeLinecap="round"
+                />
+                {/* Vertical Falcon Cheek Mark */}
+                <path
+                  d="M27 38V50"
+                  stroke="#080705"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+                {/* Spiral Falcon Wing / Tear Drop */}
+                <path
+                  d="M34 37.5C38 43 43 49 50 48.5C53.5 48.2 55.5 45.8 54.8 43.2C54.1 40.8 51.2 40.2 49.5 41.8"
+                  stroke="#080705"
+                  strokeWidth="2.8"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
                 />
               </svg>
 
               {/* Hover Label */}
               <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-[#0A1628]/90 backdrop-blur-md border border-[#C9A84C]/20 text-white text-sm font-medium rounded-lg opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-300 pointer-events-none whitespace-nowrap">
-                EgyptX AI Guide
+                {t('assistant.title')}
               </div>
             </motion.button>
           )}
@@ -223,8 +276,8 @@ export default function FloatingAssistant() {
                   <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-[#060E1A]" />
                 </div>
                 <div>
-                  <h3 className="text-gray-900 dark:text-white font-semibold text-sm">EgyptX AI Guide</h3>
-                  <p className="text-gray-500 dark:text-white/50 text-xs">Historian & Live Egypt Updates</p>
+                  <h3 className="text-gray-900 dark:text-white font-semibold text-sm">{t('assistant.title')}</h3>
+                  <p className="text-gray-500 dark:text-white/50 text-xs">{t('assistant.subtitle')}</p>
                 </div>
               </div>
               <button
@@ -270,13 +323,13 @@ export default function FloatingAssistant() {
               {/* Initial Suggestions */}
               {messages.length === 1 && (
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {SUGGESTIONS.map((suggestion, idx) => (
+                  {[0, 1, 2, 3, 4].map((idx) => (
                     <button
                       key={idx}
-                      onClick={() => handleSend(suggestion)}
+                      onClick={() => handleSend(t(`assistant.suggestions.${idx}`))}
                       className="px-3 py-2 bg-[#1B6B93]/10 dark:bg-[#1B6B93]/20 hover:bg-[#1B6B93]/20 dark:hover:bg-[#1B6B93]/40 border border-[#1B6B93]/30 text-[#1B6B93] dark:text-[#4CC9F0] text-xs font-medium rounded-lg transition-colors text-left"
                     >
-                      {suggestion}
+                      {t(`assistant.suggestions.${idx}`)}
                     </button>
                   ))}
                 </div>
@@ -320,7 +373,7 @@ export default function FloatingAssistant() {
                   type="text"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  placeholder="Ask about history, monuments, or live Egypt news..."
+                  placeholder={t('assistant.placeholder')}
                   className="flex-1 bg-white dark:bg-[#030712]/50 border border-slate-300 dark:border-white/10 focus:border-[#C9A84C]/50 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/30 outline-none transition-colors"
                 />
                 <button

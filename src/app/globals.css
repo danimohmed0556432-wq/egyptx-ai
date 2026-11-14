@@ -174,7 +174,7 @@ body {
   animation: morphBlobInner 6s ease-in-out infinite reverse;
 }
 /* ==========================================================================
-   EGYPTX AI DESIGN SYSTEM — STRICT TAILWIND ARCHITECTURE
+   EGYPTX AI DESIGN SYSTEM - STRICT TAILWIND ARCHITECTURE
    
    Pure Light Mode ("Papyrus & Sunlight"):
    - Canvas: #FDFBF7 (Papyrus Cream)
@@ -185,25 +185,29 @@ body {
    - Border: rgba(26, 35, 50, 0.08)
    - Brand Accent: #C5A059 (Pharaonic Gold)
    
-   Pure Dark Mode ("Obsidian & Torchlight"):
-   - Canvas: #0B0F19 (Deep Obsidian)
-   - Surface / Cards: #131A2A (Obsidian Basalt)
-   - Surface Alt: #0E1422 (Midnight Navy)
-   - Text Primary: #F8FAFC (Slate 50)
-   - Text Secondary: #CBD5E1 (Slate 300)
-   - Text Muted: #94A3B8 (Slate 400)
-   - Border: rgba(255, 255, 255, 0.08)
-   - Brand Accent: #D4AF37 (Pharaonic Gold)
+   Royal Pharaonic Dark Mode ("Obsidian & Royal Gold"):
+   - Primary Background: #080705 (Charcoal Black)
+   - Secondary Background / Surfaces: #17100A (Dark Brown)
+   - Cards / Elevated Containers: #21170D (Bronze Brown)
+   - Primary Accent / Gold: #D6A044 (Pharaonic Gold)
+   - Light Gold / Highlights: #F4C66A (Light Gold)
+   - Main Text / Headings: #F5F0E8 (Warm White)
+   - Secondary Text / Muted Labels: #C7B9A5 (Beige)
+   - Borders / Dividers: #76501F (Dark Gold)
+   - Hover States / Active Glow: #FFD27A (Golden Glow)
    ========================================================================== */
 
 :root {
-  --canvas-bg: #0B0F19;
-  --surface-bg: #131A2A;
-  --text-primary: #F8FAFC;
-  --text-secondary: #CBD5E1;
-  --text-muted: #94A3B8;
-  --border-color: rgba(255, 255, 255, 0.08);
-  --accent-gold: #D4AF37;
+  --canvas-bg: #080705;
+  --surface-bg: #17100A;
+  --elevated-bg: #21170D;
+  --text-primary: #F5F0E8;
+  --text-secondary: #C7B9A5;
+  --text-muted: #C7B9A5;
+  --border-color: #76501F;
+  --accent-gold: #D6A044;
+  --accent-gold-light: #F4C66A;
+  --accent-glow: #FFD27A;
   --accent-turquoise: #14BBA6;
 }
 
@@ -222,14 +226,27 @@ html.light,
 html.dark,
 html:not(.light),
 [data-theme='dark'] {
-  --canvas-bg: #0B0F19;
-  --surface-bg: #131A2A;
-  --text-primary: #F8FAFC;
-  --text-secondary: #CBD5E1;
-  --text-muted: #94A3B8;
-  --border-color: rgba(255, 255, 255, 0.08);
-  --accent-gold: #D4AF37;
+  --canvas-bg: #080705;
+  --surface-bg: #17100A;
+  --elevated-bg: #21170D;
+  --text-primary: #F5F0E8;
+  --text-secondary: #C7B9A5;
+  --text-muted: #C7B9A5;
+  --border-color: #76501F;
+  --accent-gold: #D6A044;
+  --accent-gold-light: #F4C66A;
+  --accent-glow: #FFD27A;
   --accent-turquoise: #14BBA6;
+  --color-background: #080705;
+  --color-foreground: #F5F0E8;
+  --color-gold: #D6A044;
+  --color-gold-light: #F4C66A;
+  --color-gold-dark: #76501F;
+  --color-navy: #17100A;
+  --color-navy-light: #21170D;
+  --color-navy-dark: #080705;
+  --color-sand: #C7B9A5;
+  --color-papyrus: #F5F0E8;
 }
 
 /* Base Document Styles */
@@ -251,9 +268,156 @@ html.light body {
 }
 
 html.dark body,
-html:not(.light) body {
-  background-color: #0B0F19;
-  color: #F8FAFC;
+html:not(.light) body,
+[data-theme='dark'] body {
+  background-color: #080705;
+  color: #F5F0E8;
+}
+
+/* Dark mode scrollbar, selection, glass, and gold utilities */
+:is(html.dark, [data-theme='dark']) ::-webkit-scrollbar-track {
+  background: #17100A;
+}
+:is(html.dark, [data-theme='dark']) ::-webkit-scrollbar-thumb {
+  background: rgba(214, 160, 68, 0.45);
+  border-radius: 3px;
+}
+:is(html.dark, [data-theme='dark']) ::-webkit-scrollbar-thumb:hover {
+  background: #FFD27A;
+}
+:is(html.dark, [data-theme='dark']) ::selection {
+  background: rgba(214, 160, 68, 0.35);
+  color: #F5F0E8;
+}
+:is(html.dark, [data-theme='dark']) .glass {
+  background: rgba(23, 16, 10, 0.75);
+  border: 1px solid rgba(118, 80, 31, 0.55);
+}
+:is(html.dark, [data-theme='dark']) .glass-strong {
+  background: rgba(33, 23, 13, 0.9);
+  border: 1px solid rgba(118, 80, 31, 0.75);
+}
+:is(html.dark, [data-theme='dark']) .glow-gold {
+  box-shadow: 0 0 20px rgba(255, 210, 122, 0.18), 0 0 40px rgba(214, 160, 68, 0.08);
+}
+:is(html.dark, [data-theme='dark']) .text-gradient-gold {
+  background: linear-gradient(135deg, #F4C66A, #D6A044, #76501F);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Dark mode palette normalization for hardcoded dark utility classes */
+:is(html.dark, [data-theme='dark']) :is(
+  .dark\:bg-\[\#030712\],
+  .dark\:bg-\[\#020914\],
+  .dark\:bg-\[\#020A14\],
+  .dark\:bg-\[\#030812\],
+  .dark\:bg-\[\#050B14\],
+  .dark\:bg-\[\#050B16\],
+  .dark\:bg-\[\#050d1a\],
+  .dark\:bg-\[\#05111E\],
+  .dark\:bg-\[\#060E1A\],
+  .dark\:bg-\[\#070B13\],
+  .dark\:bg-\[\#070D1F\],
+  .dark\:bg-\[\#071221\],
+  .dark\:bg-\[\#08101E\],
+  .dark\:bg-\[\#081324\],
+  .dark\:bg-\[\#0a0a0a\],
+  .dark\:bg-\[\#0a0f1c\],
+  .dark\:bg-\[\#0a0f1e\],
+  .dark\:bg-\[\#0A101D\],
+  .dark\:bg-\[\#0A1022\],
+  .dark\:bg-\[\#0A1224\],
+  .dark\:bg-\[\#0B0F19\],
+  .dark\:bg-\[\#0B1120\],
+  .dark\:bg-slate-950,
+  .dark\:bg-gray-950
+) {
+  background-color: #080705;
+}
+
+:is(html.dark, [data-theme='dark']) :is(
+  .dark\:bg-\[\#0A1628\],
+  .dark\:bg-\[\#0B1728\],
+  .dark\:bg-\[\#0C1525\],
+  .dark\:bg-\[\#0D1525\],
+  .dark\:bg-\[\#081B30\],
+  .dark\:bg-\[\#09111E\],
+  .dark\:bg-\[\#091D33\],
+  .dark\:bg-\[\#09223D\],
+  .dark\:bg-\[\#0D1E36\],
+  .dark\:bg-slate-900,
+  .dark\:bg-gray-900
+) {
+  background-color: #17100A;
+}
+
+:is(html.dark, [data-theme='dark']) :is(
+  .dark\:bg-\[\#111A2E\],
+  .dark\:bg-\[\#111C38\],
+  .dark\:bg-\[\#121a2f\],
+  .dark\:bg-\[\#121B2B\],
+  .dark\:bg-\[\#131A2A\],
+  .dark\:bg-\[\#15233C\],
+  .dark\:bg-slate-800,
+  .dark\:bg-gray-800
+) {
+  background-color: #21170D;
+}
+
+:is(html.dark, [data-theme='dark']) :is(
+  .dark\:text-white,
+  .dark\:text-slate-50,
+  .dark\:text-slate-100,
+  .dark\:text-gray-100
+) {
+  color: #F5F0E8;
+}
+
+:is(html.dark, [data-theme='dark']) :is(
+  .dark\:text-slate-300,
+  .dark\:text-slate-400,
+  .dark\:text-gray-300,
+  .dark\:text-gray-400
+) {
+  color: #C7B9A5;
+}
+
+:is(html.dark, [data-theme='dark']) :is(
+  .dark\:text-\[\#C9A84C\],
+  .dark\:text-\[\#D4AF37\]
+) {
+  color: #D6A044;
+}
+
+:is(html.dark, [data-theme='dark']) :is(
+  .dark\:text-\[\#E4C767\]
+) {
+  color: #F4C66A;
+}
+
+:is(html.dark, [data-theme='dark']) :is(
+  .dark\:border-slate-800,
+  .dark\:border-slate-700,
+  .dark\:border-gray-800,
+  .dark\:border-gray-700,
+  .dark\:border-white\/10,
+  .dark\:border-white\/5,
+  .dark\:border-\[\#C9A84C\]\/30,
+  .dark\:border-\[\#C9A84C\]\/20
+) {
+  border-color: rgba(118, 80, 31, 0.75);
+}
+
+/* Dark mode interactive hover golden glow */
+:is(html.dark, [data-theme='dark']) :is(.artifact-lift, button[class*="border"], a[class*="border"]):hover {
+  border-color: #FFD27A;
+  box-shadow: 0 0 16px rgba(255, 210, 122, 0.2);
+}
+
+:is(html.dark, [data-theme='dark']) :is(a, button):hover {
+  text-shadow: 0 0 10px rgba(255, 210, 122, 0.18);
 }
 
 /* Custom scrollbars */

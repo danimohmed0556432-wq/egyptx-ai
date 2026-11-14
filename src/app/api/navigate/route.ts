@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+interface LatLngPoint {
+  lat: number;
+  lng: number;
+}
+
 interface TransitStep {
   instruction: string;
   distance: string;
   duration: string;
   travelMode: string;
+  startLocation?: LatLngPoint;
+  endLocation?: LatLngPoint;
+  encodedPolyline?: string;
   transitDetails?: {
     lineName: string;
     lineShortName: string;
@@ -25,6 +33,8 @@ interface ModeRouteResult {
   summary?: string;
   departureTime?: string;
   arrivalTime?: string;
+  encodedPolyline?: string;
+  destinationCoords?: LatLngPoint;
   steps?: TransitStep[];
   error?: string;
 }
@@ -135,7 +145,7 @@ export async function POST(req: NextRequest) {
           headers: {
             'Content-Type': 'application/json',
             'X-Goog-Api-Key': apiKey,
-            'X-Goog-FieldMask': 'routes.duration,routes.distanceMeters,routes.description,routes.legs,routes.localizedValues'
+            'X-Goog-FieldMask': 'routes.duration,routes.distanceMeters,routes.description,routes.polyline.encodedPolyline,routes.legs.distanceMeters,routes.legs.duration,routes.legs.localizedValues,routes.legs.steps.navigationInstruction,routes.legs.steps.distanceMeters,routes.legs.steps.staticDuration,routes.legs.steps.localizedValues,routes.legs.steps.travelMode,routes.legs.steps.startLocation,routes.legs.steps.endLocation,routes.legs.steps.polyline,routes.legs.steps.transitDetails,routes.localizedValues'
           },
           body: JSON.stringify(requestBody)
         });
@@ -200,11 +210,21 @@ export async function POST(req: NextRequest) {
             s.localizedValues?.staticDuration?.text ||
             formatDuration(s.staticDuration).text;
 
+          const startLatLng = s.startLocation?.latLng;
+          const endLatLng = s.endLocation?.latLng;
+
           const stepObj: TransitStep = {
             instruction: cleanInstruction,
             distance: stepDistance,
             duration: stepDuration,
-            travelMode: s.travelMode === 'TRANSIT' ? 'TRANSIT' : s.travelMode === 'DRIVE' ? 'DRIVING' : 'WALKING'
+            travelMode: s.travelMode === 'TRANSIT' ? 'TRANSIT' : s.travelMode === 'DRIVE' ? 'DRIVING' : 'WALKING',
+            ...(typeof startLatLng?.latitude === 'number' && typeof startLatLng?.longitude === 'number'
+              ? { startLocation: { lat: startLatLng.latitude, lng: startLatLng.longitude } }
+              : {}),
+            ...(typeof endLatLng?.latitude === 'number' && typeof endLatLng?.longitude === 'number'
+              ? { endLocation: { lat: endLatLng.latitude, lng: endLatLng.longitude } }
+              : {}),
+            ...(s.polyline?.encodedPolyline ? { encodedPolyline: s.polyline.encodedPolyline } : {}),
           };
 
           if (s.travelMode === 'TRANSIT' && s.transitDetails) {
@@ -233,6 +253,8 @@ export async function POST(req: NextRequest) {
           return stepObj;
         });
 
+        const lastStepEnd = steps.length > 0 ? steps[steps.length - 1].endLocation : undefined;
+
         return {
           available: true,
           distance: distanceText,
@@ -241,6 +263,8 @@ export async function POST(req: NextRequest) {
           summary: route.description || undefined,
           departureTime: formatTime(firstTransitDeparture),
           arrivalTime: formatTime(lastTransitArrival),
+          encodedPolyline: route.polyline?.encodedPolyline || undefined,
+          destinationCoords: lastStepEnd,
           steps
         };
       } catch (modeErr: any) {

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function BusinessPortalPage() {
   return (
-    <main className="relative overflow-hidden bg-background">
+    <main className="relative overflow-hidden bg-slate-50 dark:bg-[#0B0F19] transition-colors duration-300">
       <Navbar />
       <BusinessPortalContent />
       <Footer />

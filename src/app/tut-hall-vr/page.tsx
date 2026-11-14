@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 import { 
   ArrowLeft, 
   Glasses, 
@@ -12,6 +13,7 @@ import {
 } from 'lucide-react';
 
 export default function TutHallVrPage() {
+  const { t } = useLanguage();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -73,10 +75,10 @@ export default function TutHallVrPage() {
           </div>
           <div className="text-center space-y-2">
             <h2 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-[#F5E6B8] to-[#C9A84C]">
-              Entering King Tutankhamun Hall 3D...
+              {t('tutHall.loadingTitle')}
             </h2>
             <p className="text-xs text-white/50 font-mono tracking-wider">
-              Calibrating spatial photogrammetry & Matterport 3D sweep
+              {t('tutHall.loadingSubtitle')}
             </p>
           </div>
         </div>
@@ -90,7 +92,7 @@ export default function TutHallVrPage() {
           title="Exit VR and return to EgyptX AI"
         >
           <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1 text-[#D4AF37]" />
-          <span>← Exit VR</span>
+          <span>← {t('tutHall.exitVr')}</span>
         </Link>
       </div>
 
