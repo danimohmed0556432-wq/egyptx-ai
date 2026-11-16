@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -23,10 +24,18 @@ const SUGGESTIONS = [
 
 interface FormattedMessageProps {
   content: string;
+  onNavigate?: (path: string) => void;
 }
 
-function FormattedAssistantMessage({ content: rawContent }: FormattedMessageProps) {
-  const content = stripEmojis(rawContent);
+function FormattedAssistantMessage({ content: rawContent, onNavigate }: FormattedMessageProps) {
+  const cleaned = stripEmojis(rawContent);
+  const navTokens: { path: string; label: string }[] = [];
+  const content = cleaned
+    .replace(/\[\[NAV:(\/[^|\]]*)\|([^\]]+)\]\]/g, (_, path, label) => {
+      navTokens.push({ path: path.trim(), label: label.trim() });
+      return '';
+    })
+    .trim();
   const isArabic = /[\u0600-\u06FF]/.test(content);
 
   return (
@@ -116,41 +125,73 @@ function FormattedAssistantMessage({ content: rawContent }: FormattedMessageProp
       >
         {content}
       </ReactMarkdown>
+      {navTokens.length > 0 && onNavigate && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {navTokens.map((nav, i) => (
+            <button
+              key={`${nav.path}-${i}`}
+              type="button"
+              onClick={() => onNavigate(nav.path)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#C9A84C] to-[#E2CB85] hover:brightness-105 text-[#080705] font-bold text-xs shadow-[0_4px_14px_rgba(201,168,76,0.3)] transition-all cursor-pointer"
+            >
+              <span>{nav.label}</span>
+              <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
 export default function FloatingAssistant() {
+  const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [mode, setMode] = useState<'guide' | 'navigator'>('guide');
   const { user } = useAuth();
   const { t, locale } = useLanguage();
 
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [guideMessages, setGuideMessages] = useState<Message[]>([]);
+  const [navigatorMessages, setNavigatorMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const activeMessages = mode === 'guide' ? guideMessages : navigatorMessages;
+
   // Initialize welcome message when opened for the first time
   useEffect(() => {
-    if (isOpen && messages.length === 0) {
+    if (isOpen && guideMessages.length === 0) {
       const greeting = user
         ? t('assistant.welcomeUser').replace('{name}', user.name.split(' ')[0])
         : t('assistant.welcomeGuest');
 
-      setMessages([{ role: 'assistant', content: greeting }]);
+      setGuideMessages([{ role: 'assistant', content: greeting }]);
     }
-  }, [isOpen, user, messages.length]);
+    if (isOpen && navigatorMessages.length === 0) {
+      const navGreeting =
+        locale === 'ar'
+          ? 'أهلاً بك في مستكشف موقع EgyptX. اسألني عن أي قسم أو ميزة في المنصة وسأوضح لك وظيفتها وآخذك إليها مباشرة.'
+          : 'Welcome to the EgyptX Site Navigator. Ask me where to find any page or feature on EgyptX and I will guide you straight there.';
+      setNavigatorMessages([{ role: 'assistant', content: navGreeting }]);
+    }
+  }, [isOpen, user, guideMessages.length, navigatorMessages.length, locale]);
 
   // Auto-scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping]);
+  }, [activeMessages, mode, isTyping]);
 
   const handleSend = async (text: string) => {
     if (!text.trim()) return;
 
+    const currentMode = mode;
+    const setTargetMessages = currentMode === 'guide' ? setGuideMessages : setNavigatorMessages;
+    const baseMessages = currentMode === 'guide' ? guideMessages : navigatorMessages;
+
     const userMsg: Message = { role: 'user', content: text };
-    setMessages((prev) => [...prev, userMsg]);
+    setTargetMessages((prev) => [...prev, userMsg]);
     setInputText('');
     setIsTyping(true);
 
@@ -158,7 +199,11 @@ export default function FloatingAssistant() {
       const response = await fetch('/api/chat-assistant', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [...messages, userMsg], language: locale || 'en' }),
+        body: JSON.stringify({
+          messages: [...baseMessages, userMsg],
+          language: locale || 'en',
+          mode: currentMode,
+        }),
       });
 
       const data = await response.json();
@@ -167,21 +212,29 @@ export default function FloatingAssistant() {
         throw new Error(data.error || 'Failed to get response');
       }
 
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }]);
+      setTargetMessages((prev) => [...prev, { role: 'assistant', content: data.reply }]);
     } catch (error) {
       console.error('Chat error:', error);
-      setMessages((prev) => [
+      setTargetMessages((prev) => [
         ...prev,
         {
           role: 'assistant',
-          content:
-            t('assistant.errorReply'),
+          content: t('assistant.errorReply'),
         },
       ]);
     } finally {
       setIsTyping(false);
     }
   };
+
+  const isDashboardRoute =
+    pathname?.startsWith('/government') ||
+    pathname?.startsWith('/command-center') ||
+    pathname?.startsWith('/national/dashboard');
+
+  if (isDashboardRoute) {
+    return null;
+  }
 
   return (
     <>
@@ -271,13 +324,47 @@ export default function FloatingAssistant() {
             {/* Header */}
             <div className="px-5 py-4 border-b border-slate-200 dark:border-[#C9A84C]/10 bg-[#F8F3E9] dark:bg-white/5 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-[#C9A84C] to-[#1B6B93]">
+                <button
+                  type="button"
+                  onClick={() => setMode((m) => (m === 'guide' ? 'navigator' : 'guide'))}
+                  title={
+                    mode === 'guide'
+                      ? locale === 'ar'
+                        ? 'اضغط للتبديل إلى مستكشف الموقع'
+                        : 'Switch to Site Navigator'
+                      : locale === 'ar'
+                      ? 'اضغط للعودة إلى المرشد الذكي'
+                      : 'Switch to EgyptX AI Guide'
+                  }
+                  aria-label="Toggle between AI Guide and Site Navigator"
+                  className={`group relative flex items-center justify-center w-9 h-9 rounded-full transition-all duration-300 cursor-pointer ${
+                    mode === 'navigator'
+                      ? 'bg-gradient-to-br from-[#F4C66A] to-[#C9A84C] ring-2 ring-[#F4C66A] shadow-[0_0_16px_rgba(214,160,68,0.65)] scale-105'
+                      : 'bg-gradient-to-br from-[#C9A84C] to-[#1B6B93] hover:ring-2 hover:ring-[#C9A84C]/60'
+                  }`}
+                >
                   <span className="text-[#030712] font-bold text-xs">AI</span>
-                  <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-[#060E1A]" />
-                </div>
+                  <div
+                    className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-[#060E1A] ${
+                      mode === 'navigator' ? 'bg-[#F4C66A]' : 'bg-green-500'
+                    }`}
+                  />
+                </button>
                 <div>
-                  <h3 className="text-gray-900 dark:text-white font-semibold text-sm">{t('assistant.title')}</h3>
-                  <p className="text-gray-500 dark:text-white/50 text-xs">{t('assistant.subtitle')}</p>
+                  <h3 className="text-gray-900 dark:text-white font-semibold text-sm">
+                    {mode === 'navigator'
+                      ? locale === 'ar'
+                        ? 'مستكشف موقع EgyptX'
+                        : 'EgyptX Site Navigator'
+                      : t('assistant.title')}
+                  </h3>
+                  <p className="text-gray-500 dark:text-white/50 text-xs">
+                    {mode === 'navigator'
+                      ? locale === 'ar'
+                        ? 'مساعدك الفوري لأقسام وميزات المنصة'
+                        : 'Instant Website & Feature Assistant'
+                      : t('assistant.subtitle')}
+                  </p>
                 </div>
               </div>
               <button
@@ -297,7 +384,7 @@ export default function FloatingAssistant() {
 
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-4 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
-              {messages.map((msg, idx) => (
+              {activeMessages.map((msg, idx) => (
                 <div
                   key={idx}
                   className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -310,7 +397,7 @@ export default function FloatingAssistant() {
                     }`}
                   >
                     {msg.role === 'assistant' ? (
-                      <FormattedAssistantMessage content={msg.content} />
+                      <FormattedAssistantMessage content={msg.content} onNavigate={(path: string) => router.push(path)} />
                     ) : (
                       <div dir={/[\u0600-\u06FF]/.test(msg.content) ? 'rtl' : 'ltr'}>
                         {msg.content}
@@ -321,7 +408,7 @@ export default function FloatingAssistant() {
               ))}
 
               {/* Initial Suggestions */}
-              {messages.length === 1 && (
+              {activeMessages.length === 1 && mode === 'guide' && (
                 <div className="flex flex-wrap gap-2 mt-2">
                   {[0, 1, 2, 3, 4].map((idx) => (
                     <button
@@ -330,6 +417,32 @@ export default function FloatingAssistant() {
                       className="px-3 py-2 bg-[#1B6B93]/10 dark:bg-[#1B6B93]/20 hover:bg-[#1B6B93]/20 dark:hover:bg-[#1B6B93]/40 border border-[#1B6B93]/30 text-[#1B6B93] dark:text-[#4CC9F0] text-xs font-medium rounded-lg transition-colors text-left"
                     >
                       {t(`assistant.suggestions.${idx}`)}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {activeMessages.length === 1 && mode === 'navigator' && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {(locale === 'ar'
+                    ? [
+                        'كيف أخطط رحلتي في مصر؟',
+                        'أين جولات الواقع الافتراضي VR؟',
+                        'مترجم الهيروغليفية',
+                        'مساعدة الطوارئ للسياح',
+                      ]
+                    : [
+                        'How do I plan a trip?',
+                        'Where is VR Egypt?',
+                        'Hieroglyph translator',
+                        'Emergency help',
+                      ]
+                  ).map((q, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleSend(q)}
+                      className="px-3 py-2 bg-[#C9A84C]/10 hover:bg-[#C9A84C]/25 border border-[#C9A84C]/35 text-[#8A661C] dark:text-[#F4C66A] text-xs font-medium rounded-lg transition-colors text-left cursor-pointer"
+                    >
+                      {q}
                     </button>
                   ))}
                 </div>

@@ -50,10 +50,58 @@ STRICT TOPIC GUARDRAILS (EGYPTIAN TOURISM & HISTORY ONLY):
 
 ${VERIFIED_EGYPT_HERITAGE_KB}`;
 
+const SITE_NAVIGATOR_SYSTEM_PROMPT = `You are the **EgyptX Site Navigator** — the instant website & feature assistant for the EgyptX AI platform.
+
+YOUR MISSION:
+- Help users understand what every page, tool, and feature on EgyptX does, and send them directly to the right route.
+- ALWAYS respond in the exact same language the user writes in (e.g., Arabic if the user writes in Arabic, English if English, French if French, etc.).
+- Keep answers concise, clear, and helpful (2-4 short sentences max).
+- NEVER use emojis or wide Markdown tables.
+
+CLICKABLE NAVIGATION BUTTON FORMAT (CRITICAL):
+- Whenever the user asks about a feature, tool, or page on the website, you MUST include a navigation token on its own line in this exact syntax:
+  [[NAV:/route|Button Label]]
+- Replace /route with the exact route from the directory below, and Button Label with a short, natural action label in the user's language (e.g., "Open VR Egypt", "Open AI Planner", "افتح الواقع الافتراضي", "افتح مخطط الرحلات").
+- You may include 1 or 2 [[NAV:...]] tokens if two pages are directly relevant.
+
+COMPLETE EGYPTX SITE DIRECTORY:
+- / : Home — Main EgyptX AI overview, Four Pillars, Featured Destinations, Smart Tourism, and Official Partners.
+- /planner : AI Trip Planner — Build a custom day-by-day Egypt itinerary with dates, cities, interests, and budget.
+- /navigator : Smart Navigator — Interactive Egypt map, nearby monuments, live directions, and smart mobility.
+- /ai-guide : AI Tour Guide — Full-screen conversational Egyptologist and personal travel guide.
+- /explore : Explore Egypt — Browse Egypt's major cities, temples, beaches, and oases.
+- /hidden-egypt : Hidden Egypt — Discover off-the-beaten-path oases, secret tombs, and lesser-known cultural gems.
+- /egyptian-culture : Egyptian Culture — Explore icons of Egyptian music, cinema, literature, and heritage.
+- /vr-egypt : VR Egypt — 360-degree and 3D virtual reality tours of Abu Simbel, the Grand Egyptian Museum, and Tutankhamun's Hall.
+- /vr-tour : VR Tours Directory — Browse individual 3D/VR monument experiences.
+- /gem-vr-experience : GEM VR Experience — Virtual reality preview of the Grand Egyptian Museum.
+- /tut-hall-vr : Tutankhamun Hall VR — Virtual reality exploration of King Tutankhamun's treasures.
+- /hieroglyph-scanner : Hieroglyph Scanner — Scan or upload photos of hieroglyphs to translate and decode them with AI.
+- /museum-ai : Museum AI — Identify statues, artifacts, and museum pieces using AI vision.
+- /slang : EgyptSpeak — Translate everyday Egyptian Arabic slang and phrases for travelers.
+- /memories : AI Memories — Create and save AI-styled Pharaonic & historical travel keepsake portraits.
+- /time-travel : Time Travel — Experience ancient Egyptian monuments reconstructed across historical eras.
+- /kids : Kids Mode — Child-friendly interactive Egyptian stories and audio adventures.
+- /emergency : Emergency Assistant — 24/7 tourist SOS, emergency numbers, medical help, and embassy contacts.
+- /tourist-passport : Tourist Passport — Digital EgyptX passport with monument stamps and check-ins.
+- /travel-card : Travel Card — Digital travel & currency companion card for Egypt.
+- /expenses : Trip Expenses — Track and manage trip spending and budgets in EGP/USD.
+- /bookings : Concierge Bookings — Book hotels, Nile cruises, guides, and museum tickets.
+- /crafts : Egyptian Crafts — Discover authentic Egyptian handmade crafts and artisans.
+- /news : Egypt Travel News — Latest tourism updates and cultural news.
+- /videos : Cinema — Curated documentaries and cinematic films about Egypt.
+- /reels : Shorts — Short vertical travel reels across Egypt.
+- /egypt-official : Egypt Official — Official tourism portals and visa/entry guidance.
+- /national-projects : National Projects — Flagship heritage and modern development mega-projects (GEM, New Administrative Capital, etc.).
+- /smart-site : Smart Site — On-site digital companion for heritage landmarks.
+- /elite : Elite Concierge — VIP bespoke Egyptian travel experiences.
+- /business-portal : Business Portal — Partner & tourism business onboarding.
+- /login : Sign In — Log in or register to save trips, passport stamps, and memories.`;
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { messages, stream = false, language, locale } = body;
+    const { messages, stream = false, language, locale, mode = 'guide' } = body;
     const targetLocale = normalizeLocale(language || locale);
     const langMeta = getLanguageMeta(targetLocale);
 
@@ -63,6 +111,29 @@ export async function POST(req: Request) {
 
     const lastUserMessageRaw =
       [...messages].reverse().find((m) => m.role === 'user')?.content || '';
+
+    if (mode === 'navigator') {
+      const navMessages = messages
+        .filter((m: any) => m.role !== 'system')
+        .slice(-8)
+        .map((m: any) => ({
+          role: m.role === 'assistant' ? ('assistant' as const) : ('user' as const),
+          content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content),
+        }));
+
+      const navPrompt = `${SITE_NAVIGATOR_SYSTEM_PROMPT}\n\nActive UI locale: ${langMeta.name} (${targetLocale}). Always match the language of the user's latest message.`;
+
+      const navReply = await generateWithSmartFallback({
+        systemPrompt: navPrompt,
+        messages: navMessages,
+        temperature: 0.1,
+      });
+
+      return NextResponse.json({
+        reply: navReply,
+        mode: 'navigator',
+      });
+    }
 
     if (!lastUserMessageRaw.trim()) {
       return NextResponse.json(

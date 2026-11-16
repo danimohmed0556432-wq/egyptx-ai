@@ -8,17 +8,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import KidsModeVerificationModal from '@/components/KidsModeVerificationModal';
-import { 
-  Globe, Map, Smile, Siren, 
-  Camera, Leaf, Search, Lock 
-} from 'lucide-react';
 
 const getUpcomingFeatures = (t: any) => [
   {
     id: 1,
     title: t('home.ecosystem.features.vrEgypt.title'),
     desc: t('home.ecosystem.features.vrEgypt.desc'),
-    icon: Globe,
     href: '/vr-egypt',
     bgImage: '/vr-bg.jpg',
     fallbackImage: '/destinations/giza.jpg',
@@ -27,7 +22,6 @@ const getUpcomingFeatures = (t: any) => [
     id: 2,
     title: t('home.ecosystem.features.kidsMode.title'),
     desc: t('home.ecosystem.features.kidsMode.desc'),
-    icon: Smile,
     href: '/kids',
     bgImage: '/kids-bg.jpg',
     fallbackImage: '/destinations/cairo.jpg',
@@ -36,7 +30,6 @@ const getUpcomingFeatures = (t: any) => [
     id: 3,
     title: t('home.ecosystem.features.emergency.title'),
     desc: t('home.ecosystem.features.emergency.desc'),
-    icon: Siren,
     href: '/emergency',
     bgImage: '/emergency-bg.jpg',
     fallbackImage: '/destinations/aswan.jpg',
@@ -45,7 +38,6 @@ const getUpcomingFeatures = (t: any) => [
     id: 4,
     title: t('home.ecosystem.features.aiMemories.title'),
     desc: t('home.ecosystem.features.aiMemories.desc'),
-    icon: Camera,
     href: '/memories',
     bgImage: '/ai-bg.jpg',
     fallbackImage: '/destinations/luxor.jpg',
@@ -54,7 +46,6 @@ const getUpcomingFeatures = (t: any) => [
     id: 5,
     title: t('home.ecosystem.features.treasureHunt.title'),
     desc: t('home.ecosystem.features.treasureHunt.desc'),
-    icon: Map,
     bgImage: '/treasure-bg.jpg',
     fallbackImage: '/destinations/luxor.jpg',
   },
@@ -62,7 +53,6 @@ const getUpcomingFeatures = (t: any) => [
     id: 6,
     title: t('home.ecosystem.features.sustainability.title'),
     desc: t('home.ecosystem.features.sustainability.desc'),
-    icon: Leaf,
     bgImage: '/sustain-bg.jpg',
     fallbackImage: '/destinations/siwa-oasis.jpg',
   },
@@ -70,7 +60,6 @@ const getUpcomingFeatures = (t: any) => [
     id: 7,
     title: t('home.ecosystem.features.researchHub.title'),
     desc: t('home.ecosystem.features.researchHub.desc'),
-    icon: Search,
     bgImage: '/research-bg.jpg',
     fallbackImage: '/destinations/alexandria.jpg',
   },
@@ -144,17 +133,13 @@ export default function FutureEcosystemSection() {
 
                 {/* Coming Soon Badge - Only show if no href */}
                 {!feature.href && (
-                  <div className="absolute top-4 right-4 z-20 px-2.5 py-1 bg-black/60 backdrop-blur-md border border-white/20 rounded-full text-[10px] uppercase font-bold text-[#4CC9F0] flex items-center gap-1 shadow-md">
-                    <Lock className="w-3 h-3" /> {t('home.ecosystem.comingSoon')}
+                  <div className="absolute top-4 right-4 z-20 px-3 py-1 bg-black/60 backdrop-blur-md border border-white/20 rounded-full text-[10px] uppercase font-bold text-[#4CC9F0] inline-flex items-center justify-center shadow-md">
+                    {t('home.ecosystem.comingSoon')}
                   </div>
                 )}
 
-                {/* Text and Icons */}
-                <div className="relative z-20 flex flex-col items-start w-full mt-auto pt-10">
-                  <div className="w-12 h-12 rounded-xl bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center mb-4 group-hover:border-[#D4AF37]/60 group-hover:bg-black/60 transition-colors">
-                    <feature.icon className="w-6 h-6 text-gray-200 group-hover:text-[#D4AF37] transition-colors" />
-                  </div>
-                  
+                {/* Text Content */}
+                <div className="relative z-20 flex flex-col items-start w-full mt-auto pt-16">
                   <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#D4AF37] transition-colors drop-shadow-md">
                     {feature.title}
                   </h3>

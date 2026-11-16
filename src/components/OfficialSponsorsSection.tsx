@@ -79,20 +79,13 @@ export default function OfficialSponsorsSection() {
             return (
               <div
                 key={partner.id}
-                className="group flex flex-col items-center justify-center p-5 rounded-2xl bg-[#F8F3E9] dark:bg-[#131A2A] border border-slate-200/80 dark:border-white/5 shadow-sm dark:shadow-none hover:shadow-md transition-all duration-300 hover:border-[#D4AF37]/40 cursor-default"
+                className="group flex flex-col items-center justify-center min-h-[120px] p-6 rounded-2xl bg-[#F8F3E9] dark:bg-[#131A2A] border border-slate-200/80 dark:border-white/5 shadow-sm dark:shadow-none hover:shadow-md transition-all duration-300 hover:border-[#D4AF37]/40 cursor-default"
               >
-                <div className="opacity-60 group-hover:opacity-100 transition-opacity duration-300 text-center flex flex-col items-center">
-                  {/* Monochromatic Architectural Icon Emblem */}
-                  <div className="w-9 h-9 mb-3 rounded-full border border-slate-300 dark:border-white/20 flex items-center justify-center text-[#1A2332] dark:text-gray-300">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6" />
-                    </svg>
-                  </div>
-                  
+                <div className="opacity-75 group-hover:opacity-100 transition-opacity duration-300 text-center flex flex-col items-center justify-center">
                   <p className="text-[11px] font-bold tracking-wider text-[#1A2332] dark:text-gray-100 uppercase leading-snug">
                     {partnerName !== partner.nameKey ? partnerName : partner.name}
                   </p>
-                  <p className="text-[9px] uppercase tracking-widest text-slate-500 dark:text-gray-400 mt-1">
+                  <p className="text-[9px] uppercase tracking-widest text-slate-500 dark:text-gray-400 mt-1.5">
                     {partnerCat !== partner.categoryKey ? partnerCat : partner.category}
                   </p>
                 </div>
