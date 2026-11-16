@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import Link from 'next/link';
+import EgyptXLogo from '@/components/EgyptXLogo';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Phone, MapPin, Send, CheckCircle2, Sparkles } from 'lucide-react';
 
@@ -36,8 +37,8 @@ export default function Footer() {
       <div className="container mx-auto px-6 max-w-7xl">
         
         <div className="mb-16">
-          <Link href="/" className="inline-block">
-            <h2 className="text-3xl font-serif-editorial font-bold bg-gradient-to-r from-[#A68440] via-[#C5A059] to-[#A68440] dark:from-[#FFDF73] dark:via-[#D4AF37] dark:to-[#B8860B] bg-clip-text text-transparent">{t('footer.title')}</h2>
+          <Link href="/" className="inline-block" aria-label="EgyptX Home">
+            <EgyptXLogo size="footer" />
           </Link>
           <p className="text-slate-700 dark:text-gray-300 mt-2 text-sm tracking-wide font-normal">{t('footer.subtitle')}</p>
         </div>

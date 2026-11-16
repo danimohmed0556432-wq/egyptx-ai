@@ -390,31 +390,12 @@ export async function identifyLandmarkWithCohereVision(
   }
 ): Promise<CohereLandmarkVisionResult> {
   const language: SupportedLocale = normalizeLocale(options?.language);
-  const cohereApiKey = (
-    process.env.COHERE_API_KEY ||
-    (process.env as Record<string, string | undefined>)['\uFEFFCOHERE_API_KEY'] ||
-    ''
-  ).trim();
-
-  if (!cohereApiKey) {
-    throw new Error('COHERE_API_KEY is not configured');
-  }
-
-  const { allModelNames, visionModels } = await discoverCohereVisionModels(
-    cohereApiKey
-  );
-
-  if (visionModels.length === 0) {
-    throw new Error(
-      `No chat-capable Cohere vision models found for this COHERE_API_KEY. Available models from /v1/models: ${allModelNames.join(', ') || 'none'}`
-    );
-  }
-
   const mimeType =
     options?.mimeType && options.mimeType.startsWith('image/')
       ? options.mimeType
       : 'image/jpeg';
-  const imageDataUrl = `data:${mimeType};base64,${buffer.toString('base64')}`;
+  const base64Data = buffer.toString('base64');
+  const imageDataUrl = `data:${mimeType};base64,${base64Data}`;
   const userInstruction = options?.prompt?.trim();
 
   const promptText = [
@@ -449,104 +430,117 @@ export async function identifyLandmarkWithCohereVision(
     .filter(Boolean)
     .join('\n');
 
+  const formatParsedVision = (parsed: any, modelUsed: string): CohereLandmarkVisionResult => {
+    if (!parsed || typeof parsed !== 'object' || !parsed.identified_name) {
+      throw new Error(`${modelUsed} returned incomplete JSON payload`);
+    }
+    const confLevelRaw = String(parsed.confidence_level || 'high').toLowerCase();
+    const confidence_level: 'high' | 'medium' | 'low' = confLevelRaw.includes('low')
+      ? 'low'
+      : confLevelRaw.includes('medium')
+        ? 'medium'
+        : 'high';
+    const era = String(parsed.era || parsed.dynasty || 'Historical').trim();
+    const builder = String(parsed.builder || 'Unknown').trim();
+    const location = String(parsed.location || 'Unknown').trim();
+    const significance = String(
+      parsed.historical_significance || parsed.ai_description || ''
+    ).trim();
+    const aiDesc = String(
+      parsed.ai_description ||
+        `${parsed.identified_name}\nEra: ${era}\nBuilder: ${builder}\nLocation: ${location}\nHistorical Significance: ${significance}`
+    ).trim();
+
+    return {
+      identified_name: String(parsed.identified_name).trim(),
+      confidence_level,
+      ai_description: aiDesc,
+      dynasty: era,
+      builder,
+      location,
+      historical_significance: significance,
+      confidence_percent: String(parsed.confidence_percent || '92%').trim(),
+      model_used: modelUsed,
+    };
+  };
+
+  const parseJsonText = (rawContent: string) => {
+    const rawText = String(rawContent || '')
+      .replace(/```json/gi, '')
+      .replace(/```/g, '')
+      .trim();
+    const match = rawText.match(/\{[\s\S]*\}/);
+    return JSON.parse(match ? match[0] : rawText);
+  };
+
   let lastError: unknown = null;
 
-  for (const model of visionModels) {
-    try {
-      const res = await fetch(COHERE_CHAT_URL, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${cohereApiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model,
-          temperature: 0.0,
-          response_format: { type: 'json_object' },
-          messages: [
-            {
-              role: 'user',
-              content: [
-                { type: 'text', text: promptText },
-                {
-                  type: 'image_url',
-                  image_url: {
-                    url: imageDataUrl,
-                  },
-                },
-              ],
-            },
-          ],
-        }),
-        signal: AbortSignal.timeout(45000),
-      });
+  const cohereApiKey = (
+    process.env.COHERE_API_KEY ||
+    (process.env as Record<string, string | undefined>)['\uFEFFCOHERE_API_KEY'] ||
+    ''
+  ).trim();
 
-      if (!res.ok) {
-        const errText = await res.text().catch(() => '');
-        throw new Error(`Cohere ${model} returned ${res.status}: ${errText}`);
-      }
+  if (!cohereApiKey) {
+    throw new Error('COHERE_API_KEY is not configured');
+  }
 
-      const data = await res.json();
-      const rawContent =
-        data?.message?.content?.[0]?.text ??
-        (Array.isArray(data?.message?.content)
-          ? data.message.content
-              .map((block: any) => (typeof block?.text === 'string' ? block.text : ''))
-              .join('\n')
-          : String(data?.message?.content || ''));
+  try {
+    const res = await fetch(COHERE_CHAT_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${cohereApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'command-a-vision-07-2025',
+        temperature: 0.1,
+        response_format: { type: 'json_object' },
+        messages: [
+          {
+            role: 'system',
+            content: promptText,
+          },
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'text',
+                text: 'Inspect this uploaded photograph objectively and return the JSON result.',
+              },
+              {
+                type: 'image_url',
+                image_url: { url: imageDataUrl },
+              },
+            ],
+          },
+        ],
+      }),
+      signal: AbortSignal.timeout(45000),
+    });
 
-      const rawText = String(rawContent)
-        .replace(/```json/gi, '')
-        .replace(/```/g, '')
-        .trim();
-
-      const match = rawText.match(/\{[\s\S]*\}/);
-      const parsed = JSON.parse(match ? match[0] : rawText);
-
-      if (!parsed || typeof parsed !== 'object' || !parsed.identified_name) {
-        throw new Error(`Cohere ${model} returned incomplete JSON payload`);
-      }
-
-      const confLevelRaw = String(parsed.confidence_level || 'high').toLowerCase();
-      const confidence_level: 'high' | 'medium' | 'low' = confLevelRaw.includes('low')
-        ? 'low'
-        : confLevelRaw.includes('medium')
-          ? 'medium'
-          : 'high';
-
-      const era = String(parsed.era || parsed.dynasty || 'Historical').trim();
-      const builder = String(parsed.builder || 'Unknown').trim();
-      const location = String(parsed.location || 'Unknown').trim();
-      const significance = String(
-        parsed.historical_significance || parsed.ai_description || ''
-      ).trim();
-      const aiDesc = String(
-        parsed.ai_description ||
-          `${parsed.identified_name}\nEra: ${era}\nBuilder: ${builder}\nLocation: ${location}\nHistorical Significance: ${significance}`
-      ).trim();
-
-      return {
-        identified_name: String(parsed.identified_name).trim(),
-        confidence_level,
-        ai_description: aiDesc,
-        dynasty: era,
-        builder,
-        location,
-        historical_significance: significance,
-        confidence_percent: String(parsed.confidence_percent || '92%').trim(),
-        model_used: model,
-      };
-    } catch (err: any) {
-      lastError = err;
-      console.warn(`[landmark-vision] ${model} failed:`, err?.message || err);
+    if (!res.ok) {
+      const errText = await res.text().catch(() => '');
+      throw new Error(`Cohere command-a-vision-07-2025 returned ${res.status}: ${errText}`);
     }
+
+    const data = await res.json();
+    const rawContent =
+      data?.message?.content?.[0]?.text ??
+      (Array.isArray(data?.message?.content)
+        ? data.message.content
+            .map((block: any) => (typeof block?.text === 'string' ? block.text : ''))
+            .join('\n')
+        : String(data?.message?.content || ''));
+    return formatParsedVision(parseJsonText(rawContent), 'command-a-vision-07-2025');
+  } catch (err: any) {
+    lastError = err;
+    console.warn('[landmark-vision] Cohere command-a-vision-07-2025 failed:', err?.message || err);
   }
 
   const lastMessage =
-    lastError instanceof Error ? lastError.message : String(lastError || 'unknown error');
-  throw new Error(
-    `All discovered Cohere vision models failed (${visionModels.join(', ')}). Last error: ${lastMessage}. Available models from /v1/models: ${allModelNames.join(', ') || 'none'}`
-  );
+    lastError instanceof Error ? lastError.message : String(lastError || 'Cohere Vision service unavailable — please check COHERE_API_KEY');
+  throw new Error(lastMessage);
 }
 
 export function decodeBase64Image(imageInput: string): Buffer {

@@ -39,6 +39,10 @@ export const metadata: Metadata = {
   description:
     "Discover Egypt. Experience History. Shape the Future. EgyptX AI is Egypt's National Smart Tourism Ecosystem powered by Artificial Intelligence.",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/images/logo/logo-dark.png",
+    apple: "/images/logo/logo-dark.png",
+  },
   keywords: [
     "Egypt",
     "Tourism",

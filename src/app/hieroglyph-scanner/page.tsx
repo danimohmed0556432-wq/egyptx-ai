@@ -22,6 +22,9 @@ import {
 } from 'lucide-react';
 
 interface HieroglyphScanResult {
+  classification?: 'authentic_inscription' | 'modern_artwork';
+  classification_label?: string;
+  signs?: string[];
   symbols: string | string[] | any;
   english_translation: string;
   arabic_translation: string;
@@ -34,6 +37,49 @@ interface HieroglyphScanResult {
     meaning?: string;
   };
 }
+
+const CLASSIFICATION_UI: Record<string, { authentic: string; modern: string; noSigns: string }> = {
+  en: {
+    authentic: 'Authentic Epigraphic Inscription',
+    modern: 'Modern Hieroglyphic-Style Artwork',
+    noSigns: 'No standard ancient Gardiner signs clearly identifiable in this image.',
+  },
+  ar: {
+    authentic: 'نقش هيروغليفي أثري أصيل',
+    modern: 'عمل فني / إعلاني حديث مستوحى من الهيروغليفية',
+    noSigns: 'لم يتم رصد علامات غاردينر هيروغليفية أثرية قياسية بوضوح في هذه الصورة.',
+  },
+  fr: {
+    authentic: 'Inscription épigraphique authentique',
+    modern: 'Œuvre moderne de style hiéroglyphique',
+    noSigns: 'Aucun signe standard de Gardiner clairement identifiable dans cette image.',
+  },
+  de: {
+    authentic: 'Authentische epigraphische Inschrift',
+    modern: 'Modernes Kunstwerk im Hieroglyphen-Stil',
+    noSigns: 'Keine standardisierten Gardiner-Hieroglyphen eindeutig in diesem Bild erkennbar.',
+  },
+  it: {
+    authentic: 'Iscrizione epigrafica autentica',
+    modern: 'Opera moderna in stile geroglifico',
+    noSigns: 'Nessun segno standard di Gardiner chiaramente identificabile in questa immagine.',
+  },
+  es: {
+    authentic: 'Inscripción epigráfica auténtica',
+    modern: 'Obra moderna de estilo jeroglífico',
+    noSigns: 'No se identifican signos estándar de Gardiner con claridad en esta imagen.',
+  },
+  zh: {
+    authentic: '真实古埃及铭文',
+    modern: '现代仿象形文字艺术设计',
+    noSigns: '此图像中未明确识别出标准加德纳古埃及象形文字符号。',
+  },
+  ru: {
+    authentic: 'Подлинная эпиграфическая надпись',
+    modern: 'Современная стилизация под иероглифы',
+    noSigns: 'Стандартные иероглифы Гардинера на этом изображении не обнаружены.',
+  },
+};
 
 const SAMPLE_INSCRIPTIONS = [
   {
@@ -631,26 +677,46 @@ export default function HieroglyphScannerPage() {
                     </div>
 
                     {/* Dynamic Rendering of Symbols */}
-                    {Array.isArray(scanResult.symbols) ? (
-                      <div className="flex flex-wrap gap-2 my-2">
-                        {scanResult.symbols.map((sym, idx) => (
-                          <span 
-                            key={idx}
-                            className="px-3.5 py-1.5 rounded-xl bg-amber-500/15 dark:bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 text-sm font-mono font-bold"
-                          >
-                            {typeof sym === 'object' && sym !== null ? JSON.stringify(sym) : String(sym)}
-                          </span>
-                        ))}
-                      </div>
+                    {Array.isArray(scanResult.signs || scanResult.symbols) ? (
+                      (scanResult.signs || scanResult.symbols).length > 0 ? (
+                        <div className="flex flex-wrap gap-2 my-2">
+                          {(scanResult.signs || scanResult.symbols).map((sym: any, idx: number) => (
+                            <span 
+                              key={idx}
+                              className="px-3.5 py-1.5 rounded-xl bg-amber-500/15 dark:bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 text-sm font-mono font-bold"
+                            >
+                              {typeof sym === 'object' && sym !== null ? JSON.stringify(sym) : String(sym)}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-amber-800/85 dark:text-amber-200/80 my-2">
+                          {(CLASSIFICATION_UI[(locale || 'en').slice(0, 2)] || CLASSIFICATION_UI.en).noSigns}
+                        </p>
+                      )
                     ) : (
                       <p className="font-serif text-2xl sm:text-4xl text-amber-900 dark:text-amber-200 tracking-wider font-semibold leading-relaxed">
                         {typeof scanResult.symbols === 'string' ? scanResult.symbols : JSON.stringify(scanResult.symbols)}
                       </p>
                     )}
 
-                    <p className="text-[11px] text-gray-600 dark:text-gray-400 mt-2 font-mono">
-                      Decoded exclusively using verified Egyptological dictionary records
-                    </p>
+                    <div className="mt-3 flex items-center gap-2">
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border ${
+                          scanResult.classification === 'modern_artwork'
+                            ? 'bg-sky-500/10 border-sky-500/35 text-sky-700 dark:text-sky-300'
+                            : 'bg-emerald-500/10 border-emerald-500/35 text-emerald-700 dark:text-emerald-300'
+                        }`}
+                      >
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                        <span>
+                          {scanResult.classification_label ||
+                            (scanResult.classification === 'modern_artwork'
+                              ? (CLASSIFICATION_UI[(locale || 'en').slice(0, 2)] || CLASSIFICATION_UI.en).modern
+                              : (CLASSIFICATION_UI[(locale || 'en').slice(0, 2)] || CLASSIFICATION_UI.en).authentic)}
+                        </span>
+                      </span>
+                    </div>
                   </div>
 
                   {/* 2. TRANSLATION RESULT BOX WITH ENGLISH / ARABIC TOGGLE */}

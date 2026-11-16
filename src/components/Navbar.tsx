@@ -18,6 +18,7 @@ import {
   Command,
 } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
+import EgyptXLogo from '@/components/EgyptXLogo';
 import EliteModal from '@/components/EliteModal';
 import VrLoadingOverlay from '@/components/VrLoadingOverlay';
 import {
@@ -324,19 +325,8 @@ export default function Navbar() {
         <div className="flex items-center justify-between">
 
           {/* ── LEFT: Logo ─────────────────────────────────────────────────── */}
-          <Link href="/" className="flex items-center gap-2 group shrink-0">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#C5A059] group-hover:scale-105 transition-transform">
-              <path d="M12 2L22 20H2L12 2Z" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M12 22V20" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
-              <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.75"/>
-            </svg>
-            <span className={`text-xl font-bold tracking-tight transition-colors ${
-              solidNav
-                ? 'text-[#1A2332] dark:text-white'
-                : 'text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]'
-            }`}>
-              Egypt<span className="text-[#C5A059]">X</span>
-            </span>
+          <Link href="/" className="flex items-center group shrink-0" aria-label="EgyptX Home">
+            <EgyptXLogo size="navbar" className="group-hover:scale-[1.03] transition-transform duration-300" />
           </Link>
 
           {/* ── CENTER: Clean Minimal Navigation Hierarchy (Zero Emojis) ───── */}

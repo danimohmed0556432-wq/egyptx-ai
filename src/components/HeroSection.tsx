@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
+import EgyptXLogo from '@/components/EgyptXLogo';
 
 const HeroSection = () => {
   const { t } = useLanguage();
@@ -55,11 +56,11 @@ const HeroSection = () => {
           <span className="text-[#C5A869] text-xs font-semibold tracking-[0.2em] uppercase">{t('home.badge')}</span>
         </motion.div>
 
-        {/* Title */}
-        <motion.h1 variants={staggerItem} className="text-5xl md:text-7xl lg:text-8xl font-serif-editorial font-bold mb-3 md:mb-4 tracking-tight leading-none text-white">
-          <span>Egypt</span>
-          <span className="text-[#C5A869] ml-1">X</span>
-        </motion.h1>
+        {/* Title / Centerpiece Logo */}
+        <motion.div variants={staggerItem} className="mb-4 md:mb-6 flex flex-col items-center">
+          <h1 className="sr-only">EgyptX</h1>
+          <EgyptXLogo size="hero" forceDark />
+        </motion.div>
 
         {/* Subtitle */}
         <motion.h2 variants={staggerItem} className="text-xs md:text-sm lg:text-base font-light text-stone-300 mb-6 md:mb-8 tracking-[0.3em] uppercase">

@@ -50,6 +50,7 @@ export default function EgyptianCultureShowcase() {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [selectedIcon, setSelectedIcon] = useState<CultureIconEntry | null>(null);
   const [spotlightImgError, setSpotlightImgError] = useState(false);
+  const [modalImgError, setModalImgError] = useState(false);
 
   const spotlightItem = useMemo(() => {
     const targetId = SPOTLIGHT_BY_SECTION[activeCategory] || 'umm-kulthum';
@@ -59,6 +60,10 @@ export default function EgyptianCultureShowcase() {
   useEffect(() => {
     setSpotlightImgError(false);
   }, [spotlightItem.id]);
+
+  useEffect(() => {
+    setModalImgError(false);
+  }, [selectedIcon?.id]);
 
   useEffect(() => {
     if (!selectedIcon) return;
@@ -185,21 +190,29 @@ export default function EgyptianCultureShowcase() {
           <div className="relative overflow-hidden rounded-3xl border border-[#76501F]/60 dark:border-[#D6A044]/40 bg-gradient-to-br from-[#F8F3E9] via-[#F2E9D8] to-[#EAE0CA] dark:from-[#14100A] dark:via-[#1C140C] dark:to-[#080705] shadow-[0_20px_60px_rgba(8,7,5,0.16)] dark:shadow-[0_24px_70px_rgba(0,0,0,0.65)]">
             <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
               {/* Framed Portrait */}
-              <div className="lg:col-span-5 relative min-h-[280px] sm:min-h-[340px] overflow-hidden bg-[#120E09]">
+              <div className="lg:col-span-5 relative h-72 sm:h-80 lg:h-auto lg:min-h-[340px] overflow-hidden bg-[#120E09]">
                 {spotlightItem.image && !spotlightImgError ? (
-                  <img
-                    src={spotlightItem.image}
-                    alt={spotlightLoc.name}
-                    onError={() => setSpotlightImgError(true)}
-                    className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-[1.03]"
-                  />
+                  <>
+                    <img
+                      src={spotlightItem.image}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 w-full h-full object-cover blur-xl scale-110 opacity-35 pointer-events-none"
+                    />
+                    <img
+                      src={spotlightItem.image}
+                      alt={spotlightLoc.name}
+                      onError={() => setSpotlightImgError(true)}
+                      className="relative z-10 w-full h-full object-contain object-top transition-transform duration-500 hover:scale-[1.03]"
+                    />
+                  </>
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-[#080705] via-[#21170D] to-[#76501F]/40 flex items-center justify-center">
                     <Crown className="w-16 h-16 text-[#D6A044]/70" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#080705]/80 via-transparent to-black/20 pointer-events-none" />
-                <div className="absolute top-4 left-4 right-4 flex items-center justify-between gap-2">
+                <div className="absolute inset-x-0 bottom-0 h-24 z-10 bg-gradient-to-t from-[#0c0a08]/85 via-[#0c0a08]/40 to-transparent pointer-events-none" />
+                <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between gap-2">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#080705]/85 border border-[#D6A044]/50 text-[11px] font-bold text-[#F5DFA0] uppercase tracking-wider">
                     <Sparkles className="w-3 h-3 text-[#D6A044]" />
                     {ui.spotlightLabel}
@@ -305,19 +318,37 @@ export default function EgyptianCultureShowcase() {
             className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-[#FDFBF7] dark:bg-[#0D0A06] border border-[#D6A044]/60 shadow-[0_24px_80px_rgba(0,0,0,0.8)] text-start"
           >
             {/* Modal Header Image */}
-            <div className="relative h-56 sm:h-64 w-full overflow-hidden bg-[#120E09]">
-              {selectedIcon.image ? (
-                <img
-                  src={selectedIcon.image}
-                  alt={selectedLoc.name}
-                  className="w-full h-full object-cover object-center"
-                />
+            <div className="relative h-72 sm:h-80 w-full overflow-hidden bg-[#120E09]">
+              {selectedIcon.image && !modalImgError ? (
+                <>
+                  <img
+                    src={selectedIcon.image}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover blur-xl scale-110 opacity-35 pointer-events-none"
+                  />
+                  <img
+                    src={selectedIcon.image}
+                    alt={selectedLoc.name}
+                    onError={() => setModalImgError(true)}
+                    className="relative z-10 w-full h-full object-contain object-top transition-transform duration-500"
+                  />
+                </>
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-[#080705] via-[#21170D] to-[#76501F]/40 flex items-center justify-center">
-                  <Crown className="w-16 h-16 text-[#D6A044]/70" />
+                <div className="w-full h-full bg-gradient-to-br from-[#080705] via-[#21170D] to-[#76501F]/40 flex flex-col items-center justify-center gap-2">
+                  <Crown className="w-12 h-12 text-[#D6A044]/75" />
+                  <span className="font-serif text-3xl font-bold tracking-widest text-[#D6A044]/85">
+                    {selectedLoc.name
+                      .split(' ')
+                      .filter(Boolean)
+                      .map((w) => w[0])
+                      .join('')
+                      .slice(0, 2)
+                      .toUpperCase()}
+                  </span>
                 </div>
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0D0A06] via-[#0D0A06]/35 to-black/30" />
+              <div className="absolute inset-x-0 bottom-0 h-28 z-10 bg-gradient-to-t from-[#0c0a08] via-[#0c0a08]/55 to-transparent pointer-events-none" />
 
               <button
                 type="button"

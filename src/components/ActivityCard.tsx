@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
+import { getPlannerPreferences } from '@/lib/planner-preferences';
 import { motion } from 'framer-motion';
 import {
   cleanEntityTitle,
@@ -29,6 +30,8 @@ export interface Activity {
   estimated_cost_usd?: string;
   tip?: string;
   fact?: string;
+  whyMatches?: string;
+  matchReason?: string;
   imagePath?: string;
   image_search_query?: string;
   transport?: string;
@@ -53,7 +56,8 @@ export const DEFAULT_FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1539768942893-daf53e448371?auto=format&fit=crop&w=800&q=80';
 
 export default function ActivityCard({ act, actIdx, dayIdx, cityName = 'Cairo' }: ActivityCardProps) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+  const prefsBundle = getPlannerPreferences(locale);
   const rawTitle = (act.title || act.name || cityName || 'Egypt').trim();
   const smartFallback = getSmartCategoryFallback(rawTitle, act.description || '');
 
@@ -256,6 +260,12 @@ export default function ActivityCard({ act, actIdx, dayIdx, cityName = 'Cairo' }
               </p>
 
               <div className="pt-4 mt-2 border-t border-slate-200 dark:border-white/10 space-y-3">
+                {(act.whyMatches || act.matchReason) && (
+                  <div className="flex items-start gap-3 text-sm text-[#1A1510] dark:text-[#F5EFE6] bg-[#19A974]/10 p-2.5 rounded-lg border border-[#19A974]/30">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#19A974] mt-1.5 shrink-0" />
+                    <span><strong className="text-[#19A974]">{prefsBundle.whyMatchesLabel}</strong> {act.whyMatches || act.matchReason}</span>
+                  </div>
+                )}
                 {act.tip && (
                   <div className="flex items-start gap-3 text-sm text-[#1B6B93] bg-[#1B6B93]/10 p-2.5 rounded-lg border border-[#1B6B93]/20">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#1B6B93] mt-1.5 shrink-0" />

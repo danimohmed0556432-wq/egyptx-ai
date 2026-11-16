@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { createUniversalChatCompletion } from '@/lib/ai-client';
 import { resolveEgyptianLandmarkImage } from '@/lib/egypt-image-pipeline';
 import { buildJsonLanguageInstruction, normalizeLocale } from '@/lib/i18n-ai';
+import { buildLocalizedFallbackDay } from '@/lib/planner-fallback-i18n';
+import { PlannerLocale } from '@/lib/planner-preferences';
 
 export async function POST(req: Request) {
   try {
@@ -23,6 +25,10 @@ export async function POST(req: Request) {
       avoidCrowds,
       routePreference,
       destinations,
+      mobilityPace,
+      dailyRhythm,
+      commitments,
+      passions,
       language,
       locale,
     } = body;
@@ -100,6 +106,57 @@ export async function POST(req: Request) {
         ? destinations.join(', ')
         : 'Cairo, Luxor, Aswan';
 
+    const commitmentsList: string[] = Array.isArray(commitments) ? commitments : [];
+    const passionsList: string[] = Array.isArray(passions) ? passions : [];
+
+    // Build strict non-random operational constraints from 1-tap chips
+    const strictConstraints: string[] = [];
+    if (mobilityPace === 'easy' || commitmentsList.includes('senior_friendly')) {
+      strictConstraints.push(
+        'STRICT MOBILITY & AGE LIMIT: "Easy & Accessible / Senior-Friendly" is active. FORBID strenuous climbs, steep tomb stairs, long desert hikes, or rushed back-to-back walking. Prioritize elevator/ramp-accessible venues, short walking distances, shaded rest stops, and realistic 45-60 min rest breaks between major stops.'
+      );
+    } else if (mobilityPace === 'active') {
+      strictConstraints.push(
+        'ACTIVE EXPLORER PACE: Include energetic exploration, walking heritage trails, and full-day coverage.'
+      );
+    }
+
+    if (dailyRhythm === 'early_bird') {
+      strictConstraints.push(
+        'DAILY RHYTHM (EARLY BIRD): Start first activities early around 06:30 AM - 08:00 AM for sunrise, cooler morning hours, and quieter monuments, wrapping up by early evening.'
+      );
+    } else if (dailyRhythm === 'night_owl') {
+      strictConstraints.push(
+        'DAILY RHYTHM (NIGHT OWL): Start mornings relaxed (10:30 AM+) and emphasize atmospheric Nile evenings, illuminated monuments, Khan el-Khalili / Al-Muizz night walks, and late dining.'
+      );
+    }
+
+    if (commitmentsList.includes('kid_friendly')) {
+      strictConstraints.push(
+        'KID-FRIENDLY COMMITMENT: Include engaging, family-safe stops, interactive museums, Nile boat rides, and avoid overly long academic lectures.'
+      );
+    }
+    if (commitmentsList.includes('remote_work')) {
+      strictConstraints.push(
+        'REMOTE WORK / WI-FI BREAKS: Keep mid-afternoon slots (approx. 01:30 PM - 04:30 PM) light or anchored at quiet, reliable Wi-Fi-friendly historic cafes or hotel lounges for remote work.'
+      );
+    }
+    if (commitmentsList.includes('golden_hour')) {
+      strictConstraints.push(
+        'GOLDEN-HOUR PHOTOGRAPHY: Schedule scenic viewpoints (e.g., Giza Plateau panorama, Nile felucca, Citadel terrace, Corniche) specifically around 04:30 PM - 06:00 PM for golden-hour light.'
+      );
+    }
+    if (commitmentsList.includes('dietary_care')) {
+      strictConstraints.push(
+        'VEGETARIAN / DIETARY CARE: Recommend authentic Egyptian vegetarian-friendly dishes (e.g., koshary, ful, taameya, grilled vegetables, mezze) and note dietary suitability.'
+      );
+    }
+    if (passionsList.length > 0) {
+      strictConstraints.push(
+        `DEEP PASSIONS (PRIORITIZE HEAVILY): ${passionsList.join(', ')}. Tailor monument, dining, and neighborhood choices directly around these passions.`
+      );
+    }
+
     const totalBudgetUsd =
       numericBudget > 0 ? Math.round(numericBudget) : perDayBudget * parsedDuration;
 
@@ -113,7 +170,9 @@ CRITICAL INSTRUCTIONS:
    - Restrict ALL activities, temples, restaurants, cafes, and hotels strictly to REAL, verifiable places located INSIDE the exact selected cities (${destinationsConstraint}).
    - NEVER invent fake cafes or restaurants (for example, never invent a non-existent place like "Local Dendera Cafe" inside Luxor).
    - NEVER teleport the traveler to another governorate or city without an explicit inter-city transfer step.
-   - Ensure realistic daily pacing (morning, afternoon, evening) and logical geographical grouping (for example, Luxor West Bank sites together, East Bank sites together) with accurate transit times.
+   - STRICT GEOGRAPHIC CLUSTERING PER DAY: Keep EVERY day clustered within ONE city/zone (e.g., never jump between Cairo, Luxor, and Aswan on the same day). Ensure realistic daily pacing and logical geographical grouping (for example, Luxor West Bank sites together, East Bank sites together) with accurate transit times.
+   - ZERO EMOJIS: Do NOT output any emojis anywhere in any JSON string field.
+${strictConstraints.length > 0 ? `\nSTRICT MANDATORY TRAVELER CONSTRAINTS (MUST OBEY 100%):\n${strictConstraints.map((c, idx) => `   ${idx + 1}. ${c}`).join('\n')}` : ''}
 4. SCALABLE USD COSTING:
    - Total trip budget is $${totalBudgetUsd} USD (${budgetTier} tier, approximately $${perDayBudget} USD/day for ${parsedTravelers} traveler(s)).
    - For EVERY activity, meal, transfer, and ticket, output an exact "estimated_cost_usd" string (e.g., "$45", "$120", "$0") scaled proportionally so the sum across all ${parsedDuration} days realistically aligns with $${totalBudgetUsd} USD.
@@ -143,6 +202,7 @@ CRITICAL INSTRUCTIONS:
    - "transport_tip": Nearest Station/Pier/Pickup + Exact Travel Time + Realistic Fare in EGP & USD
    - "estimated_cost_usd": e.g. "$45"
    - "historicalFact": An authentic historical fact about the site
+   - "whyMatches": A brief 1-sentence reason connecting this stop to the traveler's selected mobility, rhythm, commitments, or passions (in the active output language)
 
 JSON SCHEMA REQUIRED:
 {
@@ -160,7 +220,8 @@ JSON SCHEMA REQUIRED:
           "transport_mode": "Cairo Metro Line 2 to Giza Station + Uber via Al-Haram St",
           "transport_tip": "Metro Line 2 to Giza Station then 15 mins Uber to Nazlet El-Semman Gate | 35 mins total | 15 EGP metro + 90 EGP Uber (~$2.20 USD)",
           "estimated_cost_usd": "$55",
-          "historicalFact": "The Great Pyramid remained the tallest human-made structure for over 3,800 years."
+          "historicalFact": "The Great Pyramid remained the tallest human-made structure for over 3,800 years.",
+          "whyMatches": "Matches your passion for Pharaonic Wonders with early-morning access."
         }
       ]
     }
@@ -171,7 +232,7 @@ Available Landmarks for Reference:
 ${attractionsContext}
 
 ${buildJsonLanguageInstruction(targetLocale)}
-- NOTE ON \`exact_landmark_name\`: Keep \`exact_landmark_name\` as the official English Wikipedia/Wikimedia title so photo lookup works, and translate \`city\`, \`title\`, \`description\`, \`category\`, \`transport_mode\`, \`transport_tip\`, and \`historicalFact\` into the requested output language.`;
+- NOTE ON \`exact_landmark_name\`: Keep \`exact_landmark_name\` as the official English Wikipedia/Wikimedia title so photo lookup works, and translate \`city\`, \`title\`, \`description\`, \`category\`, \`transport_mode\`, \`transport_tip\`, \`historicalFact\`, and \`whyMatches\` into the requested output language.`;
 
     const userPrompt = `Generate an exact ${parsedDuration}-day itinerary for ${parsedTravelers} traveler(s).
 Total Budget: $${totalBudgetUsd} USD (${budgetTier} tier).
@@ -179,6 +240,10 @@ Selected Cities ONLY: ${destinationsConstraint}.
 Interests: ${interestsString}.
 Travel style: ${travelStyle || 'standard'}.
 Pace: ${paceInstruction}
+${mobilityPace ? `Mobility & Pace: ${mobilityPace}` : ''}
+${dailyRhythm ? `Daily Rhythm: ${dailyRhythm}` : ''}
+${commitmentsList.length > 0 ? `Special Commitments: ${commitmentsList.join(', ')}` : ''}
+${passionsList.length > 0 ? `Deep Passions: ${passionsList.join(', ')}` : ''}
 ${accessibility ? `Accessibility: ${accessibility}` : ''}
 ${avoidPlaces ? `Avoid: ${avoidPlaces}` : ''}
 ${avoidCrowds ? `Avoid crowded peak hours where possible.` : ''}
@@ -251,24 +316,58 @@ ${routePreference ? `Route: ${routePreference}` : ''}`;
                 `$${Math.max(15, Math.round(perDayBudget / Math.max(1, activities.length)))}`
             ).trim();
 
+            const hasArabicLeak = (s?: string | null) =>
+              targetLocale !== 'ar' && typeof s === 'string' && /[\u0600-\u06FF]/.test(s);
+
+            const localizedRef = buildLocalizedFallbackDay({
+              dayNumber: Number(dayNum),
+              rawCity: city,
+              locale: targetLocale as PlannerLocale,
+              perDayBudget,
+              dailyRhythm,
+              mobilityPace,
+              commitments: commitmentsList,
+              imageUrls: [resolvedImg.url, resolvedImg.url, resolvedImg.url],
+            }).activities[0];
+
+            const safeTitle = hasArabicLeak(title) ? localizedRef.title : title;
+            const safeDesc = hasArabicLeak(a.description)
+              ? localizedRef.description
+              : a.description || localizedRef.description;
+            const safeType = hasArabicLeak(a.category || a.type)
+              ? localizedRef.type
+              : a.category || a.type || localizedRef.type;
+            const safeTransportMode = hasArabicLeak(a.transport_mode || a.transport)
+              ? localizedRef.transport_mode
+              : a.transport_mode || a.transport || localizedRef.transport_mode;
+            const safeTransportTip = hasArabicLeak(a.transport_tip)
+              ? localizedRef.transport_tip
+              : a.transport_tip || '';
+            const safeTip = hasArabicLeak(a.tip) ? localizedRef.tip : a.tip || null;
+            const safeFact = hasArabicLeak(a.historicalFact || a.fact)
+              ? localizedRef.fact
+              : a.historicalFact || a.fact || null;
+            const safeWhy = hasArabicLeak(a.whyMatches || a.matchReason)
+              ? localizedRef.whyMatches
+              : a.whyMatches || a.matchReason || null;
+
             resolvedActivities.push({
               time: a.time || '10:00 AM',
-              name: title,
-              title,
+              name: safeTitle,
+              title: safeTitle,
               exact_landmark_name: exactLandmarkName,
-              description:
-                a.description ||
-                'Immerse yourself in authentic Egyptian culture and historical wonders.',
-              type: a.category || a.type || 'sightseeing',
+              description: safeDesc,
+              type: safeType,
               imagePath: resolvedImg.url,
               image_search_query: exactLandmarkName,
-              transport: a.transport_mode || a.transport || 'Private A/C Car',
-              transport_mode: a.transport_mode || a.transport || 'Uber / Private A/C Car',
-              transport_tip: a.transport_tip || '',
+              transport: safeTransportMode,
+              transport_mode: safeTransportMode,
+              transport_tip: safeTransportTip,
               estimated_cost_usd: costStr,
               cost: costStr,
-              tip: a.tip || null,
-              fact: a.historicalFact || a.fact || null,
+              tip: safeTip,
+              fact: safeFact,
+              whyMatches: safeWhy,
             });
           }
 
@@ -297,9 +396,6 @@ ${routePreference ? `Route: ${routePreference}` : ''}`;
       formattedData = await Promise.all(
         Array.from({ length: parsedDuration }, async (_, i) => {
           const city = fallbackCities[i % fallbackCities.length];
-          const morningCost = `$${Math.max(20, Math.round(perDayBudget * 0.4))}`;
-          const afternoonCost = `$${Math.max(15, Math.round(perDayBudget * 0.3))}`;
-          const eveningCost = `$${Math.max(15, Math.round(perDayBudget * 0.3))}`;
 
           const [img1, img2, img3] = await Promise.all([
             resolveEgyptianLandmarkImage(`${city} ancient temple landmark Egypt`, city),
@@ -307,56 +403,16 @@ ${routePreference ? `Route: ${routePreference}` : ''}`;
             resolveEgyptianLandmarkImage(`Nile River sunset ${city} Egypt`, city),
           ]);
 
-          return {
-            day: i + 1,
-            city,
-            activities: [
-              {
-                time: '09:00 AM',
-                name: `${city} Heritage Exploration`,
-                title: `${city} Heritage Exploration`,
-                description: `Discover the monumental landmarks, archaeological treasures, and rich legacy of ${city}.`,
-                type: 'Historical',
-                imagePath: img1.url,
-                image_search_query: `${city} ancient temple landmark Egypt`,
-                transport: 'Uber / Private A/C Car',
-                transport_mode: 'Uber / Private A/C Car (approx. 15-20 mins)',
-                transport_tip: `15-20 mins ride to ${city} main heritage entrance (~$4 USD)`,
-                estimated_cost_usd: morningCost,
-                cost: morningCost,
-                tip: 'Arrive early to beat the afternoon heat.',
-                fact: `${city} has stood as a crossroad of civilization for millennia.`,
-              },
-              {
-                time: '02:00 PM',
-                name: `${city} Cultural Journey`,
-                title: `${city} Cultural Journey`,
-                description: `Experience authentic Egyptian crafts, local culinary traditions, and guided museum collections in ${city}.`,
-                type: 'Culture',
-                imagePath: img2.url,
-                image_search_query: `${city} museum heritage Egypt`,
-                transport: 'Walking - 10 mins',
-                estimated_cost_usd: afternoonCost,
-                cost: afternoonCost,
-                tip: 'Sample fresh koshary and hibiscus tea.',
-                fact: 'Traditional Egyptian hospitality dates back to ancient times.',
-              },
-              {
-                time: '06:30 PM',
-                name: `Nile Sunset & Evening Promenade`,
-                title: `Nile Sunset & Evening Promenade`,
-                description: `Unwind with an evening stroll along the waterfront or take a traditional felucca sail in ${city}.`,
-                type: 'Relaxation',
-                imagePath: img3.url,
-                image_search_query: `Nile River sunset ${city} Egypt`,
-                transport: 'Felucca Boat',
-                estimated_cost_usd: eveningCost,
-                cost: eveningCost,
-                tip: 'Sunset on the Nile offers incredible photography lighting.',
-                fact: 'The Nile River has nurtured civilization in Egypt for over 5,000 years.',
-              },
-            ],
-          };
+          return buildLocalizedFallbackDay({
+            dayNumber: i + 1,
+            rawCity: city,
+            locale: targetLocale as PlannerLocale,
+            perDayBudget,
+            dailyRhythm,
+            mobilityPace,
+            commitments: commitmentsList,
+            imageUrls: [img1.url, img2.url, img3.url],
+          });
         })
       );
     }

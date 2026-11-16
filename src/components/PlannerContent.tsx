@@ -27,6 +27,8 @@ import Link from 'next/link';
 import { trackEvent } from '@/lib/analytics';
 
 import { useLanguage } from '@/context/LanguageContext';
+import { getPlannerPreferences } from '@/lib/planner-preferences';
+import { getPlannerResultUI } from '@/lib/planner-fallback-i18n';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabase/client';
 import ActivityCard, { Activity, DayPlan } from '@/components/ActivityCard';
@@ -860,6 +862,10 @@ export default function PlannerContent() {
   const [travelers, setTravelers] = useState(2);
   const [governorateId, setGovernorateId] = useState('');
   const [pace, setPace] = useState('balanced');
+  const [mobilityPace, setMobilityPace] = useState<string>('');
+  const [dailyRhythm, setDailyRhythm] = useState<string>('');
+  const [commitments, setCommitments] = useState<string[]>([]);
+  const [passions, setPassions] = useState<string[]>([]);
   const [accessibility, setAccessibility] = useState('');
   const [avoidPlaces, setAvoidPlaces] = useState('');
   const [avoidCrowds, setAvoidCrowds] = useState(false);
@@ -1091,6 +1097,24 @@ export default function PlannerContent() {
     setTravelStyle(id);
   };
   
+  const prefsBundle = getPlannerPreferences(locale);
+  const resultUI = getPlannerResultUI(locale);
+  const itineraryCacheRef = useRef<Record<string, DayPlan[]>>({});
+  const lastItineraryLocaleRef = useRef<string>(locale || 'en');
+  const [translatingItinerary, setTranslatingItinerary] = useState(false);
+
+  const toggleCommitment = (id: string) => {
+    setCommitments((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const togglePassion = (id: string) => {
+    setPassions((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
   const getPayload = () => ({ destinations, routePreference: "shortest-distance",
     country,
     duration,
@@ -1139,7 +1163,7 @@ export default function PlannerContent() {
     }, 75);
 
     try {
-      const response = await fetch('/api/generate-itinerary', {
+      const response = await fetch('/api/planner', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(getPayload())
@@ -1159,7 +1183,11 @@ export default function PlannerContent() {
       // Delight user with success micro-interaction for 750ms before revealing itinerary
       await new Promise((res) => setTimeout(res, 750));
       
-      setItinerary(data.itinerary || data);
+      const resolvedPlan = data.itinerary || data;
+      const activeLoc = locale || 'en';
+      itineraryCacheRef.current = { [activeLoc]: resolvedPlan };
+      lastItineraryLocaleRef.current = activeLoc;
+      setItinerary(resolvedPlan);
       trackEvent('planner_completed', { duration, budget });
     } catch (err: any) {
       clearInterval(progressTimer);
@@ -1168,6 +1196,54 @@ export default function PlannerContent() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const activeLoc = locale || 'en';
+    if (!itinerary || itinerary.length === 0) {
+      lastItineraryLocaleRef.current = activeLoc;
+      return;
+    }
+    if (lastItineraryLocaleRef.current === activeLoc) return;
+
+    if (itineraryCacheRef.current[activeLoc]) {
+      lastItineraryLocaleRef.current = activeLoc;
+      setItinerary(itineraryCacheRef.current[activeLoc]);
+      return;
+    }
+
+    let cancelled = false;
+    const translateActiveItinerary = async () => {
+      setTranslatingItinerary(true);
+      try {
+        const res = await fetch('/api/planner', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...getPayload(),
+            language: activeLoc,
+            locale: activeLoc,
+          }),
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        const translatedPlan = data.itinerary || data;
+        if (!cancelled && Array.isArray(translatedPlan) && translatedPlan.length > 0) {
+          itineraryCacheRef.current[activeLoc] = translatedPlan;
+          lastItineraryLocaleRef.current = activeLoc;
+          setItinerary(translatedPlan);
+        }
+      } catch (err) {
+        console.warn('[Planner] Live language switch error:', err);
+      } finally {
+        if (!cancelled) setTranslatingItinerary(false);
+      }
+    };
+
+    translateActiveItinerary();
+    return () => {
+      cancelled = true;
+    };
+  }, [locale, itinerary]);
 
   const handleSaveTrip = async () => {
     if (!itinerary) return;
@@ -1716,6 +1792,119 @@ export default function PlannerContent() {
                       {getPaces(t).map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
                     </select>
                   </div>
+
+                  {/* Optional 1-Tap Commitment & Passion Chips */}
+                  <div className="mt-6 pt-5 border-t border-[#76501F]/20 dark:border-[#D6A044]/20 space-y-5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold uppercase tracking-wider text-[#9A6B21] dark:text-[#D6A044]">
+                        {prefsBundle.optionalTag}
+                      </span>
+                    </div>
+
+                    {/* Mobility & Pace (Single-select) */}
+                    <div>
+                      <label className="block text-sm font-semibold text-[#1A1510]/80 dark:text-[#F5EFE6]/80 mb-2.5">
+                        {prefsBundle.mobilityPaceLabel}
+                      </label>
+                      <div className="flex flex-wrap gap-2.5">
+                        {prefsBundle.mobilityOptions.map((opt) => {
+                          const active = mobilityPace === opt.id;
+                          return (
+                            <button
+                              key={opt.id}
+                              type="button"
+                              onClick={() => setMobilityPace(active ? '' : opt.id)}
+                              className={`px-4 py-2 rounded-xl border text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+                                active
+                                  ? 'bg-[#C9A84C]/20 border-[#C9A84C] text-[#8A661C] dark:text-[#F4C66A] font-semibold'
+                                  : 'bg-[#EFE8D8]/70 dark:bg-[#1A1611] border-[#76501F]/25 dark:border-[#D6A044]/25 text-gray-700 dark:text-white/70 hover:border-[#C9A84C]/40'
+                              }`}
+                            >
+                              {opt.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Daily Rhythm (Single-select) */}
+                    <div>
+                      <label className="block text-sm font-semibold text-[#1A1510]/80 dark:text-[#F5EFE6]/80 mb-2.5">
+                        {prefsBundle.dailyRhythmLabel}
+                      </label>
+                      <div className="flex flex-wrap gap-2.5">
+                        {prefsBundle.rhythmOptions.map((opt) => {
+                          const active = dailyRhythm === opt.id;
+                          return (
+                            <button
+                              key={opt.id}
+                              type="button"
+                              onClick={() => setDailyRhythm(active ? '' : opt.id)}
+                              className={`px-4 py-2 rounded-xl border text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+                                active
+                                  ? 'bg-[#C9A84C]/20 border-[#C9A84C] text-[#8A661C] dark:text-[#F4C66A] font-semibold'
+                                  : 'bg-[#EFE8D8]/70 dark:bg-[#1A1611] border-[#76501F]/25 dark:border-[#D6A044]/25 text-gray-700 dark:text-white/70 hover:border-[#C9A84C]/40'
+                              }`}
+                            >
+                              {opt.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Special Commitments (Multi-select) */}
+                    <div>
+                      <label className="block text-sm font-semibold text-[#1A1510]/80 dark:text-[#F5EFE6]/80 mb-2.5">
+                        {prefsBundle.commitmentsLabel}
+                      </label>
+                      <div className="flex flex-wrap gap-2.5">
+                        {prefsBundle.commitmentOptions.map((opt) => {
+                          const active = commitments.includes(opt.id);
+                          return (
+                            <button
+                              key={opt.id}
+                              type="button"
+                              onClick={() => toggleCommitment(opt.id)}
+                              className={`px-4 py-2 rounded-xl border text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+                                active
+                                  ? 'bg-[#C9A84C]/20 border-[#C9A84C] text-[#8A661C] dark:text-[#F4C66A] font-semibold'
+                                  : 'bg-[#EFE8D8]/70 dark:bg-[#1A1611] border-[#76501F]/25 dark:border-[#D6A044]/25 text-gray-700 dark:text-white/70 hover:border-[#C9A84C]/40'
+                              }`}
+                            >
+                              {opt.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Deep Passions (Multi-select) */}
+                    <div>
+                      <label className="block text-sm font-semibold text-[#1A1510]/80 dark:text-[#F5EFE6]/80 mb-2.5">
+                        {prefsBundle.passionsLabel}
+                      </label>
+                      <div className="flex flex-wrap gap-2.5">
+                        {prefsBundle.passionOptions.map((opt) => {
+                          const active = passions.includes(opt.id);
+                          return (
+                            <button
+                              key={opt.id}
+                              type="button"
+                              onClick={() => togglePassion(opt.id)}
+                              className={`px-4 py-2 rounded-xl border text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+                                active
+                                  ? 'bg-[#C9A84C]/20 border-[#C9A84C] text-[#8A661C] dark:text-[#F4C66A] font-semibold'
+                                  : 'bg-[#EFE8D8]/70 dark:bg-[#1A1611] border-[#76501F]/25 dark:border-[#D6A044]/25 text-gray-700 dark:text-white/70 hover:border-[#C9A84C]/40'
+                              }`}
+                            >
+                              {opt.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
                   <div className="mt-4">
                     <label className="block text-sm font-semibold text-[#1A1510]/80 dark:text-[#F5EFE6]/80 mb-2">{t('planner.budgetLabel')}</label>
                     <input
@@ -1880,15 +2069,15 @@ export default function PlannerContent() {
                     <div className="flex flex-wrap gap-3">
                       <span className="px-4 py-2 rounded-full bg-[#EFE8D8] dark:bg-[#1A1611] backdrop-blur-md border border-slate-200 dark:border-white/10 text-[#1A1510] dark:text-[#F5EFE6]/90 font-medium shadow-sm flex items-center gap-2">
                         <Users className="w-4 h-4 text-[#C9A84C]" />
-                        <span>{travelers} Traveler{travelers > 1 ? 's' : ''}</span>
+                        <span>{travelers} {resultUI.travelersUnit}</span>
                       </span>
                       <span className="px-4 py-2 rounded-full bg-[#C9A84C]/15 backdrop-blur-md border border-[#C9A84C]/30 text-[#8A661C] dark:text-[#E2CB85] font-semibold shadow-sm flex items-center gap-2 tracking-wide">
                         <CreditCard className="w-4 h-4 text-[#C9A84C]" />
-                        <span>{budget || 'Flexible'} Budget</span>
+                        <span>{budget || resultUI.flexible} {resultUI.budgetSuffix}</span>
                       </span>
                       <span className="px-4 py-2 rounded-full bg-[#1B6B93]/15 backdrop-blur-md border border-[#1B6B93]/30 text-[#1B6B93] dark:text-[#4EB1E2] font-medium shadow-sm flex items-center gap-2 capitalize">
                         <Sparkles className="w-4 h-4 text-[#4EB1E2]" />
-                        <span>{travelStyle || 'Balanced'} Style</span>
+                        <span>{travelStyle || resultUI.flexible} {resultUI.styleSuffix}</span>
                       </span>
                     </div>
                   </div>
@@ -1904,7 +2093,7 @@ export default function PlannerContent() {
                     disabled={saving || saveSuccess}
                     className="px-5 py-2.5 rounded-lg bg-[#F8F3E9] dark:bg-white/10 text-[#1A1510] dark:text-[#F5EFE6] text-sm font-semibold hover:bg-slate-200 dark:hover:bg-white/20 transition-colors disabled:opacity-50 border border-[#76501F]/25 dark:border-[#D6A044]/25"
                   >
-                    {saving ? 'Saving...' : saveSuccess ? 'Saved!' : 'Save Trip'}
+                    {saving ? resultUI.saving : saveSuccess ? resultUI.saved : resultUI.saveTrip}
                   </button>
                   <button
                     onClick={() => handleOpenBooking({
@@ -1919,11 +2108,17 @@ export default function PlannerContent() {
                   >
                     <span className="absolute inset-0 bg-white/30 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out pointer-events-none" />
                     <Crown className="w-4 h-4 text-[#080705] animate-bounce" />
-                    <span>{isAr ? 'تسجيل / حجز الرحلة' : 'Register / Book this Journey'}</span>
+                    <span>{resultUI.bookJourney}</span>
                   </button>
                 </div>
               </div>
 
+              {translatingItinerary && (
+                <div className="mb-4 px-4 py-2.5 rounded-xl bg-[#D6A044]/15 border border-[#D6A044]/40 text-xs font-semibold text-[#8A661C] dark:text-[#F4C66A] flex items-center gap-2">
+                  <RotateCw className="w-3.5 h-3.5 animate-spin" />
+                  <span>{resultUI.updatingLanguage}</span>
+                </div>
+              )}
               {/* Map + Timeline */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Map */}
@@ -2033,9 +2228,7 @@ export default function PlannerContent() {
                         <div className="flex items-center gap-2 text-xs text-[#8A661C] dark:text-[#E2CB85]">
                           <Crown className="w-4 h-4 text-[#D4AF37]" />
                           <span className="font-semibold">
-                            {isAr
-                              ? `تأكيد تصريح زيارة اليوم ${day.day} (${day.city}) مع مرشد EgyptX`
-                              : `Confirm Day ${day.day} (${day.city}) Pass with EgyptX Smart Guide`}
+                            {resultUI.confirmDayPass.replace('{day}', String(day.day)).replace('{city}', String(day.city))}
                           </span>
                         </div>
                         <button
@@ -2052,7 +2245,7 @@ export default function PlannerContent() {
                           className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-[#080705] bg-gradient-to-r from-[#D4AF37] to-[#E2CB85] hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all active:scale-95"
                         >
                           <Sparkles className="w-3.5 h-3.5" />
-                          <span>{isAr ? 'تسجيل / حجز هذا اليوم' : 'Book This Day Plan'}</span>
+                          <span>{resultUI.bookThisDay}</span>
                         </button>
                       </div>
                     </motion.div>
@@ -2060,7 +2253,7 @@ export default function PlannerContent() {
 
                   {/* Bottom CTA */}
                   <div className="text-center pt-8 pb-4">
-                    <p className="text-gray-600 dark:text-white/30 text-sm mb-4">Want to explore more of Egypt?</p>
+                    <p className="text-gray-600 dark:text-white/30 text-sm mb-4">{resultUI.exploreMorePrompt}</p>
                     <div className="flex flex-wrap items-center justify-center gap-4">
                       <Link
                         href="/"
