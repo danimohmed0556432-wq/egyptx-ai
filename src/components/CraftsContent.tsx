@@ -3,26 +3,36 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, Filter, Store } from 'lucide-react';
+import { Filter, ShoppingBag, Store, Check } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 const getCategories = (t: any) => [{id: 'All', label: t('crafts.cat.all')}, {id: 'Pottery', label: t('crafts.cat.pottery')}, {id: 'Papyrus', label: t('crafts.cat.papyrus')}, {id: 'Textiles', label: t('crafts.cat.textiles')}, {id: 'Jewelry', label: t('crafts.cat.jewelry')}, {id: 'Wood Crafts', label: t('crafts.cat.wood')}, {id: 'Traditional Crafts', label: t('crafts.cat.traditional')}];
 
 const getProducts = (t: any) => [
-  { id: 1, title: t('crafts.prod.1'), category: 'Pottery', price: '450 EGP', image: '/crafts/pottery.jpg' },
-  { id: 2, title: t('crafts.prod.2'), category: 'Papyrus', price: '350 EGP', image: '/crafts/papyrus.jpg' },
-  { id: 3, title: t('crafts.prod.3'), category: 'Textiles', price: '800 EGP', image: '/crafts/textiles.jpg' },
-  { id: 4, title: t('crafts.prod.4'), category: 'Jewelry', price: '1,200 EGP', image: '/crafts/jewelry.jpg' },
-  { id: 5, title: t('crafts.prod.5'), category: 'Wood Crafts', price: '650 EGP', image: '/crafts/wood-crafts.jpg' },
-  { id: 6, title: t('crafts.prod.6'), category: 'Traditional Crafts', price: '550 EGP', image: '/crafts/traditional-crafts.jpg' },
-  { id: 7, title: t('crafts.prod.7'), category: 'Traditional Crafts', price: '280 EGP', image: '/crafts/baskets.jpg' },
-  { id: 8, title: t('crafts.prod.8'), category: 'Jewelry', price: '2,500 EGP', image: '/crafts/cartouche.jpg' },
+  { id: 1, title: t('crafts.prod.1'), category: 'Pottery', price: '$18 USD', image: '/crafts/pottery.jpg' },
+  { id: 2, title: t('crafts.prod.2'), category: 'Papyrus', price: '$15 USD', image: '/crafts/papyrus.jpg' },
+  { id: 3, title: t('crafts.prod.3'), category: 'Textiles', price: '$32 USD', image: '/crafts/textiles.jpg' },
+  { id: 4, title: t('crafts.prod.4'), category: 'Jewelry', price: '$48 USD', image: '/crafts/jewelry.jpg' },
+  { id: 5, title: t('crafts.prod.5'), category: 'Wood Crafts', price: '$26 USD', image: '/crafts/wood-crafts.jpg' },
+  { id: 6, title: t('crafts.prod.6'), category: 'Traditional Crafts', price: '$22 USD', image: '/crafts/traditional-crafts.jpg' },
+  { id: 7, title: t('crafts.prod.7'), category: 'Traditional Crafts', price: '$12 USD', image: '/crafts/baskets.jpg' },
+  { id: 8, title: t('crafts.prod.8'), category: 'Jewelry', price: '$85 USD', image: '/crafts/cartouche.jpg' },
 ];
 
 export default function CraftsContent() {
   const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState('All');
+  const [bagIds, setBagIds] = useState<number[]>([]);
+  const [toastTitle, setToastTitle] = useState<string | null>(null);
   const router = useRouter();
+
+  const handleAddToBag = (product: { id: number; title: string }) => {
+    setBagIds((prev) => (prev.includes(product.id) ? prev : [...prev, product.id]));
+    setToastTitle(product.title);
+    window.setTimeout(() => {
+      setToastTitle((current) => (current === product.title ? null : current));
+    }, 2400);
+  };
 
   const filteredProducts = activeCategory === 'All' 
     ? getProducts(t) 
@@ -30,18 +40,6 @@ export default function CraftsContent() {
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#030712] text-slate-900 dark:text-white pt-24 pb-16 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
-      {/* Demo Banner */}
-      <div className="max-w-7xl mx-auto mb-8 bg-yellow-500/20 border border-yellow-500/50 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-yellow-500">
-        <div className="flex items-start sm:items-center gap-4">
-          <AlertCircle className="w-6 h-6 shrink-0 mt-1 sm:mt-0" />
-          <p className="font-bold text-sm sm:text-base">
-             DEMO MARKETPLACE — Illustrative Demo Only. Real verified artisan vendors coming soon.
-          </p>
-        </div>
-        <p className="font-bold text-sm sm:text-base whitespace-nowrap" dir="rtl">
-          الأسعار تقريبية وتعكس أسعار السوق المصري
-        </p>
-      </div>
 
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-12">
         {/* Sidebar / Filters */}
@@ -117,12 +115,27 @@ export default function CraftsContent() {
                     {product.title}
                   </h3>
                   
-                  {/* Strict label enforcement */}
-                  <div className="mt-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg py-2 px-3 text-center">
-                    <span className="text-gray-400 text-xs font-semibold uppercase tracking-wider">
-                      Illustrative Demo Product
-                    </span>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleAddToBag(product)}
+                    className={`mt-4 w-full py-2.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 ${
+                      bagIds.includes(product.id)
+                        ? 'bg-[#1B6B93] text-white border border-[#1B6B93]'
+                        : 'bg-[#C9A84C] hover:bg-[#b5943b] text-[#0A1628]'
+                    }`}
+                  >
+                    {bagIds.includes(product.id) ? (
+                      <>
+                        <Check className="w-4 h-4" />
+                        <span>Added to Bag</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingBag className="w-4 h-4" />
+                        <span>Add to Bag</span>
+                      </>
+                    )}
+                  </button>
                 </div>
               </motion.div>
             ))}
@@ -131,11 +144,18 @@ export default function CraftsContent() {
           {filteredProducts.length === 0 && (
             <div className="text-center py-20 bg-[#F8F3E9] dark:bg-[#0A1628] rounded-2xl border border-gray-200 dark:border-white/10">
               <Store className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-              <p className="text-gray-400">No demo products in this category.</p>
+              <p className="text-gray-400">No artisan products in this category.</p>
             </div>
           )}
         </div>
       </div>
+
+      {toastTitle && (
+        <div className="fixed bottom-6 right-6 z-50 bg-[#0A1628] text-white border border-[#C9A84C]/60 rounded-xl px-4 py-3 shadow-xl flex items-center gap-3 text-sm font-medium">
+          <Check className="w-4 h-4 text-[#C9A84C] shrink-0" />
+          <span>Added &ldquo;{toastTitle}&rdquo; to Bag ({bagIds.length})</span>
+        </div>
+      )}
     </div>
   );
 }

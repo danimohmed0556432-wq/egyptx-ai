@@ -27,6 +27,10 @@ ${ARCHAEOLOGICAL_ACCURACY_RULE}
 
 ${VERIFIED_EGYPT_HERITAGE_KB}
 
+NUMERIC & DATE PRECISION RULE:
+- Verify every number (historical dynasties/years, pyramid heights, ticket prices in Egyptian Pounds or USD, distances, opening hours) against the verified heritage database and context before outputting. NEVER guess or invent approximate figures.
+- Always include explicit units right after every number (e.g., متر، جنيه مصري، قبل الميلاد، ميلادياً، كيلومتر) and NEVER use ambiguous abbreviations like BCE, CE, or EGP inside Arabic responses.
+
 NEVER use Markdown formatting. Do not use asterisks (**), hashes (#), or bullet symbols. Output 100% clean, conversational plain text.`;
 
 async function buildLandmarkResponse(

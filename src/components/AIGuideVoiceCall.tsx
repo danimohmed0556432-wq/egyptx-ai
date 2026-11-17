@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
+import { normalizeArabicNumbersForSpeech } from '@/lib/arabic-speech';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   PhoneOff,
@@ -303,7 +304,7 @@ export default function AIGuideVoiceCall({ isOpen, onClose }: AIGuideVoiceCallPr
     try {
       const synth = window.speechSynthesis;
       synth.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
+      const utterance = new SpeechSynthesisUtterance((/[\u0600-\u06FF]/.test(text) || getSiteLanguage().startsWith('ar')) ? normalizeArabicNumbersForSpeech(text) : text);
       const isAr = /[\u0600-\u06FF]/.test(text) || getSiteLanguage().startsWith('ar');
       utterance.lang = isAr ? 'ar-EG' : 'en-US';
       utterance.rate = 1.0;
@@ -370,7 +371,7 @@ export default function AIGuideVoiceCall({ isOpen, onClose }: AIGuideVoiceCallPr
           headers: { 'Content-Type': 'application/json' },
           signal: controller.signal,
           body: JSON.stringify({
-            text: text.trim().slice(0, 500),
+            text: ((/[\u0600-\u06FF]/.test(text) || getSiteLanguage().startsWith('ar')) ? normalizeArabicNumbersForSpeech(text) : text).trim().slice(0, 500),
             voiceId: selectedVoiceRef.current,
           }),
         });

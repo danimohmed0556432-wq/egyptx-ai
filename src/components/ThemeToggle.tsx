@@ -6,13 +6,21 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Sun, Moon, Tv } from 'lucide-react';
 
 export default function ThemeToggle({ className = '' }: { className?: string }) {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, toggleTheme } = useTheme();
   const { locale } = useLanguage();
 
   const isAr = locale === 'ar';
   const masperoLabel = isAr ? 'ماسبيرو زمان' : 'Maspero Zaman';
   const darkLabel = isAr ? 'الوضع الداكن الفرعوني' : 'Pharaonic Dark';
   const lightLabel = isAr ? 'وضع البردي المضيء' : 'Papyrus Light';
+
+  const currentLabel =
+    theme === 'light' ? lightLabel : theme === 'maspero' ? masperoLabel : darkLabel;
+  const nextLabel =
+    theme === 'dark' ? lightLabel : theme === 'light' ? masperoLabel : darkLabel;
+  const mobileTitle = isAr
+    ? `${currentLabel} — اضغط للتبديل إلى ${nextLabel}`
+    : `${currentLabel} — Tap to switch to ${nextLabel}`;
 
   const containerClass =
     theme === 'light'
@@ -37,11 +45,37 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
   };
 
   return (
-    <div
-      role="group"
-      aria-label={isAr ? 'تبديل المظهر' : 'Theme selector'}
-      className={`inline-flex items-center gap-0.5 p-1 rounded-full border transition-colors duration-300 ${containerClass} ${className}`}
-    >
+    <>
+      {/* Mobile (< 640px): Single compact circular cycler button */}
+      <button
+        type="button"
+        onClick={toggleTheme}
+        title={mobileTitle}
+        aria-label={mobileTitle}
+        className={`flex sm:hidden items-center justify-center w-9 h-9 rounded-full border transition-all duration-200 active:scale-90 cursor-pointer shrink-0 ${containerClass} ${
+          theme === 'light'
+            ? 'text-[#9A6B21]'
+            : theme === 'maspero'
+            ? 'text-[#C29B61]'
+            : 'text-[#FFD27A]'
+        } ${className}`}
+      >
+        <span
+          key={theme}
+          className="inline-flex items-center justify-center transition-transform duration-200"
+        >
+          {theme === 'dark' && <Moon className="w-4 h-4" />}
+          {theme === 'light' && <Sun className="w-4 h-4" />}
+          {theme === 'maspero' && <Tv className="w-4 h-4" />}
+        </span>
+      </button>
+
+      {/* Desktop (>= 640px): 3-mode pill capsule */}
+      <div
+        role="group"
+        aria-label={isAr ? 'تبديل المظهر' : 'Theme selector'}
+        className={`hidden sm:inline-flex items-center gap-0.5 p-1 rounded-full border transition-colors duration-300 ${containerClass} ${className}`}
+      >
       <button
         type="button"
         onClick={() => setTheme('dark')}
@@ -85,6 +119,7 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
           </span>
         )}
       </button>
-    </div>
+      </div>
+    </>
   );
 }

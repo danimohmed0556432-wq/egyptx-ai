@@ -29,6 +29,7 @@ RULES & PERSONA:
    - In Arabic: "${OUT_OF_SCOPE_AR}"
    - In English (if asked in English): "${OUT_OF_SCOPE_EN}"
 7. Output clean, readable conversational text without raw markdown symbols like ** or #.
+8. STRICT NUMERIC & DATE PRECISION: Verify every number (historical dynasties/years, monument heights, ticket prices, distances, opening hours) against the verified database and context before outputting, and NEVER guess or invent approximate figures. Always include explicit units right after every number (e.g., متر، جنيه مصري، قبل الميلاد، ميلادياً، كيلومتر) and NEVER use ambiguous abbreviations like BCE, CE, or EGP inside Arabic responses.
 
 ${VERIFIED_EGYPT_HERITAGE_KB}`;
 

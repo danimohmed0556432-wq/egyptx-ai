@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import { trackEvent } from '@/lib/analytics';
 import Link from 'next/link';
 import { stripEmojis } from '@/lib/strip-emojis';
+import { splitTextForBidiNumbers } from '@/lib/arabic-speech';
 
 export default function AIGuideContent() {
   const { t, locale } = useLanguage();
@@ -453,7 +454,17 @@ export default function AIGuideContent() {
                                     : 'bg-[#F8F3E9] dark:bg-[#121a2f] border border-gray-200 dark:border-white/5 text-gray-800 dark:text-gray-200 rounded-tl-none'
                                 }`}
                               >
-                                {stripEmojis(msg.content?.replace(/\*\*|#{1,6}\s?/g, ''))}
+                                {splitTextForBidiNumbers(
+                                  stripEmojis(msg.content?.replace(/\*\*|#{1,6}\s?/g, '') || '')
+                                ).map((seg, segIdx) =>
+                                  seg.isNumeric ? (
+                                    <bdi key={segIdx} dir="ltr" className="inline-block">
+                                      {seg.text}
+                                    </bdi>
+                                  ) : (
+                                    <React.Fragment key={segIdx}>{seg.text}</React.Fragment>
+                                  )
+                                )}
                               </div>
                             </div>
                           ))}

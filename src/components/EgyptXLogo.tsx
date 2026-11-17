@@ -23,7 +23,7 @@ export default function EgyptXLogo({
       ? 'h-20 sm:h-28 md:h-32 w-auto mx-auto object-contain'
       : size === 'footer'
       ? 'h-10 sm:h-12 w-auto object-contain'
-      : 'h-9 sm:h-10 w-auto max-w-[135px] object-contain';
+      : 'h-7 sm:h-8 md:h-9 w-auto max-w-[120px] object-contain';
 
   return (
     <div className={`flex items-center justify-center shrink-0 ${className}`}>

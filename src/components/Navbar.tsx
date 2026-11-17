@@ -286,6 +286,13 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
         setUserDropdownOpen(false);
@@ -515,13 +522,13 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
-            className="lg:hidden bg-[#EFE8D8]/98 dark:bg-[#12100C]/98 backdrop-blur-2xl border-b border-black/[0.06] dark:border-[#C5A059]/25 shadow-xl overflow-hidden"
+            className="lg:hidden fixed inset-x-0 top-16 bottom-0 max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain touch-pan-y bg-[#EFE8D8]/98 dark:bg-[#12100C]/98 backdrop-blur-2xl border-t border-black/[0.06] dark:border-[#C5A059]/25 shadow-xl z-40"
           >
-            <div className="max-w-7xl mx-auto px-4 pt-3 pb-8 space-y-3">
+            <div className="max-w-7xl mx-auto px-4 pt-3 pb-24 space-y-3">
               {/* Home */}
               <Link
                 href="/"
