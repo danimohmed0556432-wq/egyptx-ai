@@ -352,7 +352,7 @@ function AIBubble({
         </div>
 
         {/* Card */}
-        <div className="bg-[#06101E]/90 backdrop-blur-md border border-[#C9A84C]/30 rounded-2xl rounded-tl-sm overflow-hidden shadow-[0_6px_24px_rgba(0,0,0,0.5)]">
+        <div className="bg-[#0b1120]/60 backdrop-blur-md border border-amber-500/25 rounded-2xl rounded-tl-sm overflow-hidden shadow-[0_6px_24px_rgba(0,0,0,0.45)]">
           {/* Translation Output */}
           <div className="px-4 pt-3.5 pb-2.5">
             <div className="flex items-center justify-between mb-1">
@@ -434,7 +434,7 @@ function UserBubble({ msg }: { msg: ChatMessage }) {
         initial={{ opacity: 0, x: 16 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}
-        className="max-w-[85%] md:max-w-[75%] bg-[#12233C]/95 backdrop-blur-md border border-white/15 rounded-2xl rounded-tr-sm px-4 py-3 shadow-[0_4px_16px_rgba(0,0,0,0.4)]"
+        className="max-w-[85%] md:max-w-[75%] bg-[#12233C]/65 backdrop-blur-md border border-white/15 rounded-2xl rounded-tr-sm px-4 py-3 shadow-[0_4px_16px_rgba(0,0,0,0.35)]"
       >
         {msg.imagePreview && (
           <img
@@ -460,7 +460,7 @@ function TypingIndicator() {
         <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#C9A84C] to-[#1B6B93] flex items-center justify-center shadow-[0_0_12px_rgba(201,168,76,0.3)]">
           <Sparkles className="w-4 h-4 text-white" />
         </div>
-        <div className="flex items-center gap-1.5 bg-[#06101E]/90 border border-[#C9A84C]/25 rounded-2xl rounded-tl-sm px-4 py-3">
+        <div className="flex items-center gap-1.5 bg-[#0b1120]/55 backdrop-blur-md border border-amber-500/25 rounded-2xl rounded-tl-sm px-4 py-3">
           {[0, 0.15, 0.3].map((delay, i) => (
             <motion.div
               key={i}
@@ -496,6 +496,16 @@ export default function SlangTranslatorContent() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const { play, stop, playingId, loadingAudioId } = useElevenLabsTTS();
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    document.body.dataset.hideFloatingChat = 'true';
+    window.dispatchEvent(new Event('egyptx:floating-chat-visibility'));
+    return () => {
+      delete document.body.dataset.hideFloatingChat;
+      window.dispatchEvent(new Event('egyptx:floating-chat-visibility'));
+    };
+  }, []);
 
   const selectedVoice = VOICE_OPTIONS.find((v) => v.id === selectedVoiceId) || VOICE_OPTIONS[0];
 
@@ -626,7 +636,7 @@ export default function SlangTranslatorContent() {
   const isEmpty = messages.length === 0;
 
   return (
-    <div className="min-h-screen text-white flex flex-col justify-center items-center px-4 pt-24 pb-8 relative z-10 overflow-hidden font-sans">
+    <div className="min-h-[100dvh] text-white flex flex-col justify-start md:justify-center items-center px-3 sm:px-4 pt-20 md:pt-24 pb-6 md:pb-8 relative z-10 overflow-y-auto md:overflow-hidden overscroll-contain touch-pan-y font-sans">
       {/* ── Fullscreen Background Video (Bright & Vivid) ──────────────────── */}
       <video
         autoPlay
@@ -639,7 +649,7 @@ export default function SlangTranslatorContent() {
       </video>
 
       {/* ── 1. CENTERED CHAT CONTAINER (Crystal Clear) ────────────────────── */}
-      <div className="w-full max-w-3xl h-[82vh] md:h-[84vh] bg-gradient-to-b from-[#06101E]/85 to-[#06101E]/75 backdrop-blur-md border border-white/15 rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.65)] flex flex-col overflow-hidden relative z-10">
+      <div className="w-full max-w-3xl min-h-[calc(100dvh-6.5rem)] md:min-h-0 md:h-[84vh] bg-slate-950/50 backdrop-blur-md border border-amber-500/25 rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.55)] flex flex-col md:overflow-hidden relative z-10">
 
         {/* Card Top Header */}
         <div className="flex items-center justify-between px-5 md:px-6 py-3.5 border-b border-white/10 bg-black/20 shrink-0">
@@ -665,7 +675,7 @@ export default function SlangTranslatorContent() {
         </div>
 
         {/* ── Dual-Language Selectors (سهمين اللغات: اللهجة المحلية & لغة السائح) ─── */}
-        <div className="px-3 md:px-6 py-2.5 bg-[#070D1F]/95 border-b border-[#C9A84C]/25 flex flex-wrap items-center justify-between gap-2.5 shrink-0">
+        <div className="px-3 md:px-6 py-2.5 bg-[#0b1120]/55 backdrop-blur-md border-b border-amber-500/25 flex flex-wrap items-center justify-between gap-2.5 shrink-0">
           <div className="flex items-center gap-2 flex-1 min-w-[280px]">
             {/* First Selector: Local Dialect (السهم الأول - اللهجة المحلية) */}
             <div className={`relative flex-1 transition-all rounded-xl border ${
@@ -775,7 +785,7 @@ export default function SlangTranslatorContent() {
               AI Voice:
             </span>
           </div>
-          <div className="flex items-center gap-1.5 overflow-x-auto py-0.5">
+          <div className="flex items-center gap-1.5 overflow-x-auto touch-pan-x py-0.5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {VOICE_OPTIONS.map((v) => {
               const active = selectedVoiceId === v.id;
               return (
@@ -804,7 +814,7 @@ export default function SlangTranslatorContent() {
         <div
           ref={chatRef}
           onScroll={handleScroll}
-          className="flex-1 overflow-y-auto px-4 md:px-6 py-5 space-y-4 scroll-smooth"
+          className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y px-4 md:px-6 py-5 space-y-4 scroll-smooth"
           style={{ scrollbarWidth: 'thin', scrollbarColor: '#C9A84C20 transparent' }}
         >
           {/* ── Empty State (Welcome Screen) ────────────────────────────────── */}
@@ -813,7 +823,7 @@ export default function SlangTranslatorContent() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="h-full flex flex-col items-center justify-center text-center px-4 py-6"
+              className="min-h-full flex flex-col items-center justify-center text-center px-4 py-6"
             >
               {/* 3D Glowing Microphone Icon */}
               <div className="relative mb-5 flex items-center justify-center">
@@ -899,7 +909,7 @@ export default function SlangTranslatorContent() {
         </AnimatePresence>
 
         {/* ── Bottom Input Bar (Crystal Clear) ────────────────────────────── */}
-        <div className="border-t border-white/10 bg-black/25 px-4 py-3 shrink-0 relative z-10">
+        <div className="border-t border-white/10 bg-black/25 px-3 sm:px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,12px))] md:py-3 shrink-0 relative z-10">
           {/* Upload thumbnail preview */}
           <AnimatePresence>
             {imagePreview && (

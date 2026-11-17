@@ -36,7 +36,7 @@ const HeroSection = () => {
 
       {/* CONTENT */}
       <motion.div 
-        className="relative z-10 flex flex-col items-center justify-center text-center px-4 max-w-5xl mx-auto mt-[-4vh]"
+        className="relative z-10 flex flex-col items-center justify-center text-center px-4 max-w-5xl mx-auto pt-20 sm:pt-24 sm:mt-[-4vh]"
         initial="hidden"
         animate="visible"
         variants={{
@@ -44,7 +44,7 @@ const HeroSection = () => {
         }}
       >
         {user && (
-          <motion.div variants={staggerItem} className="mb-4">
+          <motion.div variants={staggerItem} className="hidden md:block mb-4">
             <span className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/80 text-xs uppercase tracking-wider font-medium backdrop-blur-md">
               {t('home.welcomeBack')} <span className="text-[#C5A869] font-bold">{user.name.split(' ')[0]}</span>
             </span>
@@ -74,29 +74,29 @@ const HeroSection = () => {
         </motion.p>
 
         {/* Buttons */}
-        <motion.div variants={staggerItem} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mb-12 md:mb-16">
+        <motion.div variants={staggerItem} className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3.5 w-full sm:w-auto mb-8 sm:mb-12 md:mb-16">
           <button 
             onClick={() => router.push('/planner')} 
-            className="w-full sm:w-auto px-7 py-3.5 bg-[#C5A869] hover:bg-[#B89758] text-stone-950 text-xs uppercase tracking-[0.18em] font-bold rounded-full shadow-[0_4px_20px_rgba(197,168,105,0.3)] transition-all duration-300 hover:scale-105 cursor-pointer"
+            className="w-full sm:w-auto px-7 py-3 sm:py-4 bg-[#C5A869] hover:bg-[#B89758] text-stone-950 text-xs sm:text-sm uppercase tracking-widest sm:tracking-[0.18em] font-bold rounded-full shadow-[0_4px_20px_rgba(197,168,105,0.3)] transition-all duration-300 hover:scale-105 cursor-pointer"
           >
             {t('home.planBtn')}
           </button>
           <button 
             onClick={() => router.push('/explore')} 
-            className="w-full sm:w-auto px-7 py-3.5 bg-white/5 hover:bg-white/10 border border-white/20 text-white text-xs uppercase tracking-[0.18em] font-semibold rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 cursor-pointer"
+            className="w-full sm:w-auto px-7 py-3 sm:py-4 bg-white/5 hover:bg-white/10 border border-white/20 text-white text-xs sm:text-sm uppercase tracking-widest sm:tracking-[0.18em] font-semibold rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 cursor-pointer"
           >
             {t('home.exploreBtn')}
           </button>
           <button 
             onClick={() => router.push('/vr-egypt')} 
-            className="w-full sm:w-auto px-7 py-3.5 bg-[#1B6B93]/20 hover:bg-[#1B6B93]/30 border border-[#1B6B93]/40 text-[#4EB1E2] text-xs uppercase tracking-[0.18em] font-semibold rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 cursor-pointer"
+            className="w-full sm:w-auto px-7 py-3 sm:py-4 bg-[#1B6B93]/20 hover:bg-[#1B6B93]/30 border border-[#1B6B93]/40 text-[#4EB1E2] text-xs sm:text-sm uppercase tracking-widest sm:tracking-[0.18em] font-semibold rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 cursor-pointer"
           >
             {t('home.virtualEgypt')}
           </button>
         </motion.div>
 
         {/* Stats */}
-        <motion.div variants={staggerItem} className="flex items-center gap-4 md:gap-6 text-xs text-white/40 uppercase tracking-[0.18em] font-mono">
+        <motion.div variants={staggerItem} className="flex items-center justify-center gap-2.5 sm:gap-4 md:gap-6 text-[10px] sm:text-xs text-white/40 uppercase tracking-[0.18em] font-mono pb-16 sm:pb-8">
           <span>{t('home.sitesCount')}</span>
           <span className="w-1 h-1 rounded-full bg-[#1B6B93]"></span>
           <span>{t('home.aiPowered')}</span>

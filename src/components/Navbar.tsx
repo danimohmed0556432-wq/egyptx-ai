@@ -417,7 +417,7 @@ export default function Navbar() {
           </nav>
 
           {/* ── RIGHT: Theme Toggle + Language + Profile ────────────────────── */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             <ThemeToggle />
             <LanguageSelector locale={locale} setLocale={setLocale} solidNav={solidNav} />
 
@@ -426,7 +426,7 @@ export default function Navbar() {
               <div className="relative" ref={userDropdownRef}>
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className={`flex items-center gap-2 pl-1 pr-3 py-1 rounded-full transition-colors cursor-pointer border ${
+                  className={`flex items-center gap-2 h-8 sm:h-auto pl-1 pr-1 sm:pr-3 py-1 rounded-full transition-colors cursor-pointer border ${
                     solidNav
                       ? 'bg-black/[0.04] dark:bg-white/5 hover:bg-black/[0.07] dark:hover:bg-white/10 border-black/[0.06] dark:border-white/10'
                       : 'bg-black/40 hover:bg-black/60 border-white/20 backdrop-blur-md'
@@ -504,7 +504,7 @@ export default function Navbar() {
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`lg:hidden p-2 rounded-lg transition-colors cursor-pointer ${
+              className={`lg:hidden h-8 w-8 sm:h-auto sm:w-auto flex items-center justify-center p-1.5 sm:p-2 rounded-lg transition-colors cursor-pointer ${
                 solidNav
                   ? 'text-[#1A2332] dark:text-gray-300 hover:bg-black/[0.04] dark:hover:bg-white/5'
                   : 'text-white hover:bg-white/10'
@@ -529,6 +529,14 @@ export default function Navbar() {
             className="lg:hidden fixed inset-x-0 top-16 bottom-0 max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain touch-pan-y bg-[#EFE8D8]/98 dark:bg-[#12100C]/98 backdrop-blur-2xl border-t border-black/[0.06] dark:border-[#C5A059]/25 shadow-xl z-40"
           >
             <div className="max-w-7xl mx-auto px-4 pt-3 pb-24 space-y-3">
+              {user && (
+                <div className="px-3 py-2.5 rounded-xl bg-[#C5A059]/10 border border-[#C5A059]/25 flex items-center justify-between">
+                  <span className="text-[11px] uppercase tracking-wider font-medium text-[#1A2332] dark:text-white/80">
+                    {safeNav(t('home.welcomeBack'), 'Welcome back,')}{' '}
+                    <span className="text-[#C5A059] font-bold">{user.name.split(' ')[0]}</span>
+                  </span>
+                </div>
+              )}
               {/* Home */}
               <Link
                 href="/"

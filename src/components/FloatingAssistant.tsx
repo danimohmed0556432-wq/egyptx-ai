@@ -156,7 +156,27 @@ export default function FloatingAssistant() {
   const [navigatorMessages, setNavigatorMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [hideByDataset, setHideByDataset] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const syncVisibility = () => {
+      setHideByDataset(document.body.dataset.hideFloatingChat === 'true');
+    };
+    syncVisibility();
+
+    const observer = new MutationObserver(syncVisibility);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['data-hide-floating-chat'],
+    });
+    window.addEventListener('egyptx:floating-chat-visibility', syncVisibility);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('egyptx:floating-chat-visibility', syncVisibility);
+    };
+  }, []);
 
   const activeMessages = mode === 'guide' ? guideMessages : navigatorMessages;
 
@@ -227,19 +247,17 @@ export default function FloatingAssistant() {
     }
   };
 
-  const isDashboardRoute =
-    pathname?.startsWith('/government') ||
-    pathname?.startsWith('/command-center') ||
-    pathname?.startsWith('/national/dashboard');
+  const normalizedPath = pathname?.replace(/\/+$/, '') || '/';
+  const isHomePage = /^\/(?:(ar|en|fr|de|it|es|zh|ru)\/?)?$/.test(normalizedPath);
 
-  if (isDashboardRoute) {
+  if (!isHomePage || hideByDataset) {
     return null;
   }
 
   return (
     <>
       {/* Floating Action Button */}
-      <div className="fixed bottom-6 right-6 z-[100]">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[100]">
         <AnimatePresence>
           {!isOpen && (
             <motion.button
@@ -247,13 +265,13 @@ export default function FloatingAssistant() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0, opacity: 0 }}
               onClick={() => setIsOpen(true)}
-              className="group relative flex items-center justify-center w-14 h-14 bg-gradient-to-r from-[#C9A84C] to-[#E2CB85] rounded-full shadow-[0_0_25px_rgba(201,168,76,0.5)] hover:shadow-[0_0_35px_rgba(201,168,76,0.8)] transition-all duration-300"
+              className="group relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-[#C9A84C] to-[#E2CB85] rounded-full shadow-[0_0_25px_rgba(201,168,76,0.5)] hover:shadow-[0_0_35px_rgba(201,168,76,0.8)] transition-all duration-300"
             >
               {/* Pulsing glow behind button */}
               <div className="absolute inset-0 rounded-full bg-[#C9A84C] opacity-40 animate-ping" />
 
               <svg
-                className="w-7 h-7 text-[#080705] relative z-10"
+                className="w-6 h-6 sm:w-7 sm:h-7 text-[#080705] relative z-10"
                 viewBox="0 0 64 64"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
